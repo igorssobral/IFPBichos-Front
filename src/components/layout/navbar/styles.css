@@ -28,7 +28,6 @@ span{
 
 .profile_section{
     display: flex;
-    align-items: center;
 }
 .icon{
     margin-right: 10px;

@@ -7,6 +7,8 @@ import FormControl from "@mui/material/FormControl";
 import { FormLabel } from "../../../components/ui/formLabel";
 import { Button } from "../../../components/ui/button";
 import { ButtonGroup } from "../../../components/ui/button-group";
+import { Navbar } from "../../../components/layout/navbar";
+import { useNavigate } from "react-router-dom";
 
 interface campaignForm {
   title: string;
@@ -20,7 +22,16 @@ interface campaignForm {
 export const EditCampanha = () => {
   const [campaignForm, setCampaignForm] = useState<campaignForm>();
 
+
+  const navigate = useNavigate();
+
+  const handleCancelClick = () => {
+    navigate('/');
+  };
+
   return (
+    <>
+     <Navbar title="" visible visibleMenu={false}/>
     <div className="content">
       <Container>
         <Title label="Editar Campanha" />
@@ -140,10 +151,11 @@ export const EditCampanha = () => {
             label="cancelar"
             width=""
             headlight={false}
-            onClick={() => {}}
+            onClick={handleCancelClick}
           />
         </ButtonGroup>
       </Container>
     </div>
+    </>
   );
 };

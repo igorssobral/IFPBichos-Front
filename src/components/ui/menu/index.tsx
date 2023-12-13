@@ -28,7 +28,7 @@ export const Menu = ({ isVisible }: props) => {
   return (
     <>
       {isVisibleMenu && (
-        <div style={{ display: "flex" }}>
+        <div>
           <Drawer
             variant="permanent"
             sx={{

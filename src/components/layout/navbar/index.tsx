@@ -16,11 +16,6 @@ export const Navbar = ({ title, visible, visibleMenu }: props) => {
 
   const [visibleMenus, setIsVisibleMenus] = useState<boolean>(visibleMenu);
 
-//   function handleclick(){
-// setIsVisibleMenus()
-
-
-//   }
   return (
     <div className="nav_container">
       <nav>
@@ -34,7 +29,7 @@ export const Navbar = ({ title, visible, visibleMenu }: props) => {
           <h1>{title}</h1>
         </div>
         {visible && <div className="profile_section">
-          <p> igor@gmail.com</p>
+          <p> fulano@gmail.com</p>
           <Badge badgeContent={1}  color="warning" style={{gap: "20px"}}>
             <MailIcon fontSize="inherit"  />
           </Badge>

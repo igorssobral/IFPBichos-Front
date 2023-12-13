@@ -31,7 +31,7 @@ export const CreateCampanha = () => {
   };
   return (
     <>
-    <Navbar title=" " visible visibleMenu/>
+    <Navbar title=" " visible visibleMenu={false}/>
     <div className="content">
      
         <Title label="Nova Campanha" />

@@ -8,12 +8,13 @@ import { Navbar } from "../../components/layout/navbar";
 import SelectSmall from "../../components/ui/selectFilter";
 import { TextField } from "@mui/material";
 import { Card } from "../../components/ui/card";
-import { format } from "path";
-
 export const Home = () => {
+
+
+
   return (
     <>
-    <Navbar title="" visible={true} visibleMenu={false}/>
+    <Navbar title="Campanhas" visible={true} visibleMenu={false}/>
     <div className="filters">
           <div>
             Filtros:<SelectSmall />
