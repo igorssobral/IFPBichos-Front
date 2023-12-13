@@ -17,9 +17,9 @@ export const Home = () => {
     <div className="filters">
           <div>
             Filtros:<SelectSmall />
-            <FormControlLabel
+            <FormControlLabel 
               value="end"
-              control={<Radio />}
+              control={<Radio  />}
               label="Próximo da meta"
             />
           </div>

@@ -27,7 +27,6 @@ export const CreateCampanha = () => {
   const navigate = useNavigate();
 
   const handleCancelClick = () => {
-    // Aqui você pode usar a função `push` para redirecionar para a rota desejada
     navigate('/');
   };
   return (

@@ -1,12 +1,21 @@
 .card{
     width: 350px;
-    height: 470px;
+    height: 420px;
     display: flex;
     flex-direction: column;
-    align-items: start;
+    align-items: center;
     border-radius: 15px;
     background-color: rgb(255, 255, 255);
     
+}
+
+.infor_content{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    margin-left: 10px;
+
 }
 
 .icons{
