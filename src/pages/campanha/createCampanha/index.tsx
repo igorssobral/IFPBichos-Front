@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useNavigate } from 'react-router-dom';
+
 import "./styles.css";
 import { Container } from "../../../components/ui/container";
 import { Title } from "../../../components/ui/tittle";
@@ -7,6 +9,7 @@ import FormControl from "@mui/material/FormControl";
 import { FormLabel } from "../../../components/ui/formLabel";
 import { Button } from "../../../components/ui/button";
 import { ButtonGroup } from "../../../components/ui/button-group";
+import { Navbar } from "../../../components/layout/navbar";
 
 interface campaignForm {
   title: string;
@@ -20,9 +23,18 @@ interface campaignForm {
 export const CreateCampanha = () => {
   const [campaignForm, setCampaignForm] = useState<campaignForm>();
 
+
+  const navigate = useNavigate();
+
+  const handleCancelClick = () => {
+    // Aqui você pode usar a função `push` para redirecionar para a rota desejada
+    navigate('/');
+  };
   return (
+    <>
+    <Navbar title=" " visible visibleMenu/>
     <div className="content">
-      <Container>
+     
         <Title label="Nova Campanha" />
         <FormControl>
           <FormLabel label="Titulo" htmlFor="title" />
@@ -36,7 +48,7 @@ export const CreateCampanha = () => {
             // value={""}
             InputProps={{
               style: {
-                width: "250px",
+                width: "300px",
                 height: "40px",
                 borderRadius: "15px",
               },
@@ -54,7 +66,7 @@ export const CreateCampanha = () => {
 
             InputProps={{
               style: {
-                width: "250px",
+                width: "300px",
                 height: "100px",
                 borderRadius: "15px",
               },
@@ -72,7 +84,7 @@ export const CreateCampanha = () => {
             // value={}
             InputProps={{
               style: {
-                width: "250px",
+                width: "300px",
                 height: "40px",
                 borderRadius: "15px",
               },
@@ -90,7 +102,7 @@ export const CreateCampanha = () => {
             // value={""}
             InputProps={{
               style: {
-                width: "250px",
+                width: "300px",
                 height: "40px",
                 borderRadius: "15px",
               },
@@ -108,7 +120,7 @@ export const CreateCampanha = () => {
             // value={""}
             InputProps={{
               style: {
-                width: "250px",
+                width: "300px",
                 height: "40px",
                 borderRadius: "15px",
               },
@@ -127,7 +139,7 @@ export const CreateCampanha = () => {
             // value={""}
             InputProps={{
               style: {
-                width: "250px",
+                width: "300px",
                 height: "40px",
                 borderRadius: "15px",
               },
@@ -140,10 +152,11 @@ export const CreateCampanha = () => {
             label="cancelar"
             width=""
             headlight={false}
-            onClick={() => {}}
+            onClick={handleCancelClick}
           />
         </ButtonGroup>
-      </Container>
+      
     </div>
+    </>
   );
 };

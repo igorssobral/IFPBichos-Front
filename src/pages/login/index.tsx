@@ -5,6 +5,7 @@ import TextField from "@mui/material/TextField";
 import { Button } from "../../components/ui/button";
 import { Title } from "../../components/ui/tittle";
 import { GoogleAuth } from "../../components/layout/googlelogin";
+import { Navbar } from "../../components/layout/navbar";
 
 interface user {
   email: string;
@@ -18,6 +19,8 @@ export const Login = () => {
   
 
   return (
+    <>
+    <Navbar title="" visible={false} visibleMenu={false}/>
     <div className="content">
       <Container>
         <Title label="Login"></Title>
@@ -75,5 +78,6 @@ export const Login = () => {
       </Container>
       
     </div>
+    </>
   );
 };

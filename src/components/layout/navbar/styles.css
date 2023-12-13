@@ -18,6 +18,21 @@ span{
 
 }
 
+.nav_container nav{
+    justify-content: space-between;
+    
+}
+
+.profile_section{
+    display: flex;
+    align-items: center;
+}
 .icon{
     margin-right: 10px;
+}
+
+.title h1{
+    color: rgb(255, 255, 255);
+    display: flex;
+    margin-right: 140px;
 }

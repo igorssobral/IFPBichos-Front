@@ -1,21 +1,41 @@
-.container{
+.container-home{
    display: flex;
-    justify-content: space-around;
-    flex-direction: row;
-    margin: auto 300px;
+    align-items: center;
+    justify-content: center;
     
 }
 
 .filters{
     display: flex;  
-    justify-content: space-evenly;
-    align-items: center;
-    margin-top: 80px;
-    gap: 40px;
+    justify-content: space-evenly;   
+    margin: 40px 15% 30px 15%;
+    
 }
 
-.search-bar{
+
+.search_bar{
     display: flex;
-    margin-top: 90px;
+    justify-content: center;
+    align-items: center;
+}
+.bin_content{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
 }
 
+.bin_content p{
+    margin: 0;
+
+}
+
+.content_campaign{
+    width: 60%;
+    display: grid;
+    gap: 10px;
+    grid-template-columns: repeat(3,1fr);
+    
+    
+    
+}
