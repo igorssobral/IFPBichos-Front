@@ -8,6 +8,7 @@ interface CustomTextFieldProps {
   title: string;
   label: string;
   type: string;
+  width?: string;
   height?: string;
   placeholder?: string;
   inputLabelProps?: boolean;
@@ -22,6 +23,7 @@ const CustomTextField: React.FC<CustomTextFieldProps> = ({
   label,
   type,
   textFieldProps,
+  width,
   height,
   placeholder,
   inputLabelProps,
@@ -29,31 +31,29 @@ const CustomTextField: React.FC<CustomTextFieldProps> = ({
   onChange,
   ...props
 }) => (
-  <div>
-    <FormControl>
-      <FormLabel label={title} htmlFor={id} />
-      <TextField
-        id={id}
-        label={label}
-        variant="outlined"
-        size="small"
-        type={type}
-        placeholder={placeholder}
-        InputLabelProps={{ shrink: inputLabelProps }}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        {...props}
-        InputProps={{
-          style: {
-            width: "300px",
-            height: height || "40px",
-            borderRadius: "15px",
-          },
-          ...(textFieldProps?.InputProps || {}),
-        }}
-      />
-    </FormControl>
-  </div>
+  <>
+    <FormLabel label={title} htmlFor={id} />
+    <TextField
+      id={id}
+      label={label}
+      variant="outlined"
+      size="small"
+      type={type}
+      placeholder={placeholder}
+      InputLabelProps={{ shrink: inputLabelProps }}
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      {...props}
+      InputProps={{
+        style: {
+          width: width || "300px",
+          height: height || "40px",
+          borderRadius: "15px",
+        },
+        ...(textFieldProps?.InputProps || {}),
+      }}
+    />
+  </>
 );
 
 export default CustomTextField;
