@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 import "./styles.css";
 import { Container } from "../../../components/ui/container";
@@ -10,143 +10,112 @@ import { FormLabel } from "../../../components/ui/formLabel";
 import { Button } from "../../../components/ui/button";
 import { ButtonGroup } from "../../../components/ui/button-group";
 import { Navbar } from "../../../components/layout/navbar";
+import CustomTextField from "../../../components/ui/customTextField";
 
 interface campaignForm {
   title: string;
   description: string;
-  fundraisingGoal: number;
-  startDate: Date;
-  finishedDate: Date;
-  image: File;
+  fundraisingGoal: number | string;
+  startDate: Date | string;
+  finishedDate: Date | string;
+  image: File | null;
 }
 
 export const CreateCampanha = () => {
-  const [campaignForm, setCampaignForm] = useState<campaignForm>();
-
+  const [campaignForm, setCampaignForm] = useState<campaignForm>({
+    title: "",
+    description: "",
+    fundraisingGoal: "",
+    startDate: "",
+    finishedDate: "",
+    image: null,
+  });
 
   const navigate = useNavigate();
 
   const handleCancelClick = () => {
-    navigate('/');
+    navigate("/campanhas");
   };
+
+  const handleChange = (field: keyof campaignForm, value: any) => {
+    console.log(`Changing ${field} to ${value}`);
+    setCampaignForm((prev) => ({ ...prev, [field]: value }));
+  };
+
   return (
     <>
-    <Navbar title=" " visible visibleMenu={false}/>
-    <div className="content">
-     
+      <Navbar title=" " visible visibleMenu={false} />
+      <div className="content">
         <Title label="Nova Campanha" />
         <FormControl>
-          <FormLabel label="Titulo" htmlFor="title" />
-
-          <TextField
+          <CustomTextField
             id="title"
+            title="Titulo"
             label="Digite o titulo"
-            variant="outlined"
-            size="small"
-            type={"email"}
-            // value={""}
-            InputProps={{
-              style: {
-                width: "300px",
-                height: "40px",
-                borderRadius: "15px",
-              },
-            }}
+            type="text"
+            value={campaignForm.title}
+            onChange={(value) => handleChange("title", value)}
+            textFieldProps={{ InputProps: { disableUnderline: true } }}
           />
-          <FormLabel label="Descrição" htmlFor="description" />
-
-          <TextField
+          <CustomTextField
             id="description"
+            title="Descrição"
             label="Digite uma descrição"
-            variant="outlined"
-            size="small"
-            type={"text"}
-            // value={""}
-
-            InputProps={{
-              style: {
-                width: "300px",
-                height: "100px",
-                borderRadius: "15px",
-              },
-            }}
+            type="text"
+            height="100px"
+            value={campaignForm.description}
+            onChange={(value) => handleChange("description", value)}
+            textFieldProps={{ InputProps: { disableUnderline: true } }}
           />
-          <FormLabel label="Meta de arrecadação" htmlFor="meta" />
-
-          <TextField
-            id="meta"
-            label="Digite a meta"
+          <CustomTextField
+            id="fundraisingGoal"
+            title="Meta de arrecadação"
+            label="Digite uma meta"
             placeholder="R$"
-            variant="outlined"
-            size="small"
-            type={"number"}
-            // value={}
-            InputProps={{
-              style: {
-                width: "300px",
-                height: "40px",
-                borderRadius: "15px",
-              },
-            }}
+            type="number"
+            value={campaignForm.fundraisingGoal}
+            onChange={(value) => handleChange("fundraisingGoal", value)}
+            textFieldProps={{ InputProps: { disableUnderline: true } }}
           />
-          <FormLabel label="Data Início" htmlFor="date-start" />
-
-          <TextField
-            id="date-start"
+          <CustomTextField
+            id="startDate"
+            title="Data Inicio"
             label=" "
-            InputLabelProps={{ shrink: false }}
-            variant="outlined"
-            size="small"
-            type={"date"}
-            // value={""}
-            InputProps={{
-              style: {
-                width: "300px",
-                height: "40px",
-                borderRadius: "15px",
-              },
-            }}
+            type="date"
+            inputLabelProps={false}
+            value={campaignForm.startDate}
+            onChange={(value) => handleChange("startDate", value)}
+            textFieldProps={{ InputProps: { disableUnderline: true } }}
           />
-          <FormLabel label="Data Final" htmlFor="data-finish" />
-
-          <TextField
-            id="date-finish"
+          <CustomTextField
+            id="finishedDate"
+            title="Data Final"
             label=" "
-            InputLabelProps={{ shrink: false }}
-            variant="outlined"
-            size="small"
-            type={"date"}
-            // value={""}
-            InputProps={{
-              style: {
-                width: "300px",
-                height: "40px",
-                borderRadius: "15px",
-              },
-            }}
+            type="date"
+            inputLabelProps={false}
+            value={campaignForm.finishedDate}
+            onChange={(value) => handleChange("finishedDate", value)}
+            textFieldProps={{ InputProps: { disableUnderline: true } }}
           />
-          <FormLabel label="Imagem" htmlFor="image" />
-
-          <TextField
+          <CustomTextField
             id="image"
+            title="Imagem"
             label=" "
-            InputLabelProps={{ shrink: false }}
-            variant="outlined"
-            size="small"
-            type={"file"}
-            fullWidth
-            // value={""}
-            InputProps={{
-              style: {
-                width: "300px",
-                height: "40px",
-                borderRadius: "15px",
-              },
-            }}
+            type="file"
+            value={campaignForm.image}
+            onChange={(value) => handleChange("image", value)}
+            textFieldProps={{ InputProps: { disableUnderline: true } }}
           />
         </FormControl>
         <ButtonGroup>
-          <Button label="salvar" width="120px" headlight onClick={() => {}} />
+          <Button
+            label="salvar"
+            width="120px"
+            headlight
+            onClick={() => {
+              console.log(campaignForm);
+            }}
+          />
           <Button
             label="cancelar"
             width=""
@@ -154,8 +123,7 @@ export const CreateCampanha = () => {
             onClick={handleCancelClick}
           />
         </ButtonGroup>
-      
-    </div>
+      </div>
     </>
   );
 };

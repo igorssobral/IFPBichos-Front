@@ -15,7 +15,7 @@ import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
 import HomeIcon from "@mui/icons-material/Home";
 import { Home } from "../../../pages/home";
-import { Login } from "../../../pages/login";
+import { Login } from "../../../pages/sign-in";
 import { CreateCampanha } from "../../../pages/campanha/createCampanha";
 
 type props = {
