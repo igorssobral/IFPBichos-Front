@@ -1,74 +1,105 @@
 import React, { useState } from "react";
 import {
-  CssBaseline,
   Drawer,
   List,
   ListItem,
   ListItemIcon,
   ListItemText,
-  Toolbar,
-  AppBar,
   Typography,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
-import HomeIcon from "@mui/icons-material/Home";
-import { Home } from "../../../pages/home";
-import { Login } from "../../../pages/sign-in";
-import { CreateCampanha } from "../../../pages/campanha/createCampanha";
+import IconButton from "@mui/material/IconButton";
+import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 
 type props = {
   isVisible: boolean;
 };
 
 export const Menu = ({ isVisible }: props) => {
-  const [isVisibleMenu, setIsVisibleMenu] = useState(isVisible);
+  console.log("🚀 ~ file: index.tsx:19 ~ Menu ~ isVisible:", isVisible);
+  // const [isVisibleMenu, setIsVisibleMenu] = useState(isVisible);
+
+  // const toggleMenu = () => {
+  //   setIsVisibleMenu(!isVisibleMenu);
+  // };
+  const [isOpen, setIsOpen] = useState(isVisible);
+
+  const toggleDrawer = (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
+    if (
+      event &&
+      event.type === 'keydown' &&
+      ((event as React.KeyboardEvent).key === 'Tab' || (event as React.KeyboardEvent).key === 'Shift')
+    ) {
+      return;
+    }
+
+    setIsOpen(open);
+  };
 
   return (
     <>
-      {isVisibleMenu && (
-        <div>
-          <Drawer
-            variant="permanent"
-            sx={{
-              width: 440,
-              flexShrink: 0,
-              [`& .MuiDrawer-paper`]: {
-                width: 440,
-              },
-            }}
+      {isOpen && (
+        
+          <SwipeableDrawer
+            anchor="left"
+            open={isOpen}
+            onClose={toggleDrawer(false)}
+            onOpen={toggleDrawer(true)}
           >
-            <ListItem
-              onClick={() => setIsVisibleMenu(!isVisibleMenu)}
-              component="a"
-              key="home"
-              
-              style={{ cursor: "pointer", padding: "17px" , borderBottom: "1px solid #24CA68" }}
+            <Drawer
+              variant="permanent"
+              anchor="left"
+              sx={{
+                width: 440,
+                flexShrink: 0,
+                "& .MuiDrawer-paper": {
+                  width: 440,
+                  transition: "width 0.3s ease-out",
+                },
+              }}
             >
-              <ListItemIcon>
-                <MenuIcon fontSize="large"/>
-              </ListItemIcon>
-              <ListItemText primary="Menu" aria-setsize={50}/>
-            </ListItem>
-            
-            
-
-            <List>
               <ListItem
-                button
+                onClick={toggleDrawer(false)}
                 component="a"
-                href="/createcampanha"
-                key="Criar Campanha"
+                key="home"
+                style={{
+                  cursor: "pointer",
+                  padding: "11px",
+                  borderBottom: "1px solid #24CA68",
+                }}
               >
-                <ListItemIcon>
-                  <InboxIcon />
-                </ListItemIcon>
-                <ListItemText primary="Criar Campanha" />
+                <IconButton
+                  size="large"
+                  edge="start"
+                  color="inherit"
+                  aria-label="menu"
+                  sx={{ mr: 2 }}
+                  onClick={toggleDrawer(false)}
+                >
+                  <MenuIcon />
+                </IconButton>
+                <Typography variant="h5" component="div" sx={{ flexGrow: 1 }}>
+                  Menu
+                </Typography>
               </ListItem>
-            </List>
-          </Drawer>
-        </div>
+
+              <List>
+                <ListItem
+                  button
+                  component="a"
+                  href="/createcampanha"
+                  key="Criar Campanha"
+                >
+                  <ListItemIcon>
+                    <InboxIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Criar Campanha" />
+                </ListItem>
+              </List>
+            </Drawer>
+          </SwipeableDrawer>
+        
       )}
     </>
   );

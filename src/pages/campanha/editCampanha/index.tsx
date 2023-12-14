@@ -1,15 +1,13 @@
 import React, { useState } from "react";
 import "./styles.css";
-import { Container } from "../../../components/ui/container";
 import { Title } from "../../../components/ui/tittle";
-import TextField from "@mui/material/TextField";
 import FormControl from "@mui/material/FormControl";
-import { FormLabel } from "../../../components/ui/formLabel";
 import { Button } from "../../../components/ui/button";
 import { ButtonGroup } from "../../../components/ui/button-group";
-import { Navbar } from "../../../components/layout/navbar";
 import { useNavigate } from "react-router-dom";
 import CustomTextField from "../../../components/ui/customTextField";
+import { Box } from "@mui/material";
+import ButtonAppBar from "../../../components/layout/appBar";
 
 interface campaignForm {
   title: string;
@@ -43,8 +41,8 @@ export const EditCampanha = () => {
 
   return (
     <>
-     <Navbar title="" visible visibleMenu={false}/>
-    <div className="content">
+     <ButtonAppBar title="" visible visibleMenu={false}/>
+    <Box display={"flex"} flexDirection={"column"} alignItems={"center"}>
       
         <Title label="Editar Campanha" />
         <FormControl>
@@ -117,7 +115,7 @@ export const EditCampanha = () => {
           />
         </ButtonGroup>
       
-    </div>
+    </Box>
     </>
   );
 };

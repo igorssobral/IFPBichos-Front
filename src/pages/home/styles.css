@@ -1,13 +1,10 @@
-.container-home{
-   display: flex;
-    align-items: center;
-    justify-content: center;
-    
-}
+
 
 .filters{
     display: flex;  
     justify-content: space-evenly;   
+    align-items: center;
+    justify-content: center;
     margin: 40px 15% 30px 15%;
     
 }
@@ -30,12 +27,3 @@
 
 }
 
-.content_campaign{
-    width: 60%;
-    display: grid;
-    gap: 10px;
-    grid-template-columns: repeat(3,1fr);
-    
-    
-    
-}

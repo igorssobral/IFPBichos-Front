@@ -2,15 +2,15 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import "./styles.css";
-import { Container } from "../../../components/ui/container";
 import { Title } from "../../../components/ui/tittle";
-import TextField from "@mui/material/TextField";
 import FormControl from "@mui/material/FormControl";
-import { FormLabel } from "../../../components/ui/formLabel";
 import { Button } from "../../../components/ui/button";
 import { ButtonGroup } from "../../../components/ui/button-group";
-import { Navbar } from "../../../components/layout/navbar";
 import CustomTextField from "../../../components/ui/customTextField";
+import { ApiCampaign } from "../../../services/data-base/CampaignService";
+import { Box } from "@mui/material";
+import axios from "axios";
+import ButtonAppBar from "../../../components/layout/appBar";
 
 interface campaignForm {
   title: string;
@@ -22,6 +22,7 @@ interface campaignForm {
 }
 
 export const CreateCampanha = () => {
+  const { create } = ApiCampaign();
   const [campaignForm, setCampaignForm] = useState<campaignForm>({
     title: "",
     description: "",
@@ -42,10 +43,26 @@ export const CreateCampanha = () => {
     setCampaignForm((prev) => ({ ...prev, [field]: value }));
   };
 
+  async function handleSaveCampaign(campaign: campaignForm) {
+    const data = await axios.post("http://localhost:8080/campaign", {
+      start: Date.now,
+      end: Date.now,
+      title: campaign.title,
+      description: campaign.description,
+      campaingStatus: true,
+      image: campaign.image,
+      collectionGoal: campaign.fundraisingGoal,
+      collectionPercentage: 50,
+      balance: 0,
+      undirectedBalance: 0,
+    });
+    console.log("🚀 ~ file: index.tsx:62 ~ handleSaveCampaign ~ data:", data);
+  }
+
   return (
     <>
-      <Navbar title=" " visible visibleMenu={false} />
-      <div className="content">
+      <ButtonAppBar title=" " visible visibleMenu={false} />
+      <Box display={"flex"} flexDirection={"column"} alignItems={"center"}>
         <Title label="Nova Campanha" />
         <FormControl>
           <CustomTextField
@@ -112,9 +129,7 @@ export const CreateCampanha = () => {
             label="salvar"
             width="120px"
             headlight
-            onClick={() => {
-              console.log(campaignForm);
-            }}
+            onClick={() => handleSaveCampaign(campaignForm)}
           />
           <Button
             label="cancelar"
@@ -123,7 +138,7 @@ export const CreateCampanha = () => {
             onClick={handleCancelClick}
           />
         </ButtonGroup>
-      </div>
+      </Box>
     </>
   );
 };
