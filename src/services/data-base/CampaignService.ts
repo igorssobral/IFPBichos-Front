@@ -1,25 +1,65 @@
-import createApiService from "./ApiService";
+import axios from "axios";
 
 export const ApiCampaign = () => {
 
-  const CursoApiService = createApiService("/campaign");
+  const URL = import.meta.env.VITE_APP_DB_URL;
 
-  const create = (object: any) => {
-    console.log("🚀 ~ file: CampaignService.ts:8 ~ create ~ object:", object)
-    return CursoApiService.post("", object);
+  const saveCampaign = async (campaignData: any) => {
+    console.log("🚀 ~ file: CampaignService.ts:8 ~ saveCampaign ~ campaignData:", campaignData)
+    try {
+      console.log("🚀 ~ file: CampaignService.ts:11 ~ saveCampaign ~ URL:", URL)
+      console.log("🚀 ~ file: CampaignService.ts:12 ~ saveCampaign ~ `${URL}/campaign`:", `${URL}/campaign`)
+      const response = await axios.post(`${URL}/campaign`, campaignData);
+      
+      
+      return response.data;
+      
+    } catch (error) {
+      console.error('Erro ao salvar a campanha:', error);
+      throw error;
+    }
   };
-
-  const update = (id: string, object: any) => {
-    return CursoApiService.put(`/${id}`, object);
+  
+  const getAllCampaigns = async () => {
+    try {
+      const response = await axios.get(`${URL}/campaign`);
+       console.log("🚀 ~ file: CampaignService.ts:27 ~ getAllCampaigns ~ response:", response)
+      return response.data;
+     
+    } catch (error) {
+      console.error('Erro ao buscar campanhas:', error);
+      throw error;
+    }
   };
-
-  const remove = (id: string) => {
-    return CursoApiService.delete(`/${id}`);
+  const updateCampaign = async (campaignId: string, updatedData: any) => {
+    try {
+      const response = await axios.put(`${URL}/campaign/${campaignId}`, updatedData);
+      return response.data;
+    } catch (error) {
+      console.error('Erro ao atualizar a campanha:', error);
+      throw error;
+    }
   };
+  const deleteCampaign = async (campaignId: any) => {
+    try {
+      const response = await axios.delete(`${URL}/campaign/${campaignId}`);
+      return response.data;
+    } catch (error) {
+      console.error('Erro ao excluir a campanha:', error);
+      throw error;
+    }
+    
+  
+  }
+  const getCampaignById = async (campaignId: string) => {
+      try {
+        const response = await axios.get(`${URL}/campaign/${campaignId}`);
+        return response.data;
+      } catch (error) {
+        console.error('Erro ao buscar campanha por ID:', error);
+        throw error;
+      }
+    };
 
-  const find = (params: any) => {
-    return CursoApiService.get(`${params}`);
-  };
-
-  return { create, update, remove, find };
+  return { saveCampaign, updateCampaign, getAllCampaigns, deleteCampaign,getCampaignById };
 };
