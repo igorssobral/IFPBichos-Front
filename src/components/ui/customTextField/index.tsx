@@ -1,19 +1,20 @@
-import React, { InputHTMLAttributes } from "react";
+import React from "react";
 import { FormLabel } from "../formLabel";
 import TextField, { TextFieldProps } from "@mui/material/TextField";
-import { FormControl } from "@mui/material";
 
 interface CustomTextFieldProps {
   id: string;
   title: string;
   label: string;
   type: string;
+  multiline?: boolean;
   width?: string;
   height?: string;
   placeholder?: string;
   inputLabelProps?: boolean;
   textFieldProps?: TextFieldProps;
   value: string | number | Date | File | null;
+  error?: string;
   onChange: (value: string | number | Date | File) => void;
 }
 
@@ -22,12 +23,14 @@ const CustomTextField: React.FC<CustomTextFieldProps> = ({
   title,
   label,
   type,
+  multiline,
   textFieldProps,
   width,
   height,
   placeholder,
   inputLabelProps,
   value,
+  error,
   onChange,
   ...props
 }) => (
@@ -39,9 +42,12 @@ const CustomTextField: React.FC<CustomTextFieldProps> = ({
       variant="outlined"
       size="small"
       type={type}
+      multiline={multiline || false}
       placeholder={placeholder}
       InputLabelProps={{ shrink: inputLabelProps }}
       value={value}
+      error={Boolean(error)}
+      helperText={error}
       onChange={(e) => onChange(e.target.value)}
       {...props}
       InputProps={{

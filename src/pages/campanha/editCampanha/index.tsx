@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from "react";
-import "./styles.css";
 import { Title } from "../../../components/ui/tittle";
 import FormControl from "@mui/material/FormControl";
 import { Button } from "../../../components/ui/button";
 import { ButtonGroup } from "../../../components/ui/button-group";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router";
 import CustomTextField from "../../../components/ui/customTextField";
-import { Box, Collapse } from "@mui/material";
-import Alert from "@mui/material/Alert";
+import { Box } from "@mui/material";
 import ButtonAppBar from "../../../components/layout/appBar";
 import { ApiCampaign } from "../../../services/data-base/CampaignService";
 import { formatInputDate } from "../../../utils/format-date";
@@ -52,7 +50,7 @@ export const EditCampanha = () => {
           start: formatInputDate(currencyCampaign.start),
           end: formatInputDate(currencyCampaign.end),
         };
-       
+
         setCampaignForm(formattedCampaign);
       }
     })();
@@ -61,20 +59,16 @@ export const EditCampanha = () => {
   async function updateCurrencyCampaign(updatedCampaign: any) {
     const data = await updateCampaign(`${id}`, updatedCampaign);
     setEditsucess(true);
-    
   }
- 
 
   const handleCancelClick = () => {
-
     navigate("/campanhas");
   };
 
   return (
     <>
+      <ButtonAppBar title="" visible  />
 
-      <ButtonAppBar title="" visible visibleMenu={false} />
-      
       <Box display={"flex"} flexDirection={"column"} alignItems={"center"}>
         <Title label="Editar Campanha" />
         <FormControl>
@@ -153,13 +147,14 @@ export const EditCampanha = () => {
           />
         </ButtonGroup>
 
-        {editSucess &&  <AlertMessage
+        {editSucess && (
+          <AlertMessage
             isVisible
             setVisible={handleCancelClick}
             message="Campanha editada com sucesso!"
             title="Sucesso"
-          />}
-       
+          />
+        )}
       </Box>
     </>
   );

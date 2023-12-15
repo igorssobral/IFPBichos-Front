@@ -1,7 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-
-import "./styles.css";
+import { useNavigate } from "react-router";
 import { Title } from "../../../components/ui/tittle";
 import FormControl from "@mui/material/FormControl";
 import { Button } from "../../../components/ui/button";
@@ -10,10 +8,6 @@ import CustomTextField from "../../../components/ui/customTextField";
 import { ApiCampaign } from "../../../services/data-base/CampaignService";
 import { Box } from "@mui/material";
 import ButtonAppBar from "../../../components/layout/appBar";
-import Alert from "@mui/material/Alert";
-import AlertTitle from "@mui/material/AlertTitle";
-import Stack from "@mui/material/Stack";
-import Fade from "@mui/material/Fade";
 import AlertMessage from "../../../components/layout/alert";
 
 interface campaignForm {
@@ -58,12 +52,11 @@ export const CreateCampanha = () => {
       collectionGoal: campaign.fundraisingGoal,
     });
     setCreateSucess(true);
-    
   }
 
   return (
     <>
-      <ButtonAppBar title=" " visible visibleMenu={false} />
+      <ButtonAppBar title=" " visible />
       <Box display={"flex"} flexDirection={"column"} alignItems={"center"}>
         <Title label="Nova Campanha" />
         <FormControl>

@@ -3,14 +3,8 @@
   padding: 0;
   box-sizing: border-box;
   font-family: "Lato", sans-serif;
+
 }
-
-  
-
-
-
-
-
 
 a {
   cursor: pointer;
@@ -21,4 +15,6 @@ button {
   cursor: pointer;
   border: none;
   background-color: transparent;
-};
+}
+
+;

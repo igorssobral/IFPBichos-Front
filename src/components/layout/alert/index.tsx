@@ -5,7 +5,7 @@ type props = {
   title: string;
   message: string;
   isVisible: boolean;
-  severity?: string;
+  severity?: "info" | "warning" | "error";
   setVisible: () => void;
 };
 
@@ -33,8 +33,8 @@ const AlertMessage = ({
       >
         <Alert
           variant="filled"
-          severity={"success" || severity}
-          sx={{ backgroundColor: "#24CA68" }}
+          severity={severity || "success"}
+          style={{ borderRadius: "15px" }}
         >
           <AlertTitle>{title}</AlertTitle>
           {message}

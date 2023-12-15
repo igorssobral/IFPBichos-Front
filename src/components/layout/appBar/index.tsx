@@ -10,18 +10,27 @@ import { Menu } from "../../ui/menu";
 import Badge from "@mui/material/Badge";
 import MailIcon from "@mui/icons-material/Mail";
 import { Logo } from "../../../assets/Logo";
-
-type props = {
+import { useNavigate } from "react-router";
+import { getLocalStorage } from "../../../utils/local-storage";
+import MenuPopupState from "../../ui/miniMenu";
+type Props = {
   title: string;
   visible: boolean;
-  visibleMenu: boolean;
 };
 
-export default function ButtonAppBar({ title, visible, visibleMenu }: props) {
-  const [isVisible, setIsVisible] = useState<boolean>(false);
-
+export default function ButtonAppBar({ title, visible }: Props) {
+  const [isVisible, setIsVisible] = useState(false);
+  const navigate = useNavigate();
+  const user = getLocalStorage();
+  function redirect() {
+    if (getLocalStorage() !== null) {
+      navigate("/");
+    } else {
+      navigate("/login");
+    }
+  }
   const toggleMenu = () => {
-    setIsVisible(!isVisible);
+    setIsVisible((prev) => !prev);
   };
 
   return (
@@ -47,15 +56,23 @@ export default function ButtonAppBar({ title, visible, visibleMenu }: props) {
           <Typography sx={{ flexGrow: 100 }}>
             <Logo />
           </Typography>
-          <Typography variant="h4" sx={{ flexGrow: 150 }}>
+          <Typography variant="h4" sx={{ position: "absolute", left: "45%" }}>
             {title}
           </Typography>
 
-
-
           {visible && (
             <>
-              <Button color="inherit">Login</Button>
+              {user !== null ? (
+                <Button color="inherit">
+                  {user.email}
+                  <MenuPopupState />
+                </Button>
+              ) : (
+                <Button color="inherit" onClick={redirect}>
+                  Login
+                </Button>
+              )}
+
               <Badge badgeContent={0} color="warning" style={{ gap: "20px" }}>
                 <MailIcon fontSize="medium" />
               </Badge>
