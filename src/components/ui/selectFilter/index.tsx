@@ -1,10 +1,8 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
-
-
 
 export default function SelectSmall() {
   const [filter, setFilter] = useState("Todos");

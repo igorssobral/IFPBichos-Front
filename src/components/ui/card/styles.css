@@ -27,9 +27,10 @@
 }
 
 .image{
-    width: 98%;
-    height: 205px;
+    width: 95%;
+    height: 170px;
     border-radius: 15px;
+    margin-top: 10px;
     overflow: hidden;
 }
 img{
