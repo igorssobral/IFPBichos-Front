@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import "./styles.css";
 import Radio from "@mui/material/Radio";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -6,38 +6,44 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import SearchIcon from "@mui/icons-material/Search";
 import SelectSmall from "../../components/ui/selectFilter";
 import { Box, Container, Grid, ListItem } from "@mui/material";
-import { Card } from "../../components/ui/card";
+import { CardModal } from "../../components/ui/card";
 import ButtonAppBar from "../../components/layout/appBar";
 import CustomTextField from "../../components/ui/customTextField";
 import { Campaign, CampaignRaw } from "../../services/@types/Campaign";
 import { ApiCampaign } from "../../services/data-base/CampaignService";
+import ResponsiveDialog from "../../components/ui/deleteAaction";
+
 import { useNavigate } from "react-router-dom";
+import AlertMessage from "../../components/layout/alert";
 export const Home = () => {
+  const { getAllCampaigns, deleteCampaign } = ApiCampaign();
+  const [campaigns, setCampaigns] = useState<CampaignRaw[]>();
+  const [deleteSucess, setDeleteSucess] = useState(false);
+  const [deleteDialog, setDeleteDialog] = useState(false);
+  const [idDelete, setidDelete] = useState<string | null>(null);
+  const navigate = useNavigate();
 
-const {getAllCampaigns} = ApiCampaign();
-const [campaigns, setCampaigns] = useState<CampaignRaw[]>();
-const navigate = useNavigate();
+  async function fetchCampaigns() {
+    const data = await getAllCampaigns();
+    console.log("🚀 ~ file: index.tsx:22 ~ fetchCampaigns ~ data:", data);
+    setCampaigns(data);
+  }
 
-async function fetchCampaigns(){
-  const data = await getAllCampaigns();
-  console.log("🚀 ~ file: index.tsx:22 ~ fetchCampaigns ~ data:", data)
-  setCampaigns(data);
-}
-  
+  useEffect(() => {
+    (async () => {
+      fetchCampaigns();
+      setidDelete(null);
+    })();
+  }, [deleteSucess]);
 
-useEffect(() => {
-  (async () => {
-    
-    fetchCampaigns();
-    console.log("🚀 ~ file: index.tsx:22 ~ fetchCampaigns ~ data:", campaigns)
-
-   
-  })();
-}, []);
-
-const handleEdit = (id: string) => {
-  navigate(`/editcampanha/${id}`);
-};
+  const handleEdit = (id: string) => {
+    navigate(`/editcampanha/${id}`);
+  };
+  async function handleDelete(id: string) {
+    const data = await deleteCampaign(`${id}`);
+    setDeleteSucess(!deleteSucess);
+    setidDelete(null);
+  }
 
   return (
     <>
@@ -88,6 +94,13 @@ const handleEdit = (id: string) => {
             <SearchIcon fontSize="large" color="disabled" />
           </ListItem>
         </Grid>
+        {deleteSucess &&   <AlertMessage
+            isVisible
+            setVisible={() => setDeleteSucess(false)}
+            message="Campanha excluida com sucesso!"
+            title="Sucesso"
+          />}
+      
       </Grid>
 
       <Container
@@ -105,12 +118,25 @@ const handleEdit = (id: string) => {
           }}
         >
           {campaigns?.map((campaign) => (
-      <Card key={campaign.id} campaign={campaign} onEdit={handleEdit}/>
-    ))}
-          
-          
+            <CardModal
+              key={campaign.id}
+              campaign={campaign}
+              onEdit={handleEdit}
+              onDelete={() => setidDelete(campaign.id)}
+            />
+          ))}
         </Box>
+
+        {idDelete && (
+          <ResponsiveDialog
+            isVisible={idDelete != null}
+            handleClosed={() => setidDelete(null)}
+            handleDelete={() => handleDelete(idDelete)}
+          />
+        )}
       </Container>
+
+      
     </>
   );
 };

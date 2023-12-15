@@ -9,8 +9,12 @@ import { ButtonGroup } from "../../../components/ui/button-group";
 import CustomTextField from "../../../components/ui/customTextField";
 import { ApiCampaign } from "../../../services/data-base/CampaignService";
 import { Box } from "@mui/material";
-import axios from "axios";
 import ButtonAppBar from "../../../components/layout/appBar";
+import Alert from "@mui/material/Alert";
+import AlertTitle from "@mui/material/AlertTitle";
+import Stack from "@mui/material/Stack";
+import Fade from "@mui/material/Fade";
+import AlertMessage from "../../../components/layout/alert";
 
 interface campaignForm {
   title: string;
@@ -22,7 +26,8 @@ interface campaignForm {
 }
 
 export const CreateCampanha = () => {
-  const { create } = ApiCampaign();
+  const { saveCampaign } = ApiCampaign();
+  const [createSucess, setCreateSucess] = useState(false);
   const [campaignForm, setCampaignForm] = useState<campaignForm>({
     title: "",
     description: "",
@@ -44,19 +49,16 @@ export const CreateCampanha = () => {
   };
 
   async function handleSaveCampaign(campaign: campaignForm) {
-    const data = await axios.post("http://localhost:8080/campaign", {
-      start: Date.now,
-      end: Date.now,
+    const Res = saveCampaign({
+      start: campaign.startDate,
+      end: campaign.finishedDate,
       title: campaign.title,
       description: campaign.description,
-      campaingStatus: true,
       image: campaign.image,
       collectionGoal: campaign.fundraisingGoal,
-      collectionPercentage: 50,
-      balance: 0,
-      undirectedBalance: 0,
     });
-    console.log("🚀 ~ file: index.tsx:62 ~ handleSaveCampaign ~ data:", data);
+    setCreateSucess(true);
+    
   }
 
   return (
@@ -78,6 +80,7 @@ export const CreateCampanha = () => {
             id="description"
             title="Descrição"
             label="Digite uma descrição"
+            multiline
             type="text"
             height="100px"
             value={campaignForm.description}
@@ -138,6 +141,15 @@ export const CreateCampanha = () => {
             onClick={handleCancelClick}
           />
         </ButtonGroup>
+
+        {createSucess && (
+          <AlertMessage
+            isVisible
+            setVisible={handleCancelClick}
+            message="Campanha criada com sucesso!"
+            title="Sucesso"
+          />
+        )}
       </Box>
     </>
   );

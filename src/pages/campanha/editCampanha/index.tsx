@@ -1,49 +1,81 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./styles.css";
 import { Title } from "../../../components/ui/tittle";
 import FormControl from "@mui/material/FormControl";
 import { Button } from "../../../components/ui/button";
 import { ButtonGroup } from "../../../components/ui/button-group";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import CustomTextField from "../../../components/ui/customTextField";
-import { Box } from "@mui/material";
+import { Box, Collapse } from "@mui/material";
+import Alert from "@mui/material/Alert";
 import ButtonAppBar from "../../../components/layout/appBar";
+import { ApiCampaign } from "../../../services/data-base/CampaignService";
+import { formatInputDate } from "../../../utils/format-date";
+import AlertMessage from "../../../components/layout/alert";
 
 interface campaignForm {
   title: string;
+  collectionGoal: number;
   description: string;
-  fundraisingGoal: number | string;
-  startDate: Date | string;
-  finishedDate: Date | string;
+  start: string;
+  end: string;
   image: File | null;
 }
 
 export const EditCampanha = () => {
+  const { getCampaignById, updateCampaign } = ApiCampaign();
+  const [editSucess, setEditsucess] = useState(false);
   const [campaignForm, setCampaignForm] = useState<campaignForm>({
-    title: "",
+    collectionGoal: 0,
     description: "",
-    fundraisingGoal: "",
-    startDate: "",
-    finishedDate: "",
+    end: "",
     image: null,
+    start: "",
+    title: "",
   });
+  const navigate = useNavigate();
+  const { id } = useParams();
+
   const handleChange = (field: keyof campaignForm, value: any) => {
     console.log(`Changing ${field} to ${value}`);
     setCampaignForm((prev) => ({ ...prev, [field]: value }));
   };
 
+  useEffect(() => {
+    (async () => {
+      const data = await getCampaignById(`${id}`);
 
-  const navigate = useNavigate();
+      if (data) {
+        const currencyCampaign = data;
+        const formattedCampaign = {
+          ...currencyCampaign,
+          start: formatInputDate(currencyCampaign.start),
+          end: formatInputDate(currencyCampaign.end),
+        };
+       
+        setCampaignForm(formattedCampaign);
+      }
+    })();
+  }, []);
+
+  async function updateCurrencyCampaign(updatedCampaign: any) {
+    const data = await updateCampaign(`${id}`, updatedCampaign);
+    setEditsucess(true);
+    
+  }
+ 
 
   const handleCancelClick = () => {
-    navigate('/campanhas');
+
+    navigate("/campanhas");
   };
 
   return (
     <>
-     <ButtonAppBar title="" visible visibleMenu={false}/>
-    <Box display={"flex"} flexDirection={"column"} alignItems={"center"}>
+
+      <ButtonAppBar title="" visible visibleMenu={false} />
       
+      <Box display={"flex"} flexDirection={"column"} alignItems={"center"}>
         <Title label="Editar Campanha" />
         <FormControl>
           <CustomTextField
@@ -60,39 +92,40 @@ export const EditCampanha = () => {
             title="Descrição"
             label="Digite uma descrição"
             type="text"
+            multiline
             height="100px"
             value={campaignForm.description}
             onChange={(value) => handleChange("description", value)}
             textFieldProps={{ InputProps: { disableUnderline: true } }}
           />
           <CustomTextField
-            id="fundraisingGoal"
+            id="collectionGoal"
             title="Meta de arrecadação"
             label="Digite uma meta"
             placeholder="R$"
             type="number"
-            value={campaignForm.fundraisingGoal}
-            onChange={(value) => handleChange("fundraisingGoal", value)}
+            value={campaignForm.collectionGoal}
+            onChange={(value) => handleChange("collectionGoal", value)}
             textFieldProps={{ InputProps: { disableUnderline: true } }}
           />
           <CustomTextField
-            id="startDate"
+            id="start"
             title="Data Inicio"
             label=" "
             type="date"
             inputLabelProps={false}
-            value={campaignForm.startDate}
-            onChange={(value) => handleChange("startDate", value)}
+            value={campaignForm.start}
+            onChange={(value) => handleChange("start", value)}
             textFieldProps={{ InputProps: { disableUnderline: true } }}
           />
           <CustomTextField
-            id="finishedDate"
+            id="end"
             title="Data Final"
             label=" "
             type="date"
             inputLabelProps={false}
-            value={campaignForm.finishedDate}
-            onChange={(value) => handleChange("finishedDate", value)}
+            value={campaignForm.end}
+            onChange={(value) => handleChange("end", value)}
             textFieldProps={{ InputProps: { disableUnderline: true } }}
           />
           <CustomTextField
@@ -100,13 +133,18 @@ export const EditCampanha = () => {
             title="Imagem"
             label=" "
             type="file"
-            value={campaignForm.image}
+            value={null}
             onChange={(value) => handleChange("image", value)}
             textFieldProps={{ InputProps: { disableUnderline: true } }}
           />
         </FormControl>
         <ButtonGroup>
-          <Button label="salvar" width="120px" headlight onClick={() => {console.log(campaignForm)}} />
+          <Button
+            label="salvar"
+            width="120px"
+            headlight
+            onClick={() => updateCurrencyCampaign(campaignForm)}
+          />
           <Button
             label="cancelar"
             width=""
@@ -114,8 +152,15 @@ export const EditCampanha = () => {
             onClick={handleCancelClick}
           />
         </ButtonGroup>
-      
-    </Box>
+
+        {editSucess &&  <AlertMessage
+            isVisible
+            setVisible={handleCancelClick}
+            message="Campanha editada com sucesso!"
+            title="Sucesso"
+          />}
+       
+      </Box>
     </>
   );
 };
