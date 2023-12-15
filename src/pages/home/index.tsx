@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState,useEffect} from "react";
 import "./styles.css";
 import Radio from "@mui/material/Radio";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -9,7 +9,36 @@ import { Box, Container, Grid, ListItem } from "@mui/material";
 import { Card } from "../../components/ui/card";
 import ButtonAppBar from "../../components/layout/appBar";
 import CustomTextField from "../../components/ui/customTextField";
+import { Campaign, CampaignRaw } from "../../services/@types/Campaign";
+import { ApiCampaign } from "../../services/data-base/CampaignService";
+import { useNavigate } from "react-router-dom";
 export const Home = () => {
+
+const {getAllCampaigns} = ApiCampaign();
+const [campaigns, setCampaigns] = useState<CampaignRaw[]>();
+const navigate = useNavigate();
+
+async function fetchCampaigns(){
+  const data = await getAllCampaigns();
+  console.log("🚀 ~ file: index.tsx:22 ~ fetchCampaigns ~ data:", data)
+  setCampaigns(data);
+}
+  
+
+useEffect(() => {
+  (async () => {
+    
+    fetchCampaigns();
+    console.log("🚀 ~ file: index.tsx:22 ~ fetchCampaigns ~ data:", campaigns)
+
+   
+  })();
+}, []);
+
+const handleEdit = (id: string) => {
+  navigate(`/editcampanha/${id}`);
+};
+
   return (
     <>
       <ButtonAppBar title="Campanhas" visible visibleMenu={false} />
@@ -75,12 +104,11 @@ export const Home = () => {
             gridTemplateColumns: "repeat(3,1fr)",
           }}
         >
-          <Card> </Card>
-          <Card> </Card>
-          <Card> </Card>
-          <Card> </Card>
-          <Card> </Card>
-          <Card> </Card>
+          {campaigns?.map((campaign) => (
+      <Card key={campaign.id} campaign={campaign} onEdit={handleEdit}/>
+    ))}
+          
+          
         </Box>
       </Container>
     </>

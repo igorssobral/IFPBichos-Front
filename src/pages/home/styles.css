@@ -1,11 +1,13 @@
 
 
 .filters{
+    width: auto;
     display: flex;  
     justify-content: space-evenly;   
     align-items: center;
     justify-content: center;
-    margin: 40px 15% 30px 15%;
+    margin: 40px 20% 30px 20%;
+  
     
 }
 
