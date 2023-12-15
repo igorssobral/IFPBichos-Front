@@ -9,23 +9,23 @@ import { Box, Container, Grid, ListItem } from "@mui/material";
 import { CardModal } from "../../components/ui/card";
 import ButtonAppBar from "../../components/layout/appBar";
 import CustomTextField from "../../components/ui/customTextField";
-import { Campaign, CampaignRaw } from "../../services/@types/Campaign";
+import { CampaignRaw } from "../../services/@types/Campaign";
 import { ApiCampaign } from "../../services/data-base/CampaignService";
 import ResponsiveDialog from "../../components/ui/deleteAaction";
-
-import { useNavigate } from "react-router-dom";
+import { getLocalStorage } from "../../utils/local-storage";
+import { useLocation, useNavigate } from "react-router";
 import AlertMessage from "../../components/layout/alert";
+
 export const Home = () => {
   const { getAllCampaigns, deleteCampaign } = ApiCampaign();
   const [campaigns, setCampaigns] = useState<CampaignRaw[]>();
   const [deleteSucess, setDeleteSucess] = useState(false);
-  const [deleteDialog, setDeleteDialog] = useState(false);
+  const [loggedSucess, setLoggedSucess] = useState(false);
   const [idDelete, setidDelete] = useState<string | null>(null);
   const navigate = useNavigate();
-
+  const location = useLocation();
   async function fetchCampaigns() {
     const data = await getAllCampaigns();
-    console.log("🚀 ~ file: index.tsx:22 ~ fetchCampaigns ~ data:", data);
     setCampaigns(data);
   }
 
@@ -36,9 +36,19 @@ export const Home = () => {
     })();
   }, [deleteSucess]);
 
+  useEffect(() => {
+    const additionalData = location.state;
+    if (additionalData) {
+      setLoggedSucess(additionalData.isLogged);
+    } else {
+      setLoggedSucess(false);
+    }
+  }, []);
+
   const handleEdit = (id: string) => {
     navigate(`/editcampanha/${id}`);
   };
+
   async function handleDelete(id: string) {
     const data = await deleteCampaign(`${id}`);
     setDeleteSucess(!deleteSucess);
@@ -47,7 +57,17 @@ export const Home = () => {
 
   return (
     <>
-      <ButtonAppBar title="Campanhas" visible visibleMenu={false} />
+      <ButtonAppBar title="Campanhas" visible />
+      {loggedSucess && (
+        <AlertMessage
+          isVisible
+          setVisible={() => setLoggedSucess(false)}
+          message={`Bem Vindo${
+            getLocalStorage() ? getLocalStorage().email : ""
+          }`}
+          title="Sucesso"
+        />
+      )}
 
       <Grid className="filters">
         <Grid xs>
@@ -94,13 +114,14 @@ export const Home = () => {
             <SearchIcon fontSize="large" color="disabled" />
           </ListItem>
         </Grid>
-        {deleteSucess &&   <AlertMessage
+        {deleteSucess && (
+          <AlertMessage
             isVisible
             setVisible={() => setDeleteSucess(false)}
             message="Campanha excluida com sucesso!"
             title="Sucesso"
-          />}
-      
+          />
+        )}
       </Grid>
 
       <Container
@@ -135,8 +156,6 @@ export const Home = () => {
           />
         )}
       </Container>
-
-      
     </>
   );
 };
