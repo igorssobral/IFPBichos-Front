@@ -8,7 +8,7 @@ Esse projeto é um site de doacão para pets em estado de vulnerabilidade no IFP
 
 ![](https://skillicons.dev/icons?i=react,ts,css,postgres)
 
-## Bibliotecas
+## 🛠️Bibliotecas
 
 ![MUI](https://img.shields.io/badge/MUI-%230081CB.svg?style=for-the-badge&logo=mui&logoColor=white)
 
