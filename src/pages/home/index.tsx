@@ -9,7 +9,7 @@ import { Box, Container, Grid, ListItem } from "@mui/material";
 import { CardModal } from "../../components/ui/card";
 import ButtonAppBar from "../../components/layout/appBar";
 import CustomTextField from "../../components/ui/customTextField";
-import { CampaignRaw } from "../../services/@types/Campaign";
+import { CampaignRaw } from "../../services/@types/campaign";
 import { ApiCampaign } from "../../services/data-base/CampaignService";
 import ResponsiveDialog from "../../components/ui/deleteAaction";
 import { getLocalStorage } from "../../utils/local-storage";
