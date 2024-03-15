@@ -1,51 +1,46 @@
 import React, { useState } from "react";
 import "./styles.css";
 import { ContainerModal } from "../../components/ui/container";
-import FormControl from "@mui/material/FormControl";
 import { Button } from "../../components/ui/button";
 import { Title } from "../../components/ui/tittle";
 import { useNavigate } from "react-router";
 import CustomTextField from "../../components/ui/customTextField";
 import { Box } from "@mui/material";
 import ButtonAppBar from "../../components/layout/appBar";
-// import { GoogleAuth } from "../../components/layout/googlelogin";
 import { login } from "../../services/auth";
-import { Credentials } from "../../services/@types/auth";
 import AlertMessage from "../../components/layout/alert";
-
-interface user {
-  email: string;
-  password: string;
-}
+import { useForm, Controller, SubmitHandler } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { LoginSchema, loginSchema } from "./schema";
 
 export const Login = () => {
+  const {
+    handleSubmit,
+    formState: { errors },
+    control,
+  } = useForm<LoginSchema>({
+    resolver: zodResolver(loginSchema),
+  });
+
   const [errorlogin, setErrorlogin] = useState(false);
-  const [user, setUser] = useState<Credentials>({
-    email: "",
-    password: "",
-  });
-  const [errors, setErrors] = useState({
-    email: "",
-    password: "",
-  });
 
   const navigate = useNavigate();
 
-  async function authenticate(data: Credentials) {
-    if (validateForm()) {
-      try {
-        const response = await login(data);
-        console.log(response);
-        handleCancelClick();
-      } catch (error) {
-        setErrorlogin(true);
-        console.log(error);
-      }
-    } else {
+  async function authenticate(data: LoginSchema) {
+    try {
+      const response = await login({
+        email: data.email,
+        password: data.password,
+      });
+      handleCancelClick();
+    } catch (error) {
       setErrorlogin(true);
-      console.log("Formulário inválido, corrija os erros.");
+      console.log(error);
     }
   }
+  const onSubmit: SubmitHandler<LoginSchema> = (data) => {
+    authenticate(data);
+  };
 
   const handleCancelClick = () => {
     const additionalData = {
@@ -54,37 +49,10 @@ export const Login = () => {
     };
     navigate("/campanhas", { state: additionalData });
   };
-  
-  const handleChange = (field: keyof user, value: any) => {
-    setUser((prev) => ({ ...prev, [field]: value }));
-    setErrors((prevErrors) => ({ ...prevErrors, [field]: "" }));
-  };
-
-  const validateForm = () => {
-    let isValid = true;
-
-    if (!user.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(user.email)) {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        email: "Digite um e-mail válido",
-      }));
-      isValid = false;
-    }
-
-    if (!user.password || user.password.length < 6) {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        password: "A senha deve ter pelo menos 6 caracteres",
-      }));
-      isValid = false;
-    }
-
-    return isValid;
-  };
 
   return (
     <>
-      <ButtonAppBar title="" visible={false}/>
+      <ButtonAppBar title="" visible={false} />
       <Box display={"flex"} flexDirection={"column"} alignItems={"center"}>
         {errorlogin && (
           <AlertMessage
@@ -98,37 +66,42 @@ export const Login = () => {
         <ContainerModal>
           <Title label="Login"></Title>
 
-          <FormControl>
-            <CustomTextField
-              id="email"
-              title="Email"
-              label="Digite seu email"
-              type="text"
-              value={user.email}
-              error={errors.email}
-              onChange={(value) => handleChange("email", value)}
-              textFieldProps={{ InputProps: { disableUnderline: true } }}
-            />
-            <CustomTextField
-              id="password"
-              title="Senha"
-              label="Digite sua senha"
-              type="password"
-              value={user.password}
-              error={errors.password}
-              onChange={(value) => handleChange("password", value)}
-              textFieldProps={{ InputProps: { disableUnderline: true } }}
-            />
-          </FormControl>
-          <Button
-            label="Entrar"
-            width="300px"
-            headlight
-            onClick={() => authenticate(user)}
-          />
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <Box display={"flex"} flexDirection={"column"}>
+              <Controller
+                control={control}
+                name="email"
+                render={({ field }) => (
+                  <CustomTextField
+                    id="email"
+                    title="Email"
+                    label="Digite seu email"
+                    type="text"
+                    helperText={errors.email?.message}
+                    {...field}
+                  />
+                )}
+              />
 
-          <span className="span_login">Esqueceu sua senha?</span>
-          {/* <div><GoogleAuth /></div> */}
+              <Controller
+                control={control}
+                name="password"
+                rules={{ required: false }}
+                render={({ field }) => (
+                  <CustomTextField
+                    id="password"
+                    title="Senha"
+                    label="Digite sua senha"
+                    type="password"
+                    helperText={errors.password?.message}
+                    {...field}
+                  />
+                )}
+              />
+              <Button label="Entrar" width="300px" type="submit" headlight />
+              <span className="span_login">Esqueceu sua senha?</span>
+            </Box>
+          </form>
         </ContainerModal>
       </Box>
     </>
