@@ -12,9 +12,9 @@ export const ContainerModal: React.FC<props> = ({ children }) => {
       style={{
         backgroundColor: "white",
         width: "500px",
-        height: "80vh",
+        height: "70vh",
         display: "flex",
-        marginTop: "20px",
+        marginTop: "50px",
         flexDirection: "column",
         alignItems: "center",
         borderRadius: "26px",
