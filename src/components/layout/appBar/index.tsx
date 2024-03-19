@@ -35,7 +35,7 @@ export default function ButtonAppBar({ title, visible }: Props) {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="fixed" style={{ backgroundColor: "#24CA68" }}>
+      <AppBar position="fixed" elevation={0} style={{ backgroundColor: "#24CA68" }}>
         <Toolbar>
           {visible && (
             <IconButton
