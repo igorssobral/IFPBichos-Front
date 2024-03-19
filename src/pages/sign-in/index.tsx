@@ -49,6 +49,9 @@ export const Login = () => {
     };
     navigate("/campanhas", { state: additionalData });
   };
+  const handleCreateAccount = () => {
+    navigate("/signup");
+  };
 
   return (
     <>
@@ -102,6 +105,12 @@ export const Login = () => {
               <span className="span_login">Esqueceu sua senha?</span>
             </Box>
           </form>
+          <div className="signup">
+            <p >
+            Ainda não tem conta?<a href="/signup">Cadastre-se</a>
+          </p>
+          </div>
+          
         </ContainerModal>
       </Box>
     </>
