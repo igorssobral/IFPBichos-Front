@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import CustomTextField from "../../components/ui/customTextField";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { Button } from "../../components/ui/button";
 import { ContainerModal } from "../../components/ui/container";
 import { Box } from "@mui/material";
@@ -25,13 +25,15 @@ const SignUp = () => {
   });
 
   const handleNextClick = async () => {
-    const isValid = await trigger();
-    console.log("🚀 ~ handleNextClick ~ isValid:", isValid);
+    const isValid = await trigger(["name","cpf","phone"]);
 
     if (isValid) {
       setShowAdditionalFields(!showAdditionalFields);
     }
   };
+
+  const onSubmit: SubmitHandler<SignUpSchema> = (data) => {    
+  }
 
   const handleBackClick = () => {
     navigate("/login");
@@ -44,7 +46,7 @@ const SignUp = () => {
         <ContainerModal>
           <Title label="Cadastro"></Title>
 
-          <form onSubmit={handleSubmit(() => {})}>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <Box display={"flex"} flexDirection={"column"}>
               {!showAdditionalFields && (
                 <>
@@ -81,14 +83,13 @@ const SignUp = () => {
                   <Controller
                     control={control}
                     name="phone"
-                    rules={{ required: false }}
                     render={({ field }) => (
                       <CustomTextField
                         id="phone"
                         title="Telefone"
                         label="Digite seu telefone"
                         type="text"
-                        helperText={errors.cpf?.message}
+                        helperText={errors.phone?.message}
                         {...field}
                       />
                     )}
@@ -169,7 +170,7 @@ const SignUp = () => {
                       label="Cadastrar"
                       headlight
                       width="150px"
-                      onClick={handleNextClick}
+                      type="submit"
                     />
                     <Button
                       label="voltar"
