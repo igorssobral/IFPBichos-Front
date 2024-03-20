@@ -33,7 +33,6 @@ export const CreateCampanha = () => {
   };
 
   async function handleSaveCampaign(campaign: CreateCampaignSchema) {
-
     const Res = saveCampaign({
       start: campaign.startDate,
       end: campaign.finishedDate,
@@ -64,8 +63,8 @@ export const CreateCampanha = () => {
               render={({ field }) => (
                 <CustomTextField
                   id="title"
-                  title="Titulo"
-                  label="Digite o titulo"
+                  label="Titulo"
+                  placeholder="Digite o titulo"
                   type="text"
                   helperText={errors?.title?.message}
                   {...field}
@@ -80,12 +79,13 @@ export const CreateCampanha = () => {
               render={({ field }) => (
                 <CustomTextField
                   id="description"
-                  title="Descrição"
-                  label="Digite uma descrição"
+                  label="Descrição"
+                  placeholder="Digite uma descrição"
                   multiline
                   type="text"
                   height="100px"
                   helperText={errors?.description?.message}
+                  
                   {...field}
                 />
               )}
@@ -97,9 +97,8 @@ export const CreateCampanha = () => {
               render={({ field }) => (
                 <CustomTextField
                   id="fundraisingGoal"
-                  title="Meta de arrecadação"
-                  label="Digite uma meta"
-                  placeholder="R$"
+                  label="Meta de arrecadação"
+                  placeholder="Digite uma meta"
                   type="number"
                   helperText={errors?.fundraisingGoal?.message}
                   {...field}
@@ -113,8 +112,7 @@ export const CreateCampanha = () => {
               render={({ field }) => (
                 <CustomTextField
                   id="startDate"
-                  title="Data Inicio"
-                  label=" "
+                  label="Data Inicio"
                   type="date"
                   inputLabelProps={false}
                   helperText={errors?.startDate?.message}
@@ -128,8 +126,7 @@ export const CreateCampanha = () => {
               render={({ field }) => (
                 <CustomTextField
                   id="finishedDate"
-                  title="Data Final"
-                  label=" "
+                  label="Data Final"
                   type="date"
                   inputLabelProps={false}
                   helperText={errors?.finishedDate?.message}
@@ -143,8 +140,7 @@ export const CreateCampanha = () => {
               render={({ field }) => (
                 <CustomTextField
                   id="file"
-                  title="Imagem"
-                  label=" "
+                  label="Imagem"
                   type="file"
                   helperText={errors?.file?.message}
                   {...field}

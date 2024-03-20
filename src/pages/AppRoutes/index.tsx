@@ -8,6 +8,7 @@ import { CreateCampanha } from "../campanha/createCampanha";
 import { Login } from "../sign-in";
 import { EditCampanha } from "../campanha/editCampanha";
 import { getLocalStorage } from "../../utils/local-storage";
+import SignUp from "../sign-up";
 
 const AppRouter = () => {
   const isAuthenticated = getLocalStorage();
@@ -19,6 +20,10 @@ const AppRouter = () => {
         <Route
           path="/login"
           element={isAuthenticated ? <Navigate to="/campanhas" /> : <Login />}
+        />
+        <Route
+          path="/signUp"
+          element={isAuthenticated ? <Navigate to="/signup" /> : <SignUp />}
         />
         <Route path="/campanhas" element={<Home />} />
         <Route

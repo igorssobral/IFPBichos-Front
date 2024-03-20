@@ -4,43 +4,42 @@ import TextField, { TextFieldProps } from "@mui/material/TextField";
 
 interface CustomTextFieldProps extends Omit<TextFieldProps, "error"> {
   id: string;
-  title: string;
   label: string;
+  placeholder?: string;
   type: string;
   multiline?: boolean;
   width?: string;
   height?: string;
-  placeholder?: string;
   inputLabelProps?: boolean;
   error?: boolean;
 }
 
 const CustomTextField: React.FC<CustomTextFieldProps> = ({
   id,
-  title,
   label,
+  placeholder,
   type,
   multiline,
   width,
   height,
-  placeholder,
   inputLabelProps,
   error,
-  ...props
+  helperText,
+  ...rest
 }) => (
   <>
-    <FormLabel label={title} htmlFor={id} />
+    <FormLabel label={label} htmlFor={id} />
     <TextField
       id={id}
       variant="outlined"
       size="small"
       type={type}
       multiline={multiline || false}
-      placeholder={label}
+      placeholder={placeholder}
       InputLabelProps={{ shrink: inputLabelProps }}
-      error={props.helperText ? true : false}
-      helperText={props.helperText}
-      {...props}
+      error={helperText ? true : false}
+      helperText={helperText}
+      {...rest}
       InputProps={{
         style: {
           width: width || "300px",

@@ -1,24 +1,50 @@
-
-.content{
+.content {
     display: flex;
     height: 100%;
     flex-direction: column;
     align-items: center;
+
     margin-top: 20px;
-    
+
 }
-.login_content{
+
+.login_content {
     display: flex;
     flex-direction: column;
     align-items: start;
     row-gap: 10px;
-    margin-top: 20px;
-    
+    margin-top: 100px;
+
 }
 
-.span_login{
+.span_login {
     font-size: 0.8rem;
     color: #24CA68;
     text-align: center;
 }
 
+.signup {
+    width: 100%;
+    display: flex;
+    margin-top: 150px;
+    justify-content: center;
+    align-items: center;
+}
+
+.signup p {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.signup a {
+    text-decoration: none;
+    color: #24CA68;
+    margin-left: 5px;
+}
+
+.buttons-signup{
+    display: flex;
+    gap: 10px;
+}

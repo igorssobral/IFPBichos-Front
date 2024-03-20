@@ -5,11 +5,12 @@ type props = {
   width?: string;
   label: string;
   headlight?: boolean;
+  disabled?: boolean;
   onClick?: () => void;
   type?: 'button' | 'submit';
 };
 
-export const Button = ({ width, label, headlight, onClick,type }: props) => {
+export const Button = ({ width, label, headlight,disabled, onClick,type }: props) => {
   return (
     <ButtonComponent
       style={{
@@ -26,6 +27,7 @@ export const Button = ({ width, label, headlight, onClick,type }: props) => {
       type={type}
       variant="contained"
       onClick={onClick}
+      disabled={disabled}
     >
       {label}
     </ButtonComponent>
