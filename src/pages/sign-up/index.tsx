@@ -9,6 +9,7 @@ import { SignUpSchema, signUpSchema } from "./schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import ButtonAppBar from "../../components/layout/appBar";
 import { useNavigate } from "react-router-dom";
+import { signup } from "../../services/auth";
 
 const SignUp = () => {
   const [showAdditionalFields, setShowAdditionalFields] = useState(false);
@@ -24,16 +25,43 @@ const SignUp = () => {
     resolver: zodResolver(signUpSchema),
   });
 
+  const handleCancelClick = () => {
+    const additionalData = {
+      key: "value",
+      isLogged: true,
+    };
+    navigate("/login");
+  };
+
   const handleNextClick = async () => {
-    const isValid = await trigger(["name","cpf","phone"]);
+    const isValid = await trigger(["name", "cpf", "phone"]);
 
     if (isValid) {
       setShowAdditionalFields(!showAdditionalFields);
     }
   };
 
-  const onSubmit: SubmitHandler<SignUpSchema> = (data) => {    
+  function handleregister(register: SignUpSchema) {
+
+    try {
+      const data = signup({
+      name: register.name,
+      phoneNumber: register.phone,
+      email: register.email,
+      login: register.email,
+      password: register.password,
+      CPF: register.cpf,
+    });
+    handleCancelClick();
+    } catch (error) {
+      
+    }
+    
   }
+
+  const onSubmit: SubmitHandler<SignUpSchema> = (data) => {
+    handleregister(data);
+  };
 
   const handleBackClick = () => {
     navigate("/login");
