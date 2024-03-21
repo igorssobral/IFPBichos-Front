@@ -10,9 +10,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import ButtonAppBar from "../../components/layout/appBar";
 import { useNavigate } from "react-router-dom";
 import { signup } from "../../services/auth";
+import AlertMessage from "../../components/layout/alert";
 
 const SignUp = () => {
   const [showAdditionalFields, setShowAdditionalFields] = useState(false);
+  const [registerSucess, setRegisterSucess] = useState(false);
 
   const navigate = useNavigate();
 
@@ -25,14 +27,7 @@ const SignUp = () => {
     resolver: zodResolver(signUpSchema),
   });
 
-  const handleCancelClick = () => {
-    const additionalData = {
-      key: "value",
-      isLogged: true,
-    };
-    navigate("/login");
-  };
-
+  
   const handleNextClick = async () => {
     const isValid = await trigger(["name", "cpf", "phone"]);
 
@@ -41,10 +36,10 @@ const SignUp = () => {
     }
   };
 
-  function handleregister(register: SignUpSchema) {
+  async function handleregister(register: SignUpSchema) {
 
     try {
-      const data = signup({
+      const data = await signup({
       name: register.name,
       phoneNumber: register.phone,
       email: register.email,
@@ -52,7 +47,9 @@ const SignUp = () => {
       password: register.password,
       CPF: register.cpf,
     });
-    handleCancelClick();
+    setRegisterSucess(true);
+    
+
     } catch (error) {
       
     }
@@ -211,6 +208,14 @@ const SignUp = () => {
             </Box>
           </form>
         </ContainerModal>
+
+        {registerSucess && <AlertMessage
+            isVisible
+            setVisible={handleBackClick}
+            message="Cadastro realizado com sucesso!"
+            title="Sucesso"
+          />}
+       
       </Box>
     </>
   );
