@@ -7,7 +7,7 @@ import LinearProgress, {
 import { Box, Grid } from "@mui/material";
 import "./styles.css";
 import { styled } from "@mui/material/styles";
-import { CampaignRaw } from "../../../services/@types/Campaign";
+import { CampaignRaw } from "../../../services/@types/campaign";
 import { Card } from "@mui/material";
 import { Typography } from "@mui/material";
 import { getLocalStorage } from "../../../utils/local-storage";
@@ -57,7 +57,7 @@ export const CardModal: React.FC<CardProps> = ({
         backgroundColor: "rgb(255, 255, 255)",
       }}
     >
-      {user !== null ? (
+      {user !== null && user.userRole == "ADMIN" ? (
         <Box className="icons">
           <EditIcon
             style={{ cursor: "pointer" }}
@@ -102,7 +102,7 @@ export const CardModal: React.FC<CardProps> = ({
           <Grid container display={"flex"} alignItems={"center"}>
             <Grid xs={10}>
               <Box>
-                <BorderLinearProgress variant="determinate" value={2} />
+                <BorderLinearProgress variant="determinate" value={(campaign.balance / campaign.collectionGoal) * 100} />
               </Box>
             </Grid>
             <Grid xs>
@@ -113,7 +113,7 @@ export const CardModal: React.FC<CardProps> = ({
                 fontWeight="bold"
                 fontFamily={"Lato, sans-serif"}
               >
-                {`${campaign.balance}%`}
+                {`${(campaign.balance / campaign.collectionGoal) * 100}%`}
               </Typography>
             </Grid>
           </Grid>
