@@ -53,7 +53,15 @@ export const EditCampanha = () => {
   }, []);
 
   async function updateCurrencyCampaign(updatedCampaign: any) {
-    const data = await updateCampaign(`${id}`, updatedCampaign);
+    const data = await updateCampaign(`${id}`, 
+    {
+      start: updatedCampaign.startDate,
+      end: updatedCampaign.finishedDate,
+      title: updatedCampaign.title,
+      description: updatedCampaign.description,
+      image: updatedCampaign.file,
+      collectionGoal: updatedCampaign.fundraisingGoal,
+    });
     setEditsucess(true);
   }
 
@@ -131,6 +139,7 @@ export const EditCampanha = () => {
                   type="date"
                   inputLabelProps={false}
                   helperText={errors?.startDate?.message}
+                  disabled={true}
                   {...field}
                 />
               )}
