@@ -29,7 +29,7 @@ export const Login = () => {
   async function authenticate(data: LoginSchema) {
     try {
       const response = await login({
-        email: data.email,
+        login: data.login,
         password: data.password,
       });
       handleCancelClick();
@@ -73,14 +73,14 @@ export const Login = () => {
             <Box display={"flex"} flexDirection={"column"}>
               <Controller
                 control={control}
-                name="email"
+                name="login"
                 render={({ field }) => (
                   <CustomTextField
                     id="email"
                     title="Email"
                     label="Digite seu email"
                     type="text"
-                    helperText={errors.email?.message}
+                    helperText={errors.login?.message}
                     {...field}
                   />
                 )}
