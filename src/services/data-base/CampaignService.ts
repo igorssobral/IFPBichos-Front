@@ -1,11 +1,24 @@
 import axios from "axios";
+import { getLocalStorage } from "../../utils/local-storage";
 
 export const ApiCampaign = () => {
   const URL = import.meta.env.VITE_APP_DB_URL;
+  const localStorageData = getLocalStorage();
+  const token = localStorageData ? localStorageData.token : null;
+
+  const config = {
+    headers: {
+      Authorization: token ? `Bearer ${token}` : undefined,
+    },
+  };
 
   const saveCampaign = async (campaignData: any) => {
     try {
-      const response = await axios.post(`${URL}/campaign`, campaignData);
+      const response = await axios.post(
+        `${URL}/campaign`,
+        campaignData,
+        config
+      );
 
       return response.data;
     } catch (error) {
@@ -27,7 +40,8 @@ export const ApiCampaign = () => {
     try {
       const response = await axios.put(
         `${URL}/campaign/${campaignId}`,
-        updatedData
+        updatedData,
+        config
       );
       return response.data;
     } catch (error) {
@@ -37,16 +51,18 @@ export const ApiCampaign = () => {
   };
   const deleteCampaign = async (campaignId: any) => {
     try {
-      const response = await axios.delete(`${URL}/campaign/${campaignId}`);
+      const response = await axios.delete(
+        `${URL}/campaign/${campaignId}`,
+        config
+      );
       return response.data;
     } catch (error) {
-      console.error("Erro ao excluir a campanha:", error);
-      throw error;
+      return error;
     }
   };
   const getCampaignById = async (campaignId: string) => {
     try {
-      const response = await axios.get(`${URL}/campaign/${campaignId}`);
+      const response = await axios.get(`${URL}/campaign/${campaignId}`,config);
       return response.data;
     } catch (error) {
       console.error("Erro ao buscar campanha por ID:", error);
