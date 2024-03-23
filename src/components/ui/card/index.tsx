@@ -47,6 +47,7 @@ export const CardModal: React.FC<CardProps> = ({
 
   return (
     <Card
+    
       style={{
         width: "300px",
         height: "420px",
@@ -56,9 +57,10 @@ export const CardModal: React.FC<CardProps> = ({
         borderRadius: "15px",
         backgroundColor: "rgb(255, 255, 255)",
       }}
+      
     >
-      {user !== null && user.userRole == "ADMIN" ? (
-        <Box className="icons">
+      {user !== null && user.roles == "ADMIN" ? (
+        <Box className="icons"  paddingX={1}>
           <EditIcon
             style={{ cursor: "pointer" }}
             color="success"
@@ -74,23 +76,25 @@ export const CardModal: React.FC<CardProps> = ({
         " "
       )}
 
-      <div className="image">
+      <Box className="image">
         <img
           src={campaign.image || "src/assets/dog.jpg"}
           alt={campaign.title}
         />
-      </div>
+      </Box>
 
-      <Box className="infor_content">
+      <Box className="infor_content" display={"flex"} justifyContent={"center"}>
         <Typography
           variant="h4"
-          fontSize={"1.9rem"}
+          width={"90%"}
+          textAlign={"center"}
+          fontSize={"1.6rem"}
           fontFamily={"Lato, sans-serif"}
         >
           {campaign.title}
         </Typography>
 
-        <Box marginTop={"10px"} width={"90%"}>
+        <Box marginTop={3} width={"89%"}>
           <Typography
             variant="h6"
             fontSize={"1.1rem"}
@@ -109,8 +113,8 @@ export const CardModal: React.FC<CardProps> = ({
               <Typography
                 marginLeft={"5px"}
                 variant="h3"
-                fontSize={"1.2rem"}
-                fontWeight="bold"
+                fontSize={"1.1rem"}
+               
                 fontFamily={"Lato, sans-serif"}
               >
                 {`${(campaign.balance / campaign.collectionGoal) * 100}%`}
