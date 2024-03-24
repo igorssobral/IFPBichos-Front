@@ -1,29 +1,52 @@
 import axios from "axios";
 import { Credentials } from "./@types/auth";
+import { getToken } from "../utils/auth-utils";
 
-export const login = async (credentials: Credentials): Promise<any> => {
-  const URL = import.meta.env.VITE_APP_DB_URL;
-  try {
-    const response = await axios.post(`${URL}/auth/login`, credentials);
+const URL = import.meta.env.VITE_APP_DB_URL;
 
-    localStorage.setItem("user", JSON.stringify(response.data));
+export const login = (credentials: Credentials): Promise<any> => {
+  return new Promise((resolve, reject) => {
+    axios
+      .post(`${URL}/auth/login`, credentials)
+      .then((response) => {
+        localStorage.setItem("user", JSON.stringify(response.data));
+        resolve(response.data);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};
 
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
+export const signup = (credentials: any): Promise<any> => {
+  return new Promise((resolve, reject) => {
+    axios
+      .post(`${URL}/auth/userRegistration`, credentials)
+      .then(() => {
+        resolve("Cadastro realizado com sucesso!");
+      })
+      .catch(() => {
+        reject("Cadastro não realizaado, tente novamente!");
+      });
+  });
+};
+export const isValidToken = (): Promise<any> => {
+  const token = getToken();
+  return new Promise((resolve, reject) => {
+    axios
+      .post(`${URL}/auth/isValidToken`, null, {
+        params: {
+          token: token
+        }
+      })
+      .then((response) => {
+        resolve(response.data);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
 };
 
 
-export const signup = async (credentials: any): Promise<any> => {
-  const URL = import.meta.env.VITE_APP_DB_URL;
-  try {
-    const response = await axios.post(`${URL}/auth/userRegistration`, credentials);
 
-  
-
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
