@@ -32,10 +32,10 @@ export const Login = () => {
         login: data.login,
         password: data.password,
       });
+
       handleCancelClick();
     } catch (error) {
       setErrorlogin(true);
-      console.log(error);
     }
   }
   const onSubmit: SubmitHandler<LoginSchema> = (data) => {
