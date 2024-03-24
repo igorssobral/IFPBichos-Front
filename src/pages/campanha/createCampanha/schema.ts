@@ -26,7 +26,7 @@ export const createCampaignSchema = z.object({
       required_error: "Escolha uma data!",
       invalid_type_error: "Escolha uma data",
     })
-    .refine((data) => data > new Date(), { message: "Data Inválida" }),
+    .refine((data) => data < new Date(), { message: "Data Inválida" }),
   finishedDate: z.coerce
     .date({
       required_error: "Escolha uma data!",

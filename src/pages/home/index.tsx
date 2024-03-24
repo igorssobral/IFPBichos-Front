@@ -70,14 +70,14 @@ export const Home = () => {
       )}
 
       <Grid className="filters">
-        <Grid xs>
+        <Grid >
           <ListItem>
             {" "}
             Filtros:
             <SelectSmall />
           </ListItem>
         </Grid>
-        <Grid xs>
+        <Grid >
           <ListItem>
             <FormControlLabel
               value="end"
@@ -87,7 +87,7 @@ export const Home = () => {
           </ListItem>
         </Grid>
 
-        <Grid xs>
+        <Grid >
           <ListItem>
             <FormControlLabel
               value="start"
@@ -96,7 +96,7 @@ export const Home = () => {
             />
           </ListItem>
         </Grid>
-        <Grid xs>
+        <Grid >
           <ListItem>
             <CustomTextField
               label=" "

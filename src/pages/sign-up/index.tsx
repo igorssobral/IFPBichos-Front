@@ -12,9 +12,12 @@ import { useNavigate } from "react-router-dom";
 import { signup } from "../../services/auth";
 import AlertMessage from "../../components/layout/alert";
 
+
+//Página de cadastro ddo usuário
 const SignUp = () => {
   const [showAdditionalFields, setShowAdditionalFields] = useState(false);
-  const [registerSucess, setRegisterSucess] = useState(false);
+  const [registerResponse, setRegisterResponse] = useState();
+  const [registerError, setRegisterError] = useState();
 
   const navigate = useNavigate();
 
@@ -27,37 +30,29 @@ const SignUp = () => {
     resolver: zodResolver(signUpSchema),
   });
 
-  
   const handleNextClick = async () => {
-    const isValid = await trigger(["name", "cpf", "phone"]);
+    const isValid = await trigger(["name", "CPF", "phoneNumber"]);
 
     if (isValid) {
       setShowAdditionalFields(!showAdditionalFields);
     }
   };
 
-  async function handleregister(register: SignUpSchema) {
-
-    try {
-      const data = await signup({
-      name: register.name,
-      phoneNumber: register.phone,
-      email: register.email,
+  async function handleRegister(register: SignUpSchema) {
+    const data = await signup({
+      ...register,
       login: register.email,
-      password: register.password,
-      CPF: register.cpf,
-    });
-    setRegisterSucess(true);
-    
-
-    } catch (error) {
-      
-    }
-    
+    })
+      .then((response) => {
+        setRegisterResponse(response);
+      })
+      .catch((error)=>{
+        setRegisterError(error);
+      });
   }
 
   const onSubmit: SubmitHandler<SignUpSchema> = (data) => {
-    handleregister(data);
+    handleRegister(data);
   };
 
   const handleBackClick = () => {
@@ -92,29 +87,31 @@ const SignUp = () => {
 
                   <Controller
                     control={control}
-                    name="cpf"
+                    name="CPF"
                     render={({ field }) => (
+                    
                       <CustomTextField
                         id="cpf"
                         title="CPF"
                         label="Digite seu CPF"
                         type="text"
-                        helperText={errors.cpf?.message}
+                        helperText={errors.CPF?.message}
                         {...field}
                       />
-                    )}
+                    
+                     )}
                   />
 
                   <Controller
                     control={control}
-                    name="phone"
+                    name="phoneNumber"
                     render={({ field }) => (
                       <CustomTextField
                         id="phone"
                         title="Telefone"
                         label="Digite seu telefone"
                         type="text"
-                        helperText={errors.phone?.message}
+                        helperText={errors.phoneNumber?.message}
                         {...field}
                       />
                     )}
@@ -209,12 +206,24 @@ const SignUp = () => {
           </form>
         </ContainerModal>
 
-        {registerSucess && <AlertMessage
+        {registerResponse && (
+          <AlertMessage
             isVisible
             setVisible={handleBackClick}
-            message="Cadastro realizado com sucesso!"
+            message={registerResponse}
             title="Sucesso"
-          />}
+          />
+        ) }
+
+        {registerError && (
+          <AlertMessage
+            isVisible
+            setVisible={()=>{}}
+            message={registerError}
+            title="Erro"
+            severity="error"
+          />
+        ) }
        
       </Box>
     </>

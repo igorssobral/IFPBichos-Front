@@ -87,7 +87,7 @@ export const Menu = ({ isVisible }: props) => {
             </Typography>
           </ListItem>
 
-          {getLocalStorage() !== null && getLocalStorage().userRole == "ADMIN" ? (
+          {getLocalStorage()?.userRole === "ADMIN" ? (
             <List>
               <ListItem
                 button

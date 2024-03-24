@@ -23,7 +23,6 @@ export const CardModal: React.FC<CardProps> = ({
   onEdit,
   onDelete,
 }) => {
-  const user = getLocalStorage();
 
   const handleEditClick = () => {
     onEdit(campaign.id);
@@ -45,6 +44,8 @@ export const CardModal: React.FC<CardProps> = ({
     },
   }));
 
+  
+
   return (
     <Card
     
@@ -57,10 +58,9 @@ export const CardModal: React.FC<CardProps> = ({
         borderRadius: "15px",
         backgroundColor: "rgb(255, 255, 255)",
       }}
-      
     >
-      {user !== null && user.roles == "ADMIN" ? (
-        <Box className="icons"  paddingX={1}>
+      {getLocalStorage()?.userRole === "ADMIN" ? (
+        <Box className="icons" paddingX={1}>
           <EditIcon
             style={{ cursor: "pointer" }}
             color="success"
@@ -106,7 +106,10 @@ export const CardModal: React.FC<CardProps> = ({
           <Grid container display={"flex"} alignItems={"center"}>
             <Grid xs={10}>
               <Box>
-                <BorderLinearProgress variant="determinate" value={(campaign.balance / campaign.collectionGoal) * 100} />
+                <BorderLinearProgress
+                  variant="determinate"
+                  value={(campaign.balance / campaign.collectionGoal) * 100}
+                />
               </Box>
             </Grid>
             <Grid xs>
@@ -114,7 +117,6 @@ export const CardModal: React.FC<CardProps> = ({
                 marginLeft={"5px"}
                 variant="h3"
                 fontSize={"1.1rem"}
-               
                 fontFamily={"Lato, sans-serif"}
               >
                 {`${(campaign.balance / campaign.collectionGoal) * 100}%`}
