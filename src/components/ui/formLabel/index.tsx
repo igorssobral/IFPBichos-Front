@@ -7,7 +7,7 @@ type props = {
 };
 export const FormLabel = ({ label, htmlFor }: props) => {
   return (
-    <FormLabels style={{ margin: "20px 0px 5px 0px" }} htmlFor={htmlFor}>
+    <FormLabels style={{ margin: "15px 0px 5px 0px" }} htmlFor={htmlFor}>
       {label}
     </FormLabels>
   );
