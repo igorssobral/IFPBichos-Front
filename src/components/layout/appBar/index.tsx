@@ -35,7 +35,11 @@ export default function ButtonAppBar({ title, visible }: Props) {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="fixed" elevation={0} style={{ backgroundColor: "#24CA68" }}>
+      <AppBar
+        position="fixed"
+        elevation={0}
+        style={{ backgroundColor: "#24CA68" }}
+      >
         <Toolbar>
           {visible && (
             <IconButton
@@ -64,7 +68,7 @@ export default function ButtonAppBar({ title, visible }: Props) {
             <>
               {user !== null ? (
                 <Button color="inherit">
-                  {user.email}
+                  {user.user}
                   <MenuPopupState />
                 </Button>
               ) : (
