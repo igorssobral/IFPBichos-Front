@@ -27,7 +27,6 @@ export const formatDatetime = (date: Date) => {
 }
 
 export const formatInputDate =(inputDate: string): string =>{
-    console.log("🚀 ~ file: format-date.ts:35 ~ formatInputDate ~ inputDate:", inputDate)
     const parts = inputDate;
     const formattedDate = `${parts[0]}-${String(parts[1]).padStart(2, '0')}-${String(parts[2]).padStart(2, '0')}`;
    
