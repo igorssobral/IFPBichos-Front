@@ -1,9 +1,9 @@
 .filters {
-    width: 80%;
+    width: 90%;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 5%;
+    gap: 10%;
     margin: 50px auto;
 
 }
@@ -11,6 +11,8 @@
     .filters{
         width: 90%;
         gap: 0;
+        flex-direction: column;
+        
     }
 }
 
