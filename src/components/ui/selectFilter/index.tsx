@@ -13,12 +13,9 @@ export default function SelectSmall() {
 
   return (
     <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-      <InputLabel id="demo-select-small-label">Filtro</InputLabel>
       <Select
-        labelId="demo-select-small-label"
-        id="demo-select-small"
         value={filter}
-        label="Todos"
+        
         onChange={handleChange}
       >
         <MenuItem value="Todos">Todos</MenuItem>
