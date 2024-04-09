@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Fade, Stack, Alert, AlertTitle } from "@mui/material";
+import { Fade, Stack, Alert, AlertTitle, Snackbar, Grow, Zoom } from "@mui/material";
 
 type props = {
   title: string;
@@ -22,25 +22,25 @@ const AlertMessage = ({
     setTimeout(() => {
       setIsVisibles(!isVisibles);
       setVisible();
-    }, 1500);
+    }, 2000);
   }, [isVisible]);
 
   return (
-    <Fade in={isVisibles} timeout={1500}>
-      <Stack
-        sx={{ width: "fit-content", position: "absolute", right: "10px" }}
-        spacing={2}
-      >
+    <Zoom in={isVisibles} style={{marginTop:"70px"}} >
+     
+        <Snackbar open={isVisible} anchorOrigin={{ vertical: 'top', horizontal: 'right' }} >
         <Alert
           variant="filled"
+          
           severity={severity || "success"}
-          style={{ borderRadius: "15px" }}
+          style={{ borderRadius: "10px" }}
         >
           <AlertTitle>{title}</AlertTitle>
           {message}
         </Alert>
-      </Stack>
-    </Fade>
+        </Snackbar>
+     
+    </Zoom>
   );
 };
 
