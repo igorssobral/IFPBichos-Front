@@ -1,27 +1,36 @@
 import React, { useState } from "react";
+
 import AppBar from "@mui/material/AppBar";
+import Badge from "@mui/material/Badge";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import { Grid } from "@mui/material";
+import IconButton from "@mui/material/IconButton";
+import { Logo } from "../../../assets/Logo";
+import MailIcon from "@mui/icons-material/Mail";
+import { Menu } from "../../ui/menu";
+import MenuIcon from "@mui/icons-material/Menu";
+import MenuPopupState from "../../ui/miniMenu";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
-import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
-import { Menu } from "../../ui/menu";
-import Badge from "@mui/material/Badge";
-import MailIcon from "@mui/icons-material/Mail";
-import { Logo } from "../../../assets/Logo";
-import { useNavigate } from "react-router";
 import { getLocalStorage } from "../../../utils/local-storage";
-import MenuPopupState from "../../ui/miniMenu";
+import { useNavigate } from "react-router";
+
 type Props = {
   title: string;
   visible: boolean;
 };
 
 export default function ButtonAppBar({ title, visible }: Props) {
-  const [isVisible, setIsVisible] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  const openMenu = () => {
+    setDrawerOpen(true);
+  };
+
   const navigate = useNavigate();
   const user = getLocalStorage();
+
   function redirect() {
     if (getLocalStorage() !== null) {
       navigate("/");
@@ -29,63 +38,116 @@ export default function ButtonAppBar({ title, visible }: Props) {
       navigate("/login");
     }
   }
-  const toggleMenu = () => {
-    setIsVisible((prev) => !prev);
-  };
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box>
       <AppBar
         position="fixed"
         elevation={0}
-        style={{ backgroundColor: "#24CA68" }}
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          backgroundColor: "#24CA68",
+          height: "70px",
+        }}
       >
-        <Toolbar>
+        <Toolbar sx={{ display: "flex", alignItems: "center" }}>
           {visible && (
             <IconButton
               size="large"
               edge="start"
               color="inherit"
               aria-label="menu"
-              sx={{ mr: 2 }}
-              onClick={toggleMenu}
+              onClick={openMenu}
             >
               <MenuIcon />
             </IconButton>
           )}
-          <Typography variant="h4" component="div" sx={{ flexGrow: 1 }}>
-            IFPBichos
-          </Typography>
 
-          <Typography sx={{ flexGrow: 100 }}>
-            <Logo />
-          </Typography>
-          <Typography variant="h4" sx={{ position: "absolute", left: "45%" }}>
-            {title}
-          </Typography>
+          <Grid
+            display={"flex"}
+            flexDirection={{ xs: "column-reverse", lg: "row" }}
+            gap={{ lg: 1 }}
+            alignItems={"center"}
+            justifyContent={"center"}
+          >
+            <Typography
+              fontSize={{ lg: 30, xs: 15 }}
+              component="div"
+              sx={{ flexGrow: 1 }}
+            >
+              IFPBichos
+            </Typography>
+
+            <Typography width={{ lg: "80px", xs: "50px" }}>
+              <Logo />
+            </Typography>
+          </Grid>
+
+          <Grid
+            display={"flex"}
+            gap={{ lg: 1 }}
+            alignItems={"center"}
+            justifyContent={"center"}
+            marginLeft={
+              title.length > 0
+                ? {
+                    lg: "calc(50% - 22rem)",
+                    xs: "calc(50% - 9rem)",
+                  }
+                : {
+                    lg: "calc(50% - 13rem)",
+                    xs: "calc(50% - 1.8rem)",
+                  }
+            }
+          >
+            <Typography fontSize={{ lg: 30, xs: 21 }}>{title}</Typography>
+          </Grid>
 
           {visible && (
             <>
               {user !== null ? (
-                <Button color="inherit">
-                  {user.user}
-                  <MenuPopupState />
-                </Button>
-              ) : (
-                <Button color="inherit" onClick={redirect}>
-                  Login
-                </Button>
-              )}
+                <Grid
+                  display={"flex"}
+                  alignItems={"center"}
+                  marginLeft={{
+                    lg: "calc(50% - 25rem)",
+                    xs: "calc(50% - 18rem)",
+                  }}
+                >
+                  <Typography visibility={{ xs: "hidden", md: "visible" }}>
+                    {user.user}
+                  </Typography>
 
-              <Badge badgeContent={0} color="warning" style={{ gap: "20px" }}>
-                <MailIcon fontSize="medium" />
-              </Badge>
+                  <MenuPopupState />
+                  {user != null && (
+                    <Badge badgeContent={0} color="warning">
+                      <MailIcon fontSize="medium" />
+                    </Badge>
+                  )}
+                </Grid>
+              ) : (
+                <Grid
+                  display={"flex"}
+                  alignItems={"center"}
+                  position={"fixed"}
+                  gap={0}
+                  left={{
+                    xs: "75%",
+                    md: "93%",
+                  }}
+                >
+                  <Button color="inherit" onClick={redirect}>
+                    Login
+                  </Button>
+                </Grid>
+              )}
             </>
           )}
         </Toolbar>
       </AppBar>
 
-      {isVisible && <Menu isVisible={isVisible} />}
+      <Menu open={drawerOpen} setOpen={setDrawerOpen} />
     </Box>
   );
 }
