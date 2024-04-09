@@ -1,34 +1,41 @@
-import React from "react";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import "./styles.css";
+
+import { Box, Grid } from "@mui/material";
 import LinearProgress, {
   linearProgressClasses,
 } from "@mui/material/LinearProgress";
-import { Box, Grid } from "@mui/material";
-import "./styles.css";
-import { styled } from "@mui/material/styles";
+
 import { CampaignRaw } from "../../../services/@types/campaign";
 import { Card } from "@mui/material";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import EditIcon from "@mui/icons-material/Edit";
+import { Navigate } from "react-router-dom";
+import React from "react";
 import { Typography } from "@mui/material";
 import { getLocalStorage } from "../../../utils/local-storage";
+import { styled } from "@mui/material/styles";
 
 type CardProps = {
   campaign: CampaignRaw;
   onEdit: (id: string) => void;
   onDelete: (id: string) => void;
+  onView: (id: string) => void;
 };
 
 export const CardModal: React.FC<CardProps> = ({
   campaign,
   onEdit,
   onDelete,
+  onView,
 }) => {
-
   const handleEditClick = () => {
     onEdit(campaign.id);
   };
   const handleDeleteClick = () => {
     onDelete(campaign.id);
+  };
+  const handleViewCampaign = () => {
+    onView(campaign.id);
   };
 
   const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
@@ -44,11 +51,8 @@ export const CardModal: React.FC<CardProps> = ({
     },
   }));
 
-  
-
   return (
     <Card
-    
       style={{
         width: "300px",
         height: "420px",
@@ -59,7 +63,7 @@ export const CardModal: React.FC<CardProps> = ({
         backgroundColor: "rgb(255, 255, 255)",
       }}
     >
-      {getLocalStorage()?.userRole === "ADMIN" ? (
+      {getLocalStorage()?.userRole == "ADMIN" ? (
         <Box className="icons" paddingX={1}>
           <EditIcon
             style={{ cursor: "pointer" }}
@@ -76,7 +80,7 @@ export const CardModal: React.FC<CardProps> = ({
         " "
       )}
 
-      <Box className="image">
+      <Box className="image" onClick={handleViewCampaign}>
         <img
           src={campaign.image || "src/assets/dog.jpg"}
           alt={campaign.title}
@@ -86,8 +90,12 @@ export const CardModal: React.FC<CardProps> = ({
       <Box className="infor_content" display={"flex"} justifyContent={"center"}>
         <Typography
           variant="h4"
-          width={"90%"}
+          width={"95%"}
+          maxHeight={65}
+          whiteSpace={"nowrap"}
+          overflow={"clip"}
           textAlign={"center"}
+          textOverflow={"ellipsis"}
           fontSize={"1.6rem"}
           fontFamily={"Lato, sans-serif"}
         >
@@ -104,7 +112,7 @@ export const CardModal: React.FC<CardProps> = ({
             Meta: R${campaign.collectionGoal.toFixed(2)}
           </Typography>
           <Grid container display={"flex"} alignItems={"center"}>
-            <Grid xs={10}>
+            <Grid width={"70%"}>
               <Box>
                 <BorderLinearProgress
                   variant="determinate"
@@ -112,14 +120,18 @@ export const CardModal: React.FC<CardProps> = ({
                 />
               </Box>
             </Grid>
-            <Grid xs>
+            <Grid>
               <Typography
-                marginLeft={"5px"}
+                marginLeft={1}
                 variant="h3"
                 fontSize={"1.1rem"}
+                fontWeight={"bold"}
                 fontFamily={"Lato, sans-serif"}
               >
-                {`${(campaign.balance / campaign.collectionGoal) * 100}%`}
+                {`${(
+                  (campaign.balance / campaign.collectionGoal) *
+                  100
+                ).toFixed(2)}%`}
               </Typography>
             </Grid>
           </Grid>
