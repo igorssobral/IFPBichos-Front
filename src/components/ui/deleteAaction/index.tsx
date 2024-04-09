@@ -47,9 +47,9 @@ export default function ResponsiveDialog({
         </DialogContent>
         <DialogActions>
           <ButtonGroup>
-            <Button label="Não" width="70px" onClick={handleClose} />
+            <Button label="Não" width="90px" onClick={handleClose} />
 
-            <Button label="Sim" headlight width="70px" onClick={handleDelete} />
+            <Button label="Sim" headlight width="90px" onClick={handleDelete} />
           </ButtonGroup>
         </DialogActions>
       </Dialog>
