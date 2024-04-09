@@ -16,7 +16,7 @@ export const Button = ({ width, label, headlight,disabled, onClick,type }: props
       style={{
         width: `${width}`,
         height: "40px",
-        borderRadius: 15,
+        borderRadius: 11,
         backgroundColor: `${headlight ? "#24CA68" : "#404040"}`,
         marginTop: "20px",
         paddingTop: "10px",
