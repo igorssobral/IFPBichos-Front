@@ -23,6 +23,7 @@ export const Home = () => {
   const [campaigns, setCampaigns] = useState<CampaignRaw[]>();
   const [deleteSucess, setDeleteSucess] = useState(false);
   const [loggedSucess, setLoggedSucess] = useState(false);
+  const [isChecked, setIsChecked] = useState(false);
   const [idDelete, setidDelete] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
@@ -51,6 +52,19 @@ export const Home = () => {
 
   const handleEdit = (id: string) => {
     navigate(`/editcampanha/${id}`);
+  };
+  function handleChecked() {
+    setIsChecked(false);
+    fetchCampaigns();
+    
+  }
+  
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setIsChecked(event.target.checked);
+       
+      setCampaigns(sortByRevenueDesc());
+    
+    
   };
 
   const handleViewCampaign = (id: string) => {
@@ -86,6 +100,10 @@ export const Home = () => {
         )
       : campaigns;
 
+  const sortByRevenueDesc = () => {
+    return campaigns?.sort((a, b) => (b.balance / b.collectionGoal * 100) - (a.balance / a.collectionGoal * 100));
+  };
+
   return (
     <Container>
       <ButtonAppBar title="Campanhas" visible />
@@ -93,7 +111,7 @@ export const Home = () => {
         <AlertMessage
           isVisible
           setVisible={() => setLoggedSucess(false)}
-          message={`Bem Vindo ${getLocalStorage().user}`}
+          message={`Bem Vindo  ${getLocalStorage().user}`}
           title="Sucesso"
         />
       )}
@@ -119,7 +137,13 @@ export const Home = () => {
             <ListItem>
               <FormControlLabel
                 value="end"
-                control={<Radio color="success" />}
+                control={
+                  <Radio
+                    checked={isChecked}
+                    color="success"
+                    onChange={handleChange}
+                  />
+                }
                 label="Próximo da meta"
               />
             </ListItem>
@@ -131,6 +155,7 @@ export const Home = () => {
                 value="start"
                 control={<DeleteForeverIcon color="action" />}
                 label="Limpar Filtros"
+                onClick={handleChecked}
               />
             </ListItem>
           </Grid>
