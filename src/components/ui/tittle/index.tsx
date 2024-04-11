@@ -1,5 +1,6 @@
-import React from "react";
 import "./styles.css";
+
+import React from "react";
 
 type props = {
   label: string;
