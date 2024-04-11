@@ -1,7 +1,10 @@
 import {
   Box,
+  Divider,
   Grid,
   IconButton,
+  Slide,
+  Snackbar,
   TextField,
   Typography,
   styled,
@@ -41,11 +44,23 @@ const ViewCampanha = () => {
   const { obj } = useParams<{ obj?: string }>();
   const [campaign, setCampaign] = useState<Campaign | null>();
   const [sharedLink, setSharedLink] = useState<string>("");
+  const [isCopy, setIsCopy] = useState(false);
 
   const handleClick = async () => {
     handleShare((sharedUrl: string) => {
       setSharedLink(sharedUrl);
     });
+  };
+
+  const handleClose = (
+    event: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setIsCopy(false);
   };
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -54,7 +69,7 @@ const ViewCampanha = () => {
     try {
       if (inputRef.current) {
         await navigator.clipboard.writeText(sharedLink);
-        console.log("Link copiado para a área de transferência");
+        setIsCopy(true);
       }
     } catch (error) {
       console.error("Erro ao copiar o link:", error);
@@ -103,17 +118,28 @@ const ViewCampanha = () => {
   return (
     <>
       <ButtonAppBar title="Campanha" visible />
-      <Grid display={"flex"} flexDirection={"column"} alignItems={"center"}>
+      <Grid
+        display={"flex"}
+        flexDirection={"column"}
+        alignItems={"center"}
+        justifyContent={"center"}
+      >
         <Title label={campaign?.title || ""} />
 
         <Grid
-          width={2 / 3}
+          width={{ lg: 2 / 3, xs: "95%" }}
           display={"flex"}
           marginTop={5}
           gap={8}
           justifyContent={"center"}
+          alignItems={"center"}
+          flexDirection={{ xs: "column", lg: "row" }}
         >
-          <Box width={"500px"} borderRadius={"20px"} overflow={"hidden"}>
+          <Box
+            width={{ lg: "500px", xs: "380px" }}
+            borderRadius={"20px"}
+            overflow={"hidden"}
+          >
             <img src={img} alt="" />
           </Box>
 
@@ -123,7 +149,7 @@ const ViewCampanha = () => {
             flexDirection={"column"}
             alignItems={"center"}
           >
-            <Grid container display={"flex"} justifyContent={"center"} gap={2}>
+            <Grid container display={"flex"} justifyContent={"center"} gap={1}>
               <Box width={"100%"}>
                 <Typography
                   marginLeft={1}
@@ -134,9 +160,10 @@ const ViewCampanha = () => {
                   textAlign={"center"}
                 >
                   {campaign
-                    ? `${
-                        (campaign?.balance / campaign?.collectionGoal) * 100
-                      }%  /  ${formatValue(Number(campaign?.balance))}`
+                    ? `${(
+                  (campaign.balance / campaign.collectionGoal) *
+                  100
+                ).toFixed(2)}%  /  ${formatValue(Number(campaign?.balance))}`
                     : 0}
                 </Typography>
 
@@ -191,7 +218,7 @@ const ViewCampanha = () => {
           </Box>
         </Grid>
 
-        <Grid width={"45%"} marginTop={5}>
+        <Grid width={{ lg: "850px", xs: "95%" }} marginTop={5}>
           <Box
             display={"flex"}
             flexDirection={"column"}
@@ -200,27 +227,44 @@ const ViewCampanha = () => {
             <Typography fontWeight={"400"}>
               Compartilhe essa campanha
             </Typography>
-            <Box display={"flex"} alignItems={"center"}>
-              <TextField
-                ref={inputRef}
-                onChange={(e) => setSharedLink(e.target.value)}
-                disabled
-                fullWidth
-                sx={{ width: "500px" }}
-                value={sharedLink}
-              />
-              <ButtonUi
-                onClick={handleCopy}
-                sx={{
-                  height: "55px",
-                  backgroundColor: "gray",
-                  color: "white",
-                  borderRadius: "0px 7px 7px 0px",
-                }}
+            <Box
+              display={"flex"}
+              flexDirection={{ xs: "column", lg: "row" }}
+              alignItems={"center"}
+            >
+              <Box display={"flex"} width={{ xs: "100%", lg: "65%" }}>
+                <TextField
+                  ref={inputRef}
+                  onChange={(e) => setSharedLink(e.target.value)}
+                  disabled
+                  fullWidth
+                  value={sharedLink}
+                />
+                <ButtonUi
+                  onClick={handleCopy}
+                  variant="contained"
+                  sx={{
+                    height: "56px",
+                    display: "block",
+                    position: "relative",
+                    left: "-10px",
+                    backgroundColor: "gray",
+                    color: "white",
+                    borderRadius: "0px 7px 7px 0px",
+                    boxShadow: "none",
+                    ":hover": { backgroundColor: "gray", boxShadow: "none" },
+                  }}
+                >
+                  Copiar
+                </ButtonUi>
+              </Box>
+
+              <Box
+                width={{ xs: "100%", lg: "" }}
+                display={"flex"}
+                alignContent={"left"}
+                marginLeft={{ xs: 0, lg: 10 }}
               >
-                Copiar
-              </ButtonUi>
-              <Box marginLeft={10}>
                 <IconButton onClick={handleShareSocial}>
                   <FacebookIcon fontSize="large" color="action" />
                 </IconButton>
@@ -233,8 +277,21 @@ const ViewCampanha = () => {
                 </IconButton>
               </Box>
             </Box>
+
+            <Box marginY={2}>
+              <Typography>Sobre</Typography>
+              <Divider />
+              <Typography marginTop={2}>{campaign?.description}</Typography>
+            </Box>
           </Box>
         </Grid>
+        <Snackbar
+          open={isCopy}
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+          autoHideDuration={800}
+          onClose={handleClose}
+          message="Link Copiado!"
+        />
       </Grid>
     </>
   );
