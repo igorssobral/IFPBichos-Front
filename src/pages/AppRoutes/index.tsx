@@ -1,17 +1,18 @@
-import React from "react";
-import { Route, Routes, Navigate } from "react-router";
+import { Navigate, Route, Routes } from "react-router";
 
-import { BrowserRouter as Router } from "react-router-dom";
-
-import { Home } from "../home";
 import { CreateCampanha } from "../campanha/createCampanha";
-import { Login } from "../sign-in";
 import { EditCampanha } from "../campanha/editCampanha";
-import { getLocalStorage } from "../../utils/local-storage";
+import { Home } from "../home";
+import { Login } from "../sign-in";
+import React from "react";
+import { BrowserRouter as Router } from "react-router-dom";
 import SignUp from "../sign-up";
+import ViewCampanha from "../campanha/viewCampanha";
+import { getLocalStorage } from "../../utils/local-storage";
 
 const AppRouter = () => {
   const isAuthenticated = getLocalStorage();
+  const isAdmin = isAuthenticated?.userRole == "ADMIN";
 
   return (
     <Router>
@@ -26,16 +27,17 @@ const AppRouter = () => {
           element={isAuthenticated ? <Navigate to="/signup" /> : <SignUp />}
         />
         <Route path="/campanhas" element={<Home />} />
+        <Route path="/view-campaign/:obj" element={<ViewCampanha />} />
         <Route
           path="/createcampanha"
           element={
-            isAuthenticated ? <CreateCampanha /> : <Navigate to="/login" />
+            isAdmin ? <CreateCampanha /> : <Navigate to="/login" />
           }
         />
         <Route
           path="/editcampanha/:id"
           element={
-            isAuthenticated ? <EditCampanha /> : <Navigate to="/login" />
+            isAdmin ? <EditCampanha /> : <Navigate to="/login" />
           }
         />
       </Routes>

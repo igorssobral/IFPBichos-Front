@@ -28,7 +28,7 @@ export const Login = () => {
 
   async function authenticate(data: LoginSchema) {
     try {
-      const response = await login({
+      await login({
         login: data.login,
         password: data.password,
       });
