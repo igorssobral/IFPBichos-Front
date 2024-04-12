@@ -1,16 +1,17 @@
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { CreateCampaignSchema, createCampaignSchema } from "./schema";
 import React, { useState } from "react";
-import { useNavigate } from "react-router";
-import { Title } from "../../../components/ui/tittle";
+
+import AlertMessage from "../../../components/layout/alert";
+import { ApiCampaign } from "../../../services/data-base/CampaignService";
+import { Box, FormHelperText, InputLabel, MenuItem, Select } from "@mui/material";
 import { Button } from "../../../components/ui/button";
+import ButtonAppBar from "../../../components/layout/appBar";
 import { ButtonGroup } from "../../../components/ui/button-group";
 import CustomTextField from "../../../components/ui/customTextField";
-import { ApiCampaign } from "../../../services/data-base/CampaignService";
-import { Box } from "@mui/material";
-import ButtonAppBar from "../../../components/layout/appBar";
-import AlertMessage from "../../../components/layout/alert";
+import { Title } from "../../../components/ui/tittle";
+import { useNavigate } from "react-router";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, Controller, SubmitHandler } from "react-hook-form";
-import { CreateCampaignSchema, createCampaignSchema } from "./schema";
 
 export const CreateCampanha = () => {
   const {
@@ -20,8 +21,6 @@ export const CreateCampanha = () => {
   } = useForm<CreateCampaignSchema>({
     resolver: zodResolver(createCampaignSchema),
   });
-
-  console.log("campaign:", errors);
 
   const { saveCampaign } = ApiCampaign();
   const [createSucess, setCreateSucess] = useState(false);
@@ -33,6 +32,7 @@ export const CreateCampanha = () => {
   };
 
   async function handleSaveCampaign(campaign: CreateCampaignSchema) {
+    console.log("🚀 ~ handleSaveCampaign ~ campaign:", campaign)
     const Res = saveCampaign({
       start: campaign.startDate,
       end: campaign.finishedDate,
@@ -52,7 +52,7 @@ export const CreateCampanha = () => {
 
   return (
     <>
-      <ButtonAppBar title=" " visible />
+      <ButtonAppBar title="" visible />
       <Box display={"flex"} flexDirection={"column"} alignItems={"center"}>
         <Title label="Nova Campanha" />
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -84,13 +84,36 @@ export const CreateCampanha = () => {
                   multiline
                   type="text"
                   height="100px"
+                  minRows={4}
+                  maxRows={4}
                   helperText={errors?.description?.message}
-                  
                   {...field}
                 />
               )}
             />
 
+            <Controller
+              control={control}
+              name="animal"
+              render={({ field }) => (
+                <>
+                  <InputLabel sx={{ marginTop: "10px" }}>Animal</InputLabel>
+                  <Select
+                    value={field.value || 0}
+                    placeholder="Selecione"
+                    onChange={field.onChange}
+                    error={!!errors.animal?.message}
+                    sx={{ marginBottom: "10px", borderRadius: 2  }}
+                  >
+                    <MenuItem value={0}>Selecione</MenuItem>
+                    <MenuItem value={1}>Gato</MenuItem>
+                    <MenuItem value={2}>Cachorro</MenuItem>
+                  </Select>
+                  <FormHelperText error>{errors.animal?.message}</FormHelperText>
+
+                </>
+              )}
+            />
             <Controller
               control={control}
               name="fundraisingGoal"

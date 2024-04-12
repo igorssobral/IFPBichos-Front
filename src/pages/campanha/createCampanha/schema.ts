@@ -1,6 +1,5 @@
 import { z } from "zod";
 
-
 export const createCampaignSchema = z.object({
   title: z
     .string({ required_error: "Adicione um título!", invalid_type_error: "" })
@@ -13,6 +12,12 @@ export const createCampaignSchema = z.object({
     })
     .max(255, { message: "A descrição deve ter menos de 255 caracteres" })
     .min(1, { message: "A descrição não pode estar vazia" }),
+  animal: z
+    .number({
+      required_error: "Campo não pode ser vazio!",
+      invalid_type_error: "",
+    })
+    .refine((value) => value > 0, { message: "Selecione um animal" }),
 
   fundraisingGoal: z.coerce
     .number({
