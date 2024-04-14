@@ -12,15 +12,14 @@ function setLocalStorageContent() {
 
 export default function MenuPopupState() {
   return (
-    <PopupState variant="dialog" popupId="demo-popup-menu">
+    <PopupState variant="dialog" popupId="demo-popup-menu" >
       {(popupState) => (
         <React.Fragment>
           <Button {...bindTrigger(popupState)}>
             <ArrowDropDownIcon sx={{ color: "white" }} />
           </Button>
-          <Menu {...bindMenu(popupState)}>
+          <Menu sx={{position:'absolute',marginRight:"50px"}} {...bindMenu(popupState)}>
             <MenuItem
-            sx={{fontSize: ".9rem"}}
               onClick={() => {
                 popupState.close();
                 setLocalStorageContent();

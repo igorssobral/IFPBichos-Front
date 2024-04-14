@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import {
   Drawer,
   List,
@@ -7,17 +6,23 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
+import React, { useState } from "react";
+
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import IconButton from "@mui/material/IconButton";
+import MenuIcon from "@mui/icons-material/Menu";
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 
 type props = {
-  isVisible: boolean;
+  open: boolean
+  setOpen: (value: boolean) => void
 };
 
-export const Menu = ({ isVisible }: props) => {
+export const Menu = ({open, setOpen }: props) => {
 
+  const closeDrawer = () => {
+    setOpen(false);
+  };
   function getLocalStorage() {
     const user = localStorage.getItem("user");
 
@@ -27,43 +32,29 @@ export const Menu = ({ isVisible }: props) => {
     }
     return null;
   }
-  const [isOpen, setIsOpen] = useState(isVisible);
-
-  const toggleDrawer =
-    (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
-      if (
-        event &&
-        event.type === "keydown" &&
-        ((event as React.KeyboardEvent).key === "Tab" ||
-          (event as React.KeyboardEvent).key === "Shift")
-      ) {
-        return;
-      }
-
-      setIsOpen(open);
-    };
 
   return (
     <React.Fragment>
       <SwipeableDrawer
         anchor="left"
-        open={isOpen}
-        onClose={toggleDrawer(false)}
-        onOpen={toggleDrawer(true)}
+        open={open} 
+        onOpen={()=>{}}
+        onClose={closeDrawer}
       >
         <Drawer
+        
           variant="permanent"
           anchor="left"
           sx={{
-            width: 340,
+            width: 350,
             flexShrink: 0,
             "& .MuiDrawer-paper": {
-              width: 340,
+              width: 350,
             },
           }}
         >
           <ListItem
-            onClick={toggleDrawer(false)}
+            onClick={()=>setOpen(false)}
             component="a"
             key="home"
             style={{
@@ -78,7 +69,7 @@ export const Menu = ({ isVisible }: props) => {
               color="inherit"
               aria-label="menu"
               sx={{ mr: 2 }}
-              onClick={toggleDrawer(false)}
+              onClick={()=>setOpen(false)}
             >
               <MenuIcon />
             </IconButton>

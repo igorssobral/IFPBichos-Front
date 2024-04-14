@@ -1,22 +1,24 @@
-import React, { useState, useEffect } from "react";
-import { Title } from "../../../components/ui/tittle";
-import { Button } from "../../../components/ui/button";
-import { ButtonGroup } from "../../../components/ui/button-group";
-import { useNavigate, useParams } from "react-router";
-import CustomTextField from "../../../components/ui/customTextField";
-import { Box } from "@mui/material";
-import ButtonAppBar from "../../../components/layout/appBar";
-import { ApiCampaign } from "../../../services/data-base/CampaignService";
-import { formatInputDate } from "../../../utils/format-date";
-import AlertMessage from "../../../components/layout/alert";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router";
+
+import AlertMessage from "../../../components/layout/alert";
+import { ApiCampaign } from "../../../services/data-base/CampaignService";
+import { Box, FormHelperText, InputLabel, MenuItem, Select } from "@mui/material";
+import { Button } from "../../../components/ui/button";
+import ButtonAppBar from "../../../components/layout/appBar";
+import { ButtonGroup } from "../../../components/ui/button-group";
+import CustomTextField from "../../../components/ui/customTextField";
+import { Title } from "../../../components/ui/tittle";
 import { createCampaignSchema } from "../createCampanha/schema";
+import { formatInputDate } from "../../../utils/format-date";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 interface campaignForm {
   title: string;
   fundraisingGoal: number;
   description: string;
+  animal: number;
   startDate: string;
   finishedDate: string;
   file: File | null;
@@ -45,6 +47,7 @@ export const EditCampanha = () => {
       if (data) {
         setValue("title", data.title);
         setValue("description", data.description);
+        setValue("animal", data.animal);
         setValue("fundraisingGoal", data.collectionGoal);
         setValue("startDate", formatInputDate(data.start));
         setValue("finishedDate", formatInputDate(data.end));
@@ -53,8 +56,7 @@ export const EditCampanha = () => {
   }, []);
 
   async function updateCurrencyCampaign(updatedCampaign: any) {
-    const data = await updateCampaign(`${id}`, 
-    {
+    const data = await updateCampaign(`${id}`, {
       start: updatedCampaign.startDate,
       end: updatedCampaign.finishedDate,
       title: updatedCampaign.title,
@@ -108,9 +110,35 @@ export const EditCampanha = () => {
                   multiline
                   type="text"
                   height="100px"
+                  minRows={4}
+                  maxRows={4}
                   helperText={errors?.description?.message}
                   {...field}
                 />
+              )}
+            />
+
+            <Controller
+              control={control}
+              name="animal"
+              render={({ field }) => (
+                <>
+                  <InputLabel sx={{ marginTop: "10px" }}>Animal</InputLabel>
+                  <Select
+                    value={field.value || 0}
+                    placeholder="Selecione"
+                    onChange={field.onChange}
+                    error={!!errors.animal?.message}
+                    sx={{ marginBottom: "10px", borderRadius: 2 }}
+                  >
+                    <MenuItem value={0}>Selecione</MenuItem>
+                    <MenuItem value={1}>Gato</MenuItem>
+                    <MenuItem value={2}>Cachorro</MenuItem>
+                  </Select>
+                  <FormHelperText error>
+                    {errors.animal?.message}
+                  </FormHelperText>
+                </>
               )}
             />
 
