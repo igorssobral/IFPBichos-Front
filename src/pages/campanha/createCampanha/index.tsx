@@ -37,6 +37,7 @@ export const CreateCampanha = () => {
       start: campaign.startDate,
       end: campaign.finishedDate,
       title: campaign.title,
+      animal: campaign.animal,
       description: campaign.description,
       image: campaign.file,
       collectionGoal: campaign.fundraisingGoal,
@@ -105,9 +106,9 @@ export const CreateCampanha = () => {
                     error={!!errors.animal?.message}
                     sx={{ marginBottom: "10px", borderRadius: 2  }}
                   >
-                    <MenuItem value={0}>Selecione</MenuItem>
-                    <MenuItem value={1}>Gato</MenuItem>
-                    <MenuItem value={2}>Cachorro</MenuItem>
+                    <MenuItem value={""}>Selecione</MenuItem>
+                    <MenuItem value={"GATO"}>Gato</MenuItem>
+                    <MenuItem value={"CACHORRO"}>Cachorro</MenuItem>
                   </Select>
                   <FormHelperText error>{errors.animal?.message}</FormHelperText>
 
