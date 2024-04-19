@@ -33,6 +33,7 @@ import img from "../../../assets/dog.jpg";
 interface Campaign {
   title: string;
   collectionGoal: number;
+  collectionPercentage: number;
   balance: number;
   description: string;
   start: string;
@@ -106,6 +107,7 @@ const ViewCampanha = () => {
           title: parsedObj.title,
           description: parsedObj.description,
           collectionGoal: parsedObj.collectionGoal,
+          collectionPercentage: parsedObj.collectionPercentage,
           balance: parsedObj.balance,
           start: formatUTC(new Date(formatInputDate(parsedObj.start))),
           end: formatUTC(new Date(formatInputDate(parsedObj.end))),
@@ -160,21 +162,13 @@ const ViewCampanha = () => {
                   textAlign={"center"}
                 >
                   {campaign
-                    ? `${(
-                  (campaign.balance / campaign.collectionGoal) *
-                  100
-                ).toFixed(2)}%  /  ${formatValue(Number(campaign?.balance))}`
+                    ? `${campaign.collectionPercentage}%  /  ${formatValue(
+                        Number(campaign?.balance)
+                      )}`
                     : 0}
                 </Typography>
 
-                <BorderLinearProgress
-                  variant="determinate"
-                  value={
-                    campaign
-                      ? (campaign.balance / campaign.collectionGoal) * 100
-                      : 0
-                  }
-                />
+                <BorderLinearProgress variant="determinate" value={campaign?.collectionPercentage} />
               </Box>
 
               <Box display={"flex"} flexDirection={"column"}>

@@ -116,7 +116,7 @@ export const CardModal: React.FC<CardProps> = ({
               <Box>
                 <BorderLinearProgress
                   variant="determinate"
-                  value={(campaign.balance / campaign.collectionGoal) * 100}
+                  value={campaign.collectionPercentage}
                 />
               </Box>
             </Grid>
@@ -128,10 +128,7 @@ export const CardModal: React.FC<CardProps> = ({
                 fontWeight={"bold"}
                 fontFamily={"Lato, sans-serif"}
               >
-                {`${(
-                  (campaign.balance / campaign.collectionGoal) *
-                  100
-                ).toFixed(2)}%`}
+                {`${campaign.collectionPercentage}%`}
               </Typography>
             </Grid>
           </Grid>
