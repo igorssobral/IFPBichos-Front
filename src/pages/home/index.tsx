@@ -21,6 +21,7 @@ import { getLocalStorage } from "../../utils/local-storage";
 export const Home = () => {
   const { getAllCampaigns, deleteCampaign } = ApiCampaign();
   const [campaigns, setCampaigns] = useState<CampaignRaw[]>();
+  const [campaignsCopy, setCampaignsCopy] = useState<CampaignRaw[]>();
   const [deleteSucess, setDeleteSucess] = useState(false);
   const [loggedSucess, setLoggedSucess] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
@@ -31,7 +32,9 @@ export const Home = () => {
 
   async function fetchCampaigns() {
     const data = await getAllCampaigns();
+    console.log("🚀 ~ fetchCampaigns ~ data:", data);
     setCampaigns(data);
+    setCampaignsCopy(data);
   }
 
   useEffect(() => {
@@ -53,18 +56,18 @@ export const Home = () => {
   const handleEdit = (id: string) => {
     navigate(`/editcampanha/${id}`);
   };
+
   function handleChecked() {
-    setIsChecked(false);
-    fetchCampaigns();
-    
+    if (isChecked) {
+      setSearch("")
+      setIsChecked(false);
+      setCampaigns(campaignsCopy);
+    }
   }
-  
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setIsChecked(event.target.checked);
-       
-      setCampaigns(sortByRevenueDesc());
-    
-    
+    sortByRevenueDesc();
   };
 
   const handleViewCampaign = (id: string) => {
@@ -93,6 +96,17 @@ export const Home = () => {
     setSearch(query);
   }
 
+  function handleFilterByType(animal: string) {
+    if (animal == "TODOS") {
+      setCampaigns(campaignsCopy);
+    } else {
+      const filteredCampaigns = campaignsCopy?.filter(
+        (campaign) => campaign.animal === animal
+      );
+      setCampaigns(filteredCampaigns);
+    }
+  }
+
   const filteredCampaigns =
     search != ""
       ? campaigns?.filter((note) =>
@@ -101,7 +115,10 @@ export const Home = () => {
       : campaigns;
 
   const sortByRevenueDesc = () => {
-    return campaigns?.sort((a, b) => (b.balance / b.collectionGoal * 100) - (a.balance / a.collectionGoal * 100));
+    const filteredCampaigns = campaignsCopy?.sort(
+      (a, b) => b.collectionPercentage - a.collectionPercentage
+    );
+    setCampaigns(filteredCampaigns);
   };
 
   return (
@@ -130,7 +147,9 @@ export const Home = () => {
             <ListItem>
               {" "}
               Filtros:
-              <SelectSmall />
+              <SelectSmall
+                handleFilter={(value) => handleFilterByType(value)}
+              />
             </ListItem>
           </Grid>
           <Grid>
