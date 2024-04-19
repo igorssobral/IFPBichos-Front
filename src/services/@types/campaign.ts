@@ -20,5 +20,6 @@ export type CampaignRaw = {
   image: string;
   start: string;
   title: string;
+  animal: string;
   undirectedBalance: number;
 };
