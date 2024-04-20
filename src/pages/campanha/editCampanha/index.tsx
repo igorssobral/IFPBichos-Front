@@ -131,9 +131,9 @@ export const EditCampanha = () => {
                     error={!!errors.animal?.message}
                     sx={{ marginBottom: "10px", borderRadius: 2 }}
                   >
-                    <MenuItem value={0}>Selecione</MenuItem>
-                    <MenuItem value={1}>Gato</MenuItem>
-                    <MenuItem value={2}>Cachorro</MenuItem>
+                     <MenuItem value={"Selecione"}>Selecione</MenuItem>
+                    <MenuItem value={"GATO"}>Gato</MenuItem>
+                    <MenuItem value={"CACHORRO"}>Cachorro</MenuItem>
                   </Select>
                   <FormHelperText error>
                     {errors.animal?.message}
