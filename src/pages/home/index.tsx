@@ -27,12 +27,13 @@ export const Home = () => {
   const [isChecked, setIsChecked] = useState(false);
   const [idDelete, setidDelete] = useState<string | null>(null);
   const [search, setSearch] = useState("");
+  const [selectedFilter, setSelectedFilter] = useState<string>("TODOS");
+
   const navigate = useNavigate();
   const location = useLocation();
 
   async function fetchCampaigns() {
     const data = await getAllCampaigns();
-    console.log("🚀 ~ fetchCampaigns ~ data:", data);
     setCampaigns(data);
     setCampaignsCopy(data);
   }
@@ -57,11 +58,45 @@ export const Home = () => {
     navigate(`/editcampanha/${id}`);
   };
 
-  function handleChecked() {
+  function resetFilters() {
     if (isChecked) {
-      setSearch("")
       setIsChecked(false);
+      fetchCampaigns();
+    }
+    if (selectedFilter !== "TODOS") {
+      setSelectedFilter("TODOS");
+      handleFilterByType("TODOS");
+    }
+  }
+
+  function handleSearch(event: ChangeEvent<HTMLInputElement>) {
+    const query = event.target.value;
+
+    setSearch(query);
+  }
+
+  function handleFilterByType(animal: string) {
+    if (animal == "TODOS") {
       setCampaigns(campaignsCopy);
+    } else {
+      const filteredCampaigns = campaignsCopy?.filter(
+        (campaign) => campaign.animal === animal
+      );
+      setCampaigns(filteredCampaigns);
+    }
+  }
+
+  function sortByRevenueDesc() {
+    if (selectedFilter !== "TODOS") {
+      const filteredCampaigns = campaigns?.sort(
+        (a, b) => b.collectionPercentage - a.collectionPercentage
+      );
+      setCampaigns(filteredCampaigns);
+    } else {
+      const filteredCampaigns = campaignsCopy?.sort(
+        (a, b) => b.collectionPercentage - a.collectionPercentage
+      );
+      setCampaigns(filteredCampaigns);
     }
   }
 
@@ -90,36 +125,12 @@ export const Home = () => {
     setidDelete(null);
   }
 
-  function handleSearch(event: ChangeEvent<HTMLInputElement>) {
-    const query = event.target.value;
-
-    setSearch(query);
-  }
-
-  function handleFilterByType(animal: string) {
-    if (animal == "TODOS") {
-      setCampaigns(campaignsCopy);
-    } else {
-      const filteredCampaigns = campaignsCopy?.filter(
-        (campaign) => campaign.animal === animal
-      );
-      setCampaigns(filteredCampaigns);
-    }
-  }
-
   const filteredCampaigns =
     search != ""
       ? campaigns?.filter((note) =>
           note.title.toLowerCase().includes(search.toLowerCase())
         )
       : campaigns;
-
-  const sortByRevenueDesc = () => {
-    const filteredCampaigns = campaignsCopy?.sort(
-      (a, b) => b.collectionPercentage - a.collectionPercentage
-    );
-    setCampaigns(filteredCampaigns);
-  };
 
   return (
     <Container>
@@ -148,7 +159,12 @@ export const Home = () => {
               {" "}
               Filtros:
               <SelectSmall
-                handleFilter={(value) => handleFilterByType(value)}
+                handleFilter={(value) => {
+                  setSelectedFilter(value);
+                  handleFilterByType(value);
+                  setIsChecked(false);
+                }}
+                selectedValue={selectedFilter}
               />
             </ListItem>
           </Grid>
@@ -174,7 +190,7 @@ export const Home = () => {
                 value="start"
                 control={<DeleteForeverIcon color="action" />}
                 label="Limpar Filtros"
-                onClick={handleChecked}
+                onClick={resetFilters}
               />
             </ListItem>
           </Grid>

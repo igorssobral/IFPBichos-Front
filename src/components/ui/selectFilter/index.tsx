@@ -1,17 +1,27 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 
 type SelectProps = {
   handleFilter: (value: string) => void;
+  selectedValue: string;
 };
-export default function SelectSmall({ handleFilter }: SelectProps) {
+
+export default function SelectSmall({
+  handleFilter,
+  selectedValue,
+}: SelectProps) {
   const [filter, setFilter] = useState<string>("TODOS");
 
+  useEffect(() => {
+    setFilter(selectedValue);
+  }, [selectedValue]);
+
   const handleChange = (event: SelectChangeEvent) => {
-    setFilter(event.target.value);
-    handleFilter(event.target.value);
+    const selected = event.target.value as string;
+    setFilter(selected);
+    handleFilter(selected);
   };
 
   return (
