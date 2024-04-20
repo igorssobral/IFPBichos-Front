@@ -100,13 +100,13 @@ export const CreateCampanha = () => {
                 <>
                   <InputLabel sx={{ marginTop: "10px" }}>Animal</InputLabel>
                   <Select
-                    value={field.value || 0}
+                    value={field.value || "Selecione"}
                     placeholder="Selecione"
                     onChange={field.onChange}
                     error={!!errors.animal?.message}
                     sx={{ marginBottom: "10px", borderRadius: 2  }}
                   >
-                    <MenuItem value={""}>Selecione</MenuItem>
+                    <MenuItem value={"Selecione"}>Selecione</MenuItem>
                     <MenuItem value={"GATO"}>Gato</MenuItem>
                     <MenuItem value={"CACHORRO"}>Cachorro</MenuItem>
                   </Select>
