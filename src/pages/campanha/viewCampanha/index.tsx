@@ -1,3 +1,4 @@
+/* eslint-disable no-empty */
 import {
   Box,
   Divider,
@@ -8,33 +9,35 @@ import {
   TextField,
   Typography,
   styled,
-} from "@mui/material";
+} from '@mui/material';
 import LinearProgress, {
   linearProgressClasses,
-} from "@mui/material/LinearProgress";
-import React, { useEffect, useRef, useState } from "react";
-import { formatInputDate, formatUTC } from "../../../utils/format-date";
+} from '@mui/material/LinearProgress';
+import React, { useEffect, useRef, useState } from 'react';
+import { formatInputDate, formatUTC } from '../../../utils/format-date';
 import {
   handleShare,
   handleShareSocial,
-} from "../../../components/ui/button/share-button";
-import { useNavigate, useParams } from "react-router-dom";
+} from '../../../components/ui/button/share-button';
+import { useNavigate, useParams } from 'react-router-dom';
 
-import { Button } from "../../../components/ui/button";
-import ButtonAppBar from "../../../components/layout/appBar";
-import ButtonUi from "@mui/material/Button";
-import FacebookIcon from "@mui/icons-material/Facebook";
-import InstagramIcon from "@mui/icons-material/Instagram";
-import { Title } from "../../../components/ui/tittle";
-import WhatsAppIcon from "@mui/icons-material/WhatsApp";
-import { formatValue } from "../../../utils/format-money";
-import img from "../../../assets/dog.jpg";
+import { Button } from '../../../components/ui/button';
+import ButtonAppBar from '../../../components/layout/appBar';
+import ButtonUi from '@mui/material/Button';
+import FacebookIcon from '@mui/icons-material/Facebook';
+import InstagramIcon from '@mui/icons-material/Instagram';
+import { Title } from '../../../components/ui/tittle';
+import WhatsAppIcon from '@mui/icons-material/WhatsApp';
+import { formatValue } from '../../../utils/format-money';
+import dog from '../../../assets/dog.jpg';
+import cat from '../../../assets/gato.jpg';
 
 interface Campaign {
   title: string;
   collectionGoal: number;
   collectionPercentage: number;
   balance: number;
+  animal: string;
   description: string;
   start: string;
   end: string;
@@ -44,7 +47,7 @@ interface Campaign {
 const ViewCampanha = () => {
   const { obj } = useParams<{ obj?: string }>();
   const [campaign, setCampaign] = useState<Campaign | null>();
-  const [sharedLink, setSharedLink] = useState<string>("");
+  const [sharedLink, setSharedLink] = useState<string>('');
   const [isCopy, setIsCopy] = useState(false);
 
   const handleClick = async () => {
@@ -57,7 +60,7 @@ const ViewCampanha = () => {
     event: React.SyntheticEvent | Event,
     reason?: string
   ) => {
-    if (reason === "clickaway") {
+    if (reason === 'clickaway') {
       return;
     }
 
@@ -73,7 +76,7 @@ const ViewCampanha = () => {
         setIsCopy(true);
       }
     } catch (error) {
-      console.error("Erro ao copiar o link:", error);
+      console.error('Erro ao copiar o link:', error);
     }
   };
 
@@ -83,16 +86,16 @@ const ViewCampanha = () => {
     borderRadius: 15,
     [`&.${linearProgressClasses.colorPrimary}`]: {
       backgroundColor:
-        theme.palette.grey[theme.palette.mode === "light" ? 300 : 800],
+        theme.palette.grey[theme.palette.mode === 'light' ? 300 : 800],
     },
     [`& .${linearProgressClasses.bar}`]: {
       borderRadius: 15,
-      backgroundColor: theme.palette.mode === "light" ? "#24CA68" : "#308fe8",
+      backgroundColor: theme.palette.mode === 'light' ? '#24CA68' : '#308fe8',
     },
   }));
 
   function handleBack() {
-    navigate("/campanhas");
+    navigate('/campanhas');
   }
 
   useEffect(() => {
@@ -102,12 +105,14 @@ const ViewCampanha = () => {
 
       try {
         const parsedObj: Campaign = JSON.parse(decodedObj);
+        console.log('🚀 ~ useEffect ~ parsedObj:', parsedObj);
 
         setCampaign({
           title: parsedObj.title,
           description: parsedObj.description,
           collectionGoal: parsedObj.collectionGoal,
           collectionPercentage: parsedObj.collectionPercentage,
+          animal: parsedObj.animal,
           balance: parsedObj.balance,
           start: formatUTC(new Date(formatInputDate(parsedObj.start))),
           end: formatUTC(new Date(formatInputDate(parsedObj.end))),
@@ -119,47 +124,51 @@ const ViewCampanha = () => {
 
   return (
     <>
-      <ButtonAppBar title="Campanha" visible />
+      <ButtonAppBar title='Campanha' visible />
       <Grid
-        display={"flex"}
-        flexDirection={"column"}
-        alignItems={"center"}
-        justifyContent={"center"}
+        display={'flex'}
+        flexDirection={'column'}
+        alignItems={'center'}
+        justifyContent={'center'}
       >
-        <Title label={campaign?.title || ""} />
+        <Title label={campaign?.title || ''} />
 
         <Grid
-          width={{ lg: 2 / 3, xs: "95%" }}
-          display={"flex"}
+          width={{ lg: 2 / 3, xs: '95%' }}
+          display={'flex'}
           marginTop={5}
           gap={8}
-          justifyContent={"center"}
-          alignItems={"center"}
-          flexDirection={{ xs: "column", lg: "row" }}
+          justifyContent={'center'}
+          alignItems={'center'}
+          flexDirection={{ xs: 'column', lg: 'row' }}
         >
           <Box
-            width={{ lg: "500px", xs: "380px" }}
-            borderRadius={"20px"}
-            overflow={"hidden"}
+            width={{ lg: '500px', xs: '380px' }}
+            borderRadius={'20px'}
+            overflow={'hidden'}
           >
-            <img src={img} alt="" />
+            {campaign?.animal === 'GATO' ? (
+              <img src={cat} alt='' />
+            ) : (
+              <img src={dog} alt='' />
+            )}
           </Box>
 
           <Box
-            width={"300px"}
-            display={"flex"}
-            flexDirection={"column"}
-            alignItems={"center"}
+            width={'300px'}
+            display={'flex'}
+            flexDirection={'column'}
+            alignItems={'center'}
           >
-            <Grid container display={"flex"} justifyContent={"center"} gap={1}>
-              <Box width={"100%"}>
+            <Grid container display={'flex'} justifyContent={'center'} gap={1}>
+              <Box width={'100%'}>
                 <Typography
                   marginLeft={1}
-                  variant="h3"
-                  fontSize={"1.1rem"}
-                  fontWeight={"600"}
-                  fontFamily={"Lato, sans-serif"}
-                  textAlign={"center"}
+                  variant='h3'
+                  fontSize={'1.1rem'}
+                  fontWeight={'600'}
+                  fontFamily={'Lato, sans-serif'}
+                  textAlign={'center'}
                 >
                   {campaign
                     ? `${campaign.collectionPercentage}%  /  ${formatValue(
@@ -168,24 +177,27 @@ const ViewCampanha = () => {
                     : 0}
                 </Typography>
 
-                <BorderLinearProgress variant="determinate" value={campaign?.collectionPercentage} />
+                <BorderLinearProgress
+                  variant='determinate'
+                  value={campaign?.collectionPercentage}
+                />
               </Box>
 
-              <Box display={"flex"} flexDirection={"column"}>
+              <Box display={'flex'} flexDirection={'column'}>
                 <Typography
-                  variant="h6"
-                  fontSize={"1.1rem"}
-                  fontWeight={"300"}
-                  fontFamily={"Lato, sans-serif"}
-                  textAlign={"center"}
+                  variant='h6'
+                  fontSize={'1.1rem'}
+                  fontWeight={'300'}
+                  fontFamily={'Lato, sans-serif'}
+                  textAlign={'center'}
                 >
                   META
                 </Typography>
                 <Typography
-                  variant="h3"
-                  fontWeight={"1000"}
-                  textAlign={"center"}
-                  color={"#24CA68"}
+                  variant='h3'
+                  fontWeight={'1000'}
+                  textAlign={'center'}
+                  color={'#24CA68'}
                 >
                   {formatValue(Number(campaign?.collectionGoal))}
                 </Typography>
@@ -193,40 +205,40 @@ const ViewCampanha = () => {
 
               <Box>
                 <Typography
-                  variant="h6"
-                  fontWeight={"300"}
-                  fontFamily={"Lato, sans-serif"}
-                  textAlign={"center"}
+                  variant='h6'
+                  fontWeight={'300'}
+                  fontFamily={'Lato, sans-serif'}
+                  textAlign={'center'}
                 >
                   TERMINA
-                  <Typography variant="h5" fontWeight={"bold"}>
+                  <Typography variant='h5' fontWeight={'bold'}>
                     {campaign?.end}
                   </Typography>
                 </Typography>
               </Box>
-              <Box width={"100%"} display={"flex"} flexDirection={"column"}>
-                <Button label="Realizar Doação" headlight />
-                <Button label="voltar" onClick={handleBack} />
+              <Box width={'100%'} display={'flex'} flexDirection={'column'}>
+                <Button label='Realizar Doação' headlight />
+                <Button label='voltar' onClick={handleBack} />
               </Box>
             </Grid>
           </Box>
         </Grid>
 
-        <Grid width={{ lg: "850px", xs: "95%" }} marginTop={5}>
+        <Grid width={{ lg: '850px', xs: '95%' }} marginTop={5}>
           <Box
-            display={"flex"}
-            flexDirection={"column"}
-            justifyContent={"start"}
+            display={'flex'}
+            flexDirection={'column'}
+            justifyContent={'start'}
           >
-            <Typography fontWeight={"400"}>
+            <Typography fontWeight={'400'}>
               Compartilhe essa campanha
             </Typography>
             <Box
-              display={"flex"}
-              flexDirection={{ xs: "column", lg: "row" }}
-              alignItems={"center"}
+              display={'flex'}
+              flexDirection={{ xs: 'column', lg: 'row' }}
+              alignItems={'center'}
             >
-              <Box display={"flex"} width={{ xs: "100%", lg: "65%" }}>
+              <Box display={'flex'} width={{ xs: '100%', lg: '65%' }}>
                 <TextField
                   ref={inputRef}
                   onChange={(e) => setSharedLink(e.target.value)}
@@ -236,17 +248,17 @@ const ViewCampanha = () => {
                 />
                 <ButtonUi
                   onClick={handleCopy}
-                  variant="contained"
+                  variant='contained'
                   sx={{
-                    height: "56px",
-                    display: "block",
-                    position: "relative",
-                    left: "-10px",
-                    backgroundColor: "gray",
-                    color: "white",
-                    borderRadius: "0px 7px 7px 0px",
-                    boxShadow: "none",
-                    ":hover": { backgroundColor: "gray", boxShadow: "none" },
+                    height: '56px',
+                    display: 'block',
+                    position: 'relative',
+                    left: '-10px',
+                    backgroundColor: 'gray',
+                    color: 'white',
+                    borderRadius: '0px 7px 7px 0px',
+                    boxShadow: 'none',
+                    ':hover': { backgroundColor: 'gray', boxShadow: 'none' },
                   }}
                 >
                   Copiar
@@ -254,20 +266,20 @@ const ViewCampanha = () => {
               </Box>
 
               <Box
-                width={{ xs: "100%", lg: "" }}
-                display={"flex"}
-                alignContent={"left"}
+                width={{ xs: '100%', lg: '' }}
+                display={'flex'}
+                alignContent={'left'}
                 marginLeft={{ xs: 0, lg: 10 }}
               >
                 <IconButton onClick={handleShareSocial}>
-                  <FacebookIcon fontSize="large" color="action" />
+                  <FacebookIcon fontSize='large' color='action' />
                 </IconButton>
                 <IconButton onClick={handleShareSocial}>
-                  <InstagramIcon fontSize="large" color="action" />
+                  <InstagramIcon fontSize='large' color='action' />
                 </IconButton>
 
                 <IconButton onClick={handleShareSocial}>
-                  <WhatsAppIcon fontSize="large" color="action" />
+                  <WhatsAppIcon fontSize='large' color='action' />
                 </IconButton>
               </Box>
             </Box>
@@ -281,10 +293,10 @@ const ViewCampanha = () => {
         </Grid>
         <Snackbar
           open={isCopy}
-          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
           autoHideDuration={800}
           onClose={handleClose}
-          message="Link Copiado!"
+          message='Link Copiado!'
         />
       </Grid>
     </>

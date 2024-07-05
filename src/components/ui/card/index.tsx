@@ -81,10 +81,17 @@ export const CardModal: React.FC<CardProps> = ({
       )}
 
       <Box className="image" onClick={handleViewCampaign}>
-        <img
-          src={campaign.image || "src/assets/dog.jpg"}
-          alt={campaign.title}
-        />
+      {campaign?.animal === 'GATO' ? (
+             <img
+             src={campaign.image || "src/assets/gato.jpg"}
+             alt={campaign.title}
+           />
+            ) : (
+              <img
+              src={campaign.image || "src/assets/dog.jpg"}
+              alt={campaign.title}
+            />
+            )} 
       </Box>
 
       <Box className="infor_content" display={"flex"} justifyContent={"center"}>
