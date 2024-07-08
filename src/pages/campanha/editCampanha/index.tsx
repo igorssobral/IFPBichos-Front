@@ -1,3 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
@@ -63,8 +66,10 @@ export const EditCampanha = () => {
       description: updatedCampaign.description,
       image: updatedCampaign.file,
       collectionGoal: updatedCampaign.fundraisingGoal,
+      animal:updatedCampaign.animal
     });
-    setEditsucess(true);
+    setEditsucess(true);   
+
   }
 
   const onSubmit: SubmitHandler<campaignForm> = (data) => {
