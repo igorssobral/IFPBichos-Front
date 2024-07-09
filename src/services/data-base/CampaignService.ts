@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios";
 import { AxiosResponse } from "axios";
 import { getToken } from "../../utils/auth-utils";

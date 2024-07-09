@@ -4,7 +4,6 @@ import {
   Divider,
   Grid,
   IconButton,
-  Slide,
   Snackbar,
   TextField,
   Typography,
@@ -57,7 +56,7 @@ const ViewCampanha = () => {
   };
 
   const handleClose = (
-    event: React.SyntheticEvent | Event,
+    _event: React.SyntheticEvent | Event,
     reason?: string
   ) => {
     if (reason === 'clickaway') {

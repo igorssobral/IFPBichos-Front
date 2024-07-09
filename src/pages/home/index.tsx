@@ -1,22 +1,23 @@
-import "./styles.css";
+/* eslint-disable react-hooks/exhaustive-deps */
+import './styles.css';
 
-import { Box, Container, Grid, ListItem, Typography } from "@mui/material";
-import React, { ChangeEvent, useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router";
+import { Box, Container, Grid, ListItem, Typography } from '@mui/material';
+import React, { ChangeEvent, useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router';
 
-import AlertMessage from "../../components/layout/alert";
-import { ApiCampaign } from "../../services/data-base/CampaignService";
-import ButtonAppBar from "../../components/layout/appBar";
-import { CampaignRaw } from "../../services/@types/campaign";
-import { CardModal } from "../../components/ui/card";
-import CustomTextField from "../../components/ui/customTextField";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Radio from "@mui/material/Radio";
-import ResponsiveDialog from "../../components/ui/deleteAaction";
-import SearchIcon from "@mui/icons-material/Search";
-import SelectSmall from "../../components/ui/selectFilter";
-import { getLocalStorage } from "../../utils/local-storage";
+import AlertMessage from '../../components/layout/alert';
+import { ApiCampaign } from '../../services/data-base/CampaignService';
+import ButtonAppBar from '../../components/layout/appBar';
+import { CampaignRaw } from '../../services/@types/campaign';
+import { CardModal } from '../../components/ui/card';
+import CustomTextField from '../../components/ui/customTextField';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Radio from '@mui/material/Radio';
+import ResponsiveDialog from '../../components/ui/deleteAaction';
+import SearchIcon from '@mui/icons-material/Search';
+import SelectSmall from '../../components/ui/selectFilter';
+import { getLocalStorage } from '../../utils/local-storage';
 
 export const Home = () => {
   const { getAllCampaigns, deleteCampaign } = ApiCampaign();
@@ -26,14 +27,15 @@ export const Home = () => {
   const [loggedSucess, setLoggedSucess] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   const [idDelete, setidDelete] = useState<string | null>(null);
-  const [search, setSearch] = useState("");
-  const [selectedFilter, setSelectedFilter] = useState<string>("TODOS");
+  const [search, setSearch] = useState('');
+  const [selectedFilter, setSelectedFilter] = useState<string>('TODOS');
 
   const navigate = useNavigate();
   const location = useLocation();
 
   async function fetchCampaigns() {
     const data = await getAllCampaigns();
+    console.log('🚀 ~ fetchCampaigns ~ data:', data);
     setCampaigns(data);
     setCampaignsCopy(data);
   }
@@ -43,7 +45,7 @@ export const Home = () => {
       fetchCampaigns();
       setidDelete(null);
     })();
-  }, [deleteSucess]);
+  }, []);
 
   useEffect(() => {
     const additionalData = location.state;
@@ -63,9 +65,9 @@ export const Home = () => {
       setIsChecked(false);
       fetchCampaigns();
     }
-    if (selectedFilter !== "TODOS") {
-      setSelectedFilter("TODOS");
-      handleFilterByType("TODOS");
+    if (selectedFilter !== 'TODOS') {
+      setSelectedFilter('TODOS');
+      handleFilterByType('TODOS');
     }
   }
 
@@ -76,7 +78,7 @@ export const Home = () => {
   }
 
   function handleFilterByType(animal: string) {
-    if (animal == "TODOS") {
+    if (animal == 'TODOS') {
       setCampaigns(campaignsCopy);
     } else {
       const filteredCampaigns = campaignsCopy?.filter(
@@ -87,7 +89,7 @@ export const Home = () => {
   }
 
   function sortByRevenueDesc() {
-    if (selectedFilter !== "TODOS") {
+    if (selectedFilter !== 'TODOS') {
       const filteredCampaigns = campaigns?.sort(
         (a, b) => b.collectionPercentage - a.collectionPercentage
       );
@@ -120,13 +122,13 @@ export const Home = () => {
   };
 
   async function handleDelete(id: string) {
-    const data = await deleteCampaign(`${id}`);
-    setDeleteSucess(!deleteSucess);
+    await deleteCampaign(`${id}`);
     setidDelete(null);
+    fetchCampaigns();
   }
 
   const filteredCampaigns =
-    search != ""
+    search != ''
       ? campaigns?.filter((note) =>
           note.title.toLowerCase().includes(search.toLowerCase())
         )
@@ -134,29 +136,29 @@ export const Home = () => {
 
   return (
     <Container>
-      <ButtonAppBar title="Campanhas" visible />
+      <ButtonAppBar title='Campanhas' visible />
       {loggedSucess && getLocalStorage() && (
         <AlertMessage
           isVisible
           setVisible={() => setLoggedSucess(false)}
           message={`Bem Vindo  ${getLocalStorage().user}`}
-          title="Sucesso"
+          title='Sucesso'
         />
       )}
 
       <Grid
-        className="filters"
-        flexDirection={{ xs: "column", md: "row", lg: "row" }}
+        className='filters'
+        flexDirection={{ xs: 'column', md: 'row', lg: 'row' }}
       >
         <Grid
-          display={"flex"}
-          alignItems={{ lg: "center", xs: "start" }}
-          flexDirection={{ xs: "column", md: "row", lg: "row" }}
-          justifyContent={"start"}
+          display={'flex'}
+          alignItems={{ lg: 'center', xs: 'start' }}
+          flexDirection={{ xs: 'column', md: 'row', lg: 'row' }}
+          justifyContent={'start'}
         >
           <Grid>
             <ListItem>
-              {" "}
+              {' '}
               Filtros:
               <SelectSmall
                 handleFilter={(value) => {
@@ -171,15 +173,15 @@ export const Home = () => {
           <Grid>
             <ListItem>
               <FormControlLabel
-                value="end"
+                value='end'
                 control={
                   <Radio
                     checked={isChecked}
-                    color="success"
+                    color='success'
                     onChange={handleChange}
                   />
                 }
-                label="Próximo da meta"
+                label='Próximo da meta'
               />
             </ListItem>
           </Grid>
@@ -187,9 +189,9 @@ export const Home = () => {
           <Grid marginLeft={1}>
             <ListItem>
               <FormControlLabel
-                value="start"
-                control={<DeleteForeverIcon color="action" />}
-                label="Limpar Filtros"
+                value='start'
+                control={<DeleteForeverIcon color='action' />}
+                label='Limpar Filtros'
                 onClick={resetFilters}
               />
             </ListItem>
@@ -199,20 +201,20 @@ export const Home = () => {
         <Grid>
           <ListItem>
             <CustomTextField
-              label=" "
-              title=""
+              label=' '
+              title=''
               onChange={handleSearch}
               inputLabelProps={false}
-              placeholder="pesquise por campanhas"
-              id="title"
-              type={"text"}
-              width="300px"
-              height="30px"
+              placeholder='pesquise por campanhas'
+              id='title'
+              type={'text'}
+              width='300px'
+              height='30px'
             />
             <SearchIcon
-              fontSize="medium"
-              color="disabled"
-              sx={{ position: "absolute", right: "20px" }}
+              fontSize='medium'
+              color='disabled'
+              sx={{ position: 'absolute', right: '20px' }}
             />
           </ListItem>
         </Grid>
@@ -220,28 +222,28 @@ export const Home = () => {
           <AlertMessage
             isVisible
             setVisible={() => setDeleteSucess(false)}
-            message="Campanha excluida com sucesso!"
-            title="Sucesso"
+            message='Campanha excluida com sucesso!'
+            title='Sucesso'
           />
         )}
       </Grid>
 
       <Container
         style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
         }}
       >
         <Box
-          display={"grid"}
-          width={{ xs: "100%", lg: "100%" }}
+          display={'grid'}
+          width={{ xs: '100%', lg: '100%' }}
           marginBottom={5}
-          justifyItems={"center"}
+          justifyItems={'center'}
           gridTemplateColumns={{
-            sm: "repeat(1, 1fr)",
-            md: "repeat(2, 1fr)",
-            lg: "repeat(3, 1fr)",
+            sm: 'repeat(1, 1fr)',
+            md: 'repeat(2, 1fr)',
+            lg: 'repeat(3, 1fr)',
           }}
           gap={5}
         >
@@ -265,7 +267,7 @@ export const Home = () => {
         )}
       </Container>
       {filteredCampaigns?.length === 0 && (
-        <Typography width={300} mx={{ lg: "40%", xs: "20%" }}>
+        <Typography width={300} mx={{ lg: '40%', xs: '20%' }}>
           Nenhuma campanha encontrada
         </Typography>
       )}
