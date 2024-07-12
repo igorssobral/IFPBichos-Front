@@ -1,19 +1,18 @@
-import "./styles.css";
+import './styles.css';
 
-import { Box, Grid } from "@mui/material";
+import { Box, Grid, Tooltip } from '@mui/material';
 import LinearProgress, {
   linearProgressClasses,
-} from "@mui/material/LinearProgress";
+} from '@mui/material/LinearProgress';
 
-import { CampaignRaw } from "../../../services/@types/campaign";
-import { Card } from "@mui/material";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import EditIcon from "@mui/icons-material/Edit";
-import { Navigate } from "react-router-dom";
-import React from "react";
-import { Typography } from "@mui/material";
-import { getLocalStorage } from "../../../utils/local-storage";
-import { styled } from "@mui/material/styles";
+import { CampaignRaw } from '../../../services/@types/campaign';
+import { Card } from '@mui/material';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import EditIcon from '@mui/icons-material/Edit';
+import React from 'react';
+import { Typography } from '@mui/material';
+import { getLocalStorage } from '../../../utils/local-storage';
+import { styled } from '@mui/material/styles';
 
 type CardProps = {
   campaign: CampaignRaw;
@@ -43,86 +42,94 @@ export const CardModal: React.FC<CardProps> = ({
     borderRadius: 15,
     [`&.${linearProgressClasses.colorPrimary}`]: {
       backgroundColor:
-        theme.palette.grey[theme.palette.mode === "light" ? 300 : 800],
+        theme.palette.grey[theme.palette.mode === 'light' ? 300 : 800],
     },
     [`& .${linearProgressClasses.bar}`]: {
       borderRadius: 15,
-      backgroundColor: theme.palette.mode === "light" ? "#24CA68" : "#308fe8",
+      backgroundColor: theme.palette.mode === 'light' ? '#24CA68' : '#308fe8',
     },
   }));
 
   return (
     <Card
-      style={{
-        width: "300px",
-        height: "420px",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        borderRadius: "15px",
-        backgroundColor: "rgb(255, 255, 255)",
+      sx={{
+        width: '300px',
+        height: '420px',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        borderRadius: '15px',
+        backgroundColor: 'rgb(255, 255, 255)',
       }}
     >
-      {getLocalStorage()?.userRole == "ADMIN" ? (
-        <Box className="icons" paddingX={1}>
-          <EditIcon
-            style={{ cursor: "pointer" }}
-            color="success"
-            onClick={handleEditClick}
-          />
-          <DeleteForeverIcon
-            style={{ cursor: "pointer" }}
-            color="error"
-            onClick={handleDeleteClick}
-          />{" "}
+      {getLocalStorage()?.userRole == 'ADMIN' ? (
+        <Box className='icons' paddingX={1}>
+          <Tooltip title='Editar Campanha'>
+            <EditIcon
+              style={{ cursor: 'pointer' }}
+              color='success'
+              onClick={handleEditClick}
+            />
+          </Tooltip>
+
+          <Tooltip title='Excluir Campanha'>
+            <DeleteForeverIcon
+              style={{ cursor: 'pointer' }}
+              color='error'
+              onClick={handleDeleteClick}
+            />
+          </Tooltip>
         </Box>
       ) : (
-        " "
+        ' '
       )}
 
-      <Box className="image" onClick={handleViewCampaign}>
-      {campaign?.animal === 'GATO' ? (
-             <img
-             src={campaign.image || "src/assets/gato.jpg"}
-             alt={campaign.title}
-           />
-            ) : (
-              <img
-              src={campaign.image || "src/assets/dog.jpg"}
-              alt={campaign.title}
-            />
-            )} 
+      <Box className='image' onClick={handleViewCampaign}>
+        {campaign?.animal === 'GATO' ? (
+          <img
+            src={campaign.image || 'src/assets/gato.jpg'}
+            alt={campaign.title}
+          />
+        ) : (
+          <img
+            src={campaign.image || 'src/assets/dog.jpg'}
+            alt={campaign.title}
+          />
+        )}
       </Box>
 
-      <Box className="infor_content" display={"flex"} justifyContent={"center"}>
-        <Typography
-          variant="h4"
-          width={"95%"}
-          maxHeight={65}
-          whiteSpace={"nowrap"}
-          overflow={"clip"}
-          textAlign={"center"}
-          textOverflow={"ellipsis"}
-          fontSize={"1.6rem"}
-          fontFamily={"Lato, sans-serif"}
-        >
-          {campaign.title}
-        </Typography>
-
-        <Box marginTop={3} width={"89%"}>
+      <Box className='infor_content' display={'flex'} justifyContent={'center'}>
+        <Tooltip title={campaign.title}>
           <Typography
-            variant="h6"
-            fontSize={"1.1rem"}
-            fontWeight={"300"}
-            fontFamily={"Lato, sans-serif"}
+            variant='h4'
+            width={'95%'}
+            maxHeight={65}
+            whiteSpace={'nowrap'}
+            overflow={'clip'}
+            textAlign={'center'}
+            textOverflow={'ellipsis'}
+            fontSize={'1.4rem'}
+            fontFamily={'Lato, sans-serif'}
+            sx={{ cursor: 'default' }}
+          >
+            {campaign.title}
+          </Typography>
+        </Tooltip>
+
+        <Box marginTop={3} width={'89%'}>
+          <Typography
+            variant='h6'
+            fontSize={'1.1rem'}
+            fontWeight={'300'}
+            fontFamily={'Lato, sans-serif'}
           >
             Meta: R${campaign.collectionGoal.toFixed(2)}
           </Typography>
-          <Grid container display={"flex"} alignItems={"center"}>
-            <Grid width={"70%"}>
+          <Grid container display={'flex'} alignItems={'center'}>
+            <Grid width={'70%'}>
               <Box>
                 <BorderLinearProgress
-                  variant="determinate"
+                  variant='determinate'
                   value={campaign.collectionPercentage}
                 />
               </Box>
@@ -130,10 +137,10 @@ export const CardModal: React.FC<CardProps> = ({
             <Grid>
               <Typography
                 marginLeft={1}
-                variant="h3"
-                fontSize={"1.1rem"}
-                fontWeight={"bold"}
-                fontFamily={"Lato, sans-serif"}
+                variant='h3'
+                fontSize={'1.1rem'}
+                fontWeight={'bold'}
+                fontFamily={'Lato, sans-serif'}
               >
                 {`${campaign.collectionPercentage}%`}
               </Typography>
@@ -141,10 +148,10 @@ export const CardModal: React.FC<CardProps> = ({
           </Grid>
 
           <Typography
-            variant="h6"
-            fontSize={".9rem"}
-            fontWeight={"300"}
-            fontFamily={"Lato, sans-serif"}
+            variant='h6'
+            fontSize={'.9rem'}
+            fontWeight={'300'}
+            fontFamily={'Lato, sans-serif'}
           >
             Arrecadado R${campaign.balance.toFixed(2)}
           </Typography>
