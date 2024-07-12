@@ -10,6 +10,7 @@ interface CustomTextFieldProps extends Omit<TextFieldProps, "error"> {
   multiline?: boolean;
   width?: string;
   height?: string;
+  fontSize?: string;
   inputLabelProps?: boolean;
   error?: boolean;
 }
@@ -22,8 +23,8 @@ const CustomTextField: React.FC<CustomTextFieldProps> = ({
   multiline,
   width,
   height,
+  fontSize,
   inputLabelProps,
-  error,
   helperText,
   ...rest
 }) => (
@@ -39,12 +40,14 @@ const CustomTextField: React.FC<CustomTextFieldProps> = ({
       InputLabelProps={{ shrink: inputLabelProps }}
       error={helperText ? true : false}
       helperText={helperText}
+      
       {...rest}
       InputProps={{
         style: {
           width: width || "300px",
           height: height || "40px",
-          borderRadius: "10px",
+          borderRadius: "7px",
+          fontSize: fontSize || "15px",
         },
       }}
     />
