@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
 import { Button } from "../button";
 import Dialog from "@mui/material/Dialog";
@@ -5,9 +6,9 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import useMediaQuery from "@mui/material/useMediaQuery";
-import { useTheme } from "@mui/material/styles";
 import { ButtonGroup } from "../button-group";
+import { Slide } from '@mui/material';
+import { TransitionProps } from '@mui/material/transitions';
 
 
 type props = {
@@ -22,8 +23,14 @@ export default function ResponsiveDialog({
   handleClosed,
 }: props) {
   const [open, setOpen] = useState(isVisible);
-  const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
+  const Transition = React.forwardRef(function Transition(
+    props: TransitionProps & {
+      children: React.ReactElement<any, any>;
+    },
+    ref: React.Ref<unknown>,
+  ) {
+    return <Slide direction="up" ref={ref} {...props} />;
+  });
 
   const handleClose = () => {
     handleClosed();
@@ -33,16 +40,17 @@ export default function ResponsiveDialog({
   return (
     <React.Fragment>
       <Dialog
-        fullScreen={fullScreen}
         open={open}
         onClose={handleClose}
-        style={{ borderRadius: "25px" }}
+        TransitionComponent={Transition}
+        keepMounted
         aria-labelledby="responsive-dialog-title"
       >
         <DialogTitle id="responsive-dialog-title">
           {"Excluir Campanha"}
         </DialogTitle>
-        <DialogContent>
+        <DialogContent 
+>
           <DialogContentText>Deseja excluir essa campanha?</DialogContentText>
         </DialogContent>
         <DialogActions>
