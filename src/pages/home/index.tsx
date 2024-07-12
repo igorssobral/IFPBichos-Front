@@ -1,7 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import './styles.css';
 
-import { Box, Container, Grid, ListItem, Typography } from '@mui/material';
+import {
+  Box,
+  Container,
+  Grid,
+  ListItem,
+  Pagination,
+  Typography,
+} from '@mui/material';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 
@@ -18,10 +25,11 @@ import ResponsiveDialog from '../../components/ui/deleteAaction';
 import SearchIcon from '@mui/icons-material/Search';
 import SelectSmall from '../../components/ui/selectFilter';
 import { getLocalStorage } from '../../utils/local-storage';
+import usePagination from '../../hooks/pagination';
 
 export const Home = () => {
   const { getAllCampaigns, deleteCampaign } = ApiCampaign();
-  const [campaigns, setCampaigns] = useState<CampaignRaw[]>();
+  const [campaigns, setCampaigns] = useState<CampaignRaw[]>([]);
   const [campaignsCopy, setCampaignsCopy] = useState<CampaignRaw[]>();
   const [deleteSucess, setDeleteSucess] = useState(false);
   const [loggedSucess, setLoggedSucess] = useState(false);
@@ -29,17 +37,30 @@ export const Home = () => {
   const [idDelete, setidDelete] = useState<string | null>(null);
   const [search, setSearch] = useState('');
   const [selectedFilter, setSelectedFilter] = useState<string>('TODOS');
+  const [page, setPage] = useState(1);
 
+  const PER_PAGE = 12;
+  const totalPages = Math.ceil(campaigns?.length / PER_PAGE);
   const navigate = useNavigate();
   const location = useLocation();
 
+  //uso do hook de paginação
+  const _DATA = usePagination(campaigns, PER_PAGE);
+
+  //função que recebe os dados do componente <Pagination/>
+  const handleChangePage = (_e: unknown, p: number) => {
+    setPage(p);
+    _DATA.jump(p);
+  };
+
   async function fetchCampaigns() {
     const data = await getAllCampaigns();
-    console.log('🚀 ~ fetchCampaigns ~ data:', data);
-    setCampaigns(data);
-    setCampaignsCopy(data);
+    if (data) {
+      setCampaigns(data);
+      setCampaignsCopy(data);
+    }
   }
-
+  //Carrega as campanhas salvas chamando a função fetchCampaigns()
   useEffect(() => {
     (async () => {
       fetchCampaigns();
@@ -47,6 +68,7 @@ export const Home = () => {
     })();
   }, []);
 
+  //verifica se tem algum o usuario logado
   useEffect(() => {
     const additionalData = location.state;
     if (additionalData) {
@@ -60,7 +82,9 @@ export const Home = () => {
     navigate(`/editcampanha/${id}`);
   };
 
+  //função pra resetar os filtros
   function resetFilters() {
+    setSearch('');
     if (isChecked) {
       setIsChecked(false);
       fetchCampaigns();
@@ -71,23 +95,26 @@ export const Home = () => {
     }
   }
 
+  //função de filtro de pesquisa
   function handleSearch(event: ChangeEvent<HTMLInputElement>) {
     const query = event.target.value;
 
     setSearch(query);
   }
 
+  //função que filtra por tipo de animal
   function handleFilterByType(animal: string) {
     if (animal == 'TODOS') {
-      setCampaigns(campaignsCopy);
+      setCampaigns(campaignsCopy || []);
     } else {
-      const filteredCampaigns = campaignsCopy?.filter(
+      const filteredCampaigns = (campaignsCopy || []).filter(
         (campaign) => campaign.animal === animal
       );
       setCampaigns(filteredCampaigns);
     }
   }
 
+  //função que filtra por proximo da meta
   function sortByRevenueDesc() {
     if (selectedFilter !== 'TODOS') {
       const filteredCampaigns = campaigns?.sort(
@@ -95,7 +122,7 @@ export const Home = () => {
       );
       setCampaigns(filteredCampaigns);
     } else {
-      const filteredCampaigns = campaignsCopy?.sort(
+      const filteredCampaigns = (campaignsCopy || []).sort(
         (a, b) => b.collectionPercentage - a.collectionPercentage
       );
       setCampaigns(filteredCampaigns);
@@ -107,6 +134,7 @@ export const Home = () => {
     sortByRevenueDesc();
   };
 
+  //função pra visualizar detalhes de uma campanha
   const handleViewCampaign = (id: string) => {
     const obj = campaigns?.find((campaign) => campaign.id === id);
 
@@ -121,18 +149,22 @@ export const Home = () => {
     }
   };
 
+  //função pra deletar uma campanha
   async function handleDelete(id: string) {
     await deleteCampaign(`${id}`);
     setidDelete(null);
     fetchCampaigns();
   }
 
+  //renderiza
   const filteredCampaigns =
     search != ''
-      ? campaigns?.filter((note) =>
-          note.title.toLowerCase().includes(search.toLowerCase())
-        )
-      : campaigns;
+      ? _DATA
+          .currentData()
+          ?.filter((note) =>
+            note.title.toLowerCase().includes(search.toLowerCase())
+          )
+      : _DATA.currentData();
 
   return (
     <Container>
@@ -201,18 +233,20 @@ export const Home = () => {
         <Grid>
           <ListItem>
             <CustomTextField
-              label=' '
+              label=''
               title=''
               onChange={handleSearch}
               inputLabelProps={false}
               placeholder='pesquise por campanhas'
               id='title'
               type={'text'}
-              width='300px'
+              width='250px'
               height='30px'
+              focused={false}
+              fontSize='13px'
             />
             <SearchIcon
-              fontSize='medium'
+              fontSize='small'
               color='disabled'
               sx={{ position: 'absolute', right: '20px' }}
             />
@@ -227,6 +261,24 @@ export const Home = () => {
           />
         )}
       </Grid>
+
+      <Container
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          marginBlock: '20px',
+        }}
+      >
+        <Pagination
+          count={totalPages}
+          variant='outlined'
+          style={{ color: 'red' }}
+          size='medium'
+          shape='rounded'
+          page={page}
+          onChange={handleChangePage}
+        ></Pagination>
+      </Container>
 
       <Container
         style={{
@@ -247,15 +299,17 @@ export const Home = () => {
           }}
           gap={5}
         >
-          {filteredCampaigns?.map((campaign) => (
-            <CardModal
-              key={campaign.id}
-              campaign={campaign}
-              onEdit={handleEdit}
-              onView={handleViewCampaign}
-              onDelete={() => setidDelete(campaign.id)}
-            />
-          ))}
+          {filteredCampaigns.map((campaign) => {
+            return (
+              <CardModal
+                key={campaign.id}
+                campaign={campaign}
+                onEdit={handleEdit}
+                onView={handleViewCampaign}
+                onDelete={() => setidDelete(campaign.id)}
+              />
+            );
+          })}
         </Box>
 
         {idDelete && (
@@ -270,6 +324,25 @@ export const Home = () => {
         <Typography width={300} mx={{ lg: '40%', xs: '20%' }}>
           Nenhuma campanha encontrada
         </Typography>
+      )}
+
+      {filteredCampaigns?.length !== 0 && (
+        <Container
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            marginBlock: '20px',
+          }}
+        >
+          <Pagination
+            count={totalPages}
+            variant='outlined'
+            size='medium'
+            shape='rounded'
+            page={page}
+            onChange={handleChangePage}
+          ></Pagination>
+        </Container>
       )}
     </Container>
   );
