@@ -26,11 +26,21 @@ import SearchIcon from '@mui/icons-material/Search';
 import SelectSmall from '../../components/ui/selectFilter';
 import { getLocalStorage } from '../../utils/local-storage';
 import usePagination from '../../hooks/pagination';
+import { ResponsePayment } from '../../services/@types/response-payment';
+import { ApiPayment } from '../../services/data-base/payment-service';
 
 export const Home = () => {
   const { getAllCampaigns, deleteCampaign } = ApiCampaign();
+  const { updatePayment } = ApiPayment();
   const [campaigns, setCampaigns] = useState<CampaignRaw[]>([]);
   const [campaignsCopy, setCampaignsCopy] = useState<CampaignRaw[]>();
+  const [responsePayment, setResponsePayment] = useState<ResponsePayment>({
+    paymentId: '',
+    status: '',
+    paymentType: '',
+    preferenceId: '',
+  });
+
   const [deleteSucess, setDeleteSucess] = useState(false);
   const [loggedSucess, setLoggedSucess] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
@@ -43,9 +53,6 @@ export const Home = () => {
   const totalPages = Math.ceil(campaigns?.length / PER_PAGE);
   const navigate = useNavigate();
   const location = useLocation();
-
-  //uso do hook de paginação
-  const _DATA = usePagination(campaigns, PER_PAGE);
 
   //função que recebe os dados do componente <Pagination/>
   const handleChangePage = (_e: unknown, p: number) => {
@@ -156,15 +163,46 @@ export const Home = () => {
     fetchCampaigns();
   }
 
-  //renderiza
+  useEffect(() => {
+    const urlObj = new URL(window.location.href);
+    const params = new URLSearchParams(urlObj.search);
+
+    const paymentId = params.get('payment_id') || '';
+    const status = params.get('status') || '';
+    const paymentType = params.get('payment_type') || '';
+    const preferenceId = params.get('preference_id') || '';
+    setResponsePayment({
+      paymentId: paymentId,
+      status: status,
+      paymentType: paymentType,
+      preferenceId: preferenceId,
+    });
+  }, []);
+
+  useEffect(() => {
+    const updatePay = async () => {
+
+      if (responsePayment.paymentId != '') {
+         await updatePayment(responsePayment);
+       window.location.href = "http://localhost:5173/campanhas"
+      }
+      
+    };
+    updatePay();
+  
+  }, [responsePayment]);
+
   const filteredCampaigns =
     search != ''
-      ? _DATA
-          .currentData()
+      ? campaigns
+         
           ?.filter((note) =>
             note.title.toLowerCase().includes(search.toLowerCase())
           )
-      : _DATA.currentData();
+      : campaigns;
+
+  //uso do hook de paginação
+  const _DATA = usePagination(filteredCampaigns, PER_PAGE);
 
   return (
     <Container>
@@ -277,7 +315,7 @@ export const Home = () => {
           shape='rounded'
           page={page}
           onChange={handleChangePage}
-        ></Pagination>
+        />
       </Container>
 
       <Container
@@ -299,7 +337,7 @@ export const Home = () => {
           }}
           gap={5}
         >
-          {filteredCampaigns.map((campaign) => {
+          {_DATA.currentData().map((campaign) => {
             return (
               <CardModal
                 key={campaign.id}
@@ -341,7 +379,7 @@ export const Home = () => {
             shape='rounded'
             page={page}
             onChange={handleChangePage}
-          ></Pagination>
+          />
         </Container>
       )}
     </Container>

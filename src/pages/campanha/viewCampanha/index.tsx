@@ -1,9 +1,13 @@
+/* eslint-disable @typescript-eslint/prefer-as-const */
 /* eslint-disable no-empty */
 import {
+  Backdrop,
   Box,
+  CircularProgress,
   Divider,
   Grid,
   IconButton,
+  Modal,
   Snackbar,
   TextField,
   Typography,
@@ -30,8 +34,13 @@ import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import { formatValue } from '../../../utils/format-money';
 import dog from '../../../assets/dog.jpg';
 import cat from '../../../assets/gato.jpg';
+import CustomTextField from '../../../components/ui/customTextField';
+import { ButtonGroup } from '../../../components/ui/button-group';
+import { ApiPayment } from '../../../services/data-base/payment-service';
+import { getLocalStorage } from '../../../utils/local-storage';
 
 interface Campaign {
+  id: number;
   title: string;
   collectionGoal: number;
   collectionPercentage: number;
@@ -43,12 +52,42 @@ interface Campaign {
   image: File | null;
 }
 
+const style = {
+  position: 'absolute' as 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+  borderRadius: 2,
+};
+
+const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
+  height: 15,
+  borderRadius: 15,
+  [`&.${linearProgressClasses.colorPrimary}`]: {
+    backgroundColor:
+      theme.palette.grey[theme.palette.mode === 'light' ? 300 : 800],
+  },
+  [`& .${linearProgressClasses.bar}`]: {
+    borderRadius: 15,
+    backgroundColor: theme.palette.mode === 'light' ? '#24CA68' : '#308fe8',
+  },
+}));
+
 const ViewCampanha = () => {
   const { obj } = useParams<{ obj?: string }>();
   const [campaign, setCampaign] = useState<Campaign | null>();
   const [sharedLink, setSharedLink] = useState<string>('');
   const [isCopy, setIsCopy] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [currentValue, setCurrentValue] = useState<string>('');
 
+  const { startPayment } = ApiPayment();
   const handleClick = async () => {
     handleShare((sharedUrl: string) => {
       setSharedLink(sharedUrl);
@@ -80,18 +119,6 @@ const ViewCampanha = () => {
   };
 
   const navigate = useNavigate();
-  const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
-    height: 15,
-    borderRadius: 15,
-    [`&.${linearProgressClasses.colorPrimary}`]: {
-      backgroundColor:
-        theme.palette.grey[theme.palette.mode === 'light' ? 300 : 800],
-    },
-    [`& .${linearProgressClasses.bar}`]: {
-      borderRadius: 15,
-      backgroundColor: theme.palette.mode === 'light' ? '#24CA68' : '#308fe8',
-    },
-  }));
 
   function handleBack() {
     navigate('/campanhas');
@@ -104,9 +131,9 @@ const ViewCampanha = () => {
 
       try {
         const parsedObj: Campaign = JSON.parse(decodedObj);
-        console.log('🚀 ~ useEffect ~ parsedObj:', parsedObj);
 
         setCampaign({
+          id: parsedObj.id,
           title: parsedObj.title,
           description: parsedObj.description,
           collectionGoal: parsedObj.collectionGoal,
@@ -120,6 +147,31 @@ const ViewCampanha = () => {
       } catch (error) {}
     }
   }, [obj, campaign]);
+  //
+
+  async function handleConfirmDonation() {
+    setOpen(true);
+    await startPayment({
+      description: campaign?.description,
+      title: campaign?.title,
+      transactionAmount: currentValue,
+      installments: 1,
+      campaignId: campaign?.id,
+      userLogin: getLocalStorage().user,
+    })
+      .then((response) => {
+        window.location.href = response.initPoint;
+
+        console.log(response.initPoint);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    setOpen(false);
+  }
+
+  const handleOpen = () => setOpenModal(true);
+  const handleCloseModal = () => setOpenModal(false);
 
   return (
     <>
@@ -170,15 +222,21 @@ const ViewCampanha = () => {
                   textAlign={'center'}
                 >
                   {campaign
-                    ? `${campaign.collectionPercentage}%  /  ${formatValue(
-                        Number(campaign?.balance)
-                      )}`
+                    ? `${
+                        campaign.collectionPercentage > 100
+                          ? 100
+                          : campaign.collectionPercentage
+                      }%  /  ${formatValue(Number(campaign?.balance))}`
                     : 0}
                 </Typography>
 
                 <BorderLinearProgress
                   variant='determinate'
-                  value={campaign?.collectionPercentage}
+                  value={
+                    campaign && campaign?.collectionPercentage > 100
+                      ? 100
+                      : campaign?.collectionPercentage
+                  }
                 />
               </Box>
 
@@ -215,8 +273,13 @@ const ViewCampanha = () => {
                   </Typography>
                 </Typography>
               </Box>
+
               <Box width={'100%'} display={'flex'} flexDirection={'column'}>
-                <Button label='Realizar Doação' headlight />
+                <Button
+                  label='Realizar Doação'
+                  headlight
+                  onClick={handleOpen}
+                />
                 <Button label='voltar' onClick={handleBack} />
               </Box>
             </Grid>
@@ -297,6 +360,40 @@ const ViewCampanha = () => {
           onClose={handleClose}
           message='Link Copiado!'
         />
+        <Backdrop
+          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.modal + 1 }}
+          open={open}
+          onClick={handleClose}
+        >
+          <CircularProgress color='inherit' />
+        </Backdrop>
+
+        <Modal open={openModal} onClose={handleCloseModal}>
+          <Box sx={style}>
+            <Typography variant='h5' color={'#24CA68'}>
+              {campaign?.title}
+            </Typography>
+            <Divider sx={{ marginBottom: 5 }} />
+            <Typography variant='subtitle1'>Valor da Doação</Typography>
+            <CustomTextField
+              id=''
+              label=''
+              type='number'
+              placeholder='R$'
+              variant='standard'
+              onChange={(e) => setCurrentValue(e.target.value)}
+            />
+            <ButtonGroup>
+              <Button label='Cancelar' onClick={handleCloseModal} />
+              <Button
+                headlight
+                label='Doar'
+                width='120px'
+                onClick={handleConfirmDonation}
+              />
+            </ButtonGroup>
+          </Box>
+        </Modal>
       </Grid>
     </>
   );
