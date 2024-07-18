@@ -49,6 +49,7 @@ export const CardModal: React.FC<CardProps> = ({
       backgroundColor: theme.palette.mode === 'light' ? '#24CA68' : '#308fe8',
     },
   }));
+  // console.log('🚀 ~ campaign.collectionPercentage:', campaign.collectionPercentage)
 
   return (
     <Card
@@ -130,7 +131,7 @@ export const CardModal: React.FC<CardProps> = ({
               <Box>
                 <BorderLinearProgress
                   variant='determinate'
-                  value={campaign.collectionPercentage}
+                  value={campaign.collectionPercentage > 100 ? 100 : campaign.collectionPercentage}
                 />
               </Box>
             </Grid>
@@ -142,7 +143,7 @@ export const CardModal: React.FC<CardProps> = ({
                 fontWeight={'bold'}
                 fontFamily={'Lato, sans-serif'}
               >
-                {`${campaign.collectionPercentage}%`}
+                {`${campaign.collectionPercentage > 100 ? 100 : campaign.collectionPercentage}%`}
               </Typography>
             </Grid>
           </Grid>

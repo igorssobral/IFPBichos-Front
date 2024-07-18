@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
+import React, { useState, useEffect } from 'react';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 type SelectProps = {
   handleFilter: (value: string) => void;
@@ -12,7 +12,7 @@ export default function SelectSmall({
   handleFilter,
   selectedValue,
 }: SelectProps) {
-  const [filter, setFilter] = useState<string>("TODOS");
+  const [filter, setFilter] = useState<string>('TODOS');
 
   useEffect(() => {
     setFilter(selectedValue);
@@ -25,11 +25,11 @@ export default function SelectSmall({
   };
 
   return (
-    <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-      <Select value={filter} onChange={handleChange}>
-        <MenuItem value={"TODOS"}>Todos</MenuItem>
-        <MenuItem value={"GATO"}>Gato</MenuItem>
-        <MenuItem value={"CACHORRO"}>Cachorro</MenuItem>
+    <FormControl sx={{ m: 1, minWidth: 120 }} size='small'>
+      <Select value={filter} onChange={handleChange} sx={{ height: 35 }}>
+        <MenuItem value={'TODOS'}>Todos</MenuItem>
+        <MenuItem value={'GATO'}>Gato</MenuItem>
+        <MenuItem value={'CACHORRO'}>Cachorro</MenuItem>
       </Select>
     </FormControl>
   );

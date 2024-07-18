@@ -166,11 +166,13 @@ export const CreateCampanha = () => {
                   id="file"
                   label="Imagem"
                   type="file"
+                  
                   helperText={errors?.file?.message}
                   {...field}
                 />
               )}
             />
+            
 
             <ButtonGroup>
               <Button headlight label="Salvar" type="submit" />
