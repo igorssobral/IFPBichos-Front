@@ -27,7 +27,7 @@ const AppRouter = () => {
           element={isAuthenticated ? <Navigate to='/signup' /> : <SignUp />}
         />
         <Route path='/campanhas' element={<Home />} />
-        <Route path='/view-campaign/:obj' element={<ViewCampanha />} />
+        <Route path='/view-campaign/:id' element={<ViewCampanha />} />
         <Route
           path='/createcampanha'
           element={isAdmin ? <CreateCampanha /> : <Navigate to='/login' />}
