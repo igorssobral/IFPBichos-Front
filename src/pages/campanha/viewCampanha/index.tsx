@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/prefer-as-const */
 /* eslint-disable no-empty */
 import {
@@ -11,11 +12,8 @@ import {
   Snackbar,
   TextField,
   Typography,
-  styled,
+  
 } from '@mui/material';
-import LinearProgress, {
-  linearProgressClasses,
-} from '@mui/material/LinearProgress';
 import React, { useEffect, useRef, useState } from 'react';
 import { formatInputDate, formatUTC } from '../../../utils/format-date';
 import {
@@ -38,48 +36,13 @@ import CustomTextField from '../../../components/ui/customTextField';
 import { ButtonGroup } from '../../../components/ui/button-group';
 import { ApiPayment } from '../../../services/data-base/payment-service';
 import { getLocalStorage } from '../../../utils/local-storage';
-
-interface Campaign {
-  id: number;
-  title: string;
-  collectionGoal: number;
-  collectionPercentage: number;
-  balance: number;
-  animal: string;
-  description: string;
-  start: string;
-  end: string;
-  image: File | null;
-}
-
-const style = {
-  position: 'absolute' as 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
-  borderRadius: 2,
-};
-
-const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
-  height: 15,
-  borderRadius: 15,
-  [`&.${linearProgressClasses.colorPrimary}`]: {
-    backgroundColor:
-      theme.palette.grey[theme.palette.mode === 'light' ? 300 : 800],
-  },
-  [`& .${linearProgressClasses.bar}`]: {
-    borderRadius: 15,
-    backgroundColor: theme.palette.mode === 'light' ? '#24CA68' : '#308fe8',
-  },
-}));
+import { ApiCampaign } from '../../../services/data-base/CampaignService';
+import { ResponsePayment } from '../../../services/@types/response-payment';
+import { BorderLinearProgress, style, styleButtonUi } from './style';
+import { Campaign } from '../../../services/@types/campaign';
 
 const ViewCampanha = () => {
-  const { obj } = useParams<{ obj?: string }>();
+  const { id } = useParams<{ id?: string }>();
   const [campaign, setCampaign] = useState<Campaign | null>();
   const [sharedLink, setSharedLink] = useState<string>('');
   const [isCopy, setIsCopy] = useState(false);
@@ -87,7 +50,18 @@ const ViewCampanha = () => {
   const [open, setOpen] = useState(false);
   const [currentValue, setCurrentValue] = useState<string>('');
 
-  const { startPayment } = ApiPayment();
+  const [responsePayment, setResponsePayment] = useState<ResponsePayment>({
+    paymentId: '',
+    status: '',
+    paymentType: '',
+    preferenceId: '',
+  });
+
+  const { startPayment, updatePayment } = ApiPayment();
+  const { getCampaignById } = ApiCampaign();
+  const navigate = useNavigate();
+  const inputRef = useRef<HTMLInputElement>(null);
+
   const handleClick = async () => {
     handleShare((sharedUrl: string) => {
       setSharedLink(sharedUrl);
@@ -105,8 +79,6 @@ const ViewCampanha = () => {
     setIsCopy(false);
   };
 
-  const inputRef = useRef<HTMLInputElement>(null);
-
   const handleCopy = async () => {
     try {
       if (inputRef.current) {
@@ -117,61 +89,89 @@ const ViewCampanha = () => {
       console.error('Erro ao copiar o link:', error);
     }
   };
+  const handleOpen = () => setOpenModal(true);
+  const handleCloseModal = () => setOpenModal(false);
+  const handleBack = () => navigate('/campanhas');
 
-  const navigate = useNavigate();
-
-  function handleBack() {
-    navigate('/campanhas');
-  }
-
-  useEffect(() => {
-    handleClick();
-    if (obj && !campaign) {
-      const decodedObj = decodeURIComponent(obj);
-
-      try {
-        const parsedObj: Campaign = JSON.parse(decodedObj);
-
-        setCampaign({
-          id: parsedObj.id,
-          title: parsedObj.title,
-          description: parsedObj.description,
-          collectionGoal: parsedObj.collectionGoal,
-          collectionPercentage: parsedObj.collectionPercentage,
-          animal: parsedObj.animal,
-          balance: parsedObj.balance,
-          start: formatUTC(new Date(formatInputDate(parsedObj.start))),
-          end: formatUTC(new Date(formatInputDate(parsedObj.end))),
-          image: parsedObj.image,
+  async function findCampaign() {
+    if (id && !campaign) {
+      console.log('🚀 ~ findCampaign ~ id:', id);
+      await getCampaignById(id)
+        .then((data: Campaign) => {
+          setCampaign({
+            id: data.id,
+            title: data.title,
+            description: data.description,
+            collectionGoal: data.collectionGoal,
+            collectionPercentage: data.collectionPercentage,
+            animal: data.animal,
+            balance: data.balance,
+            start: formatUTC(new Date(formatInputDate(data.start))),
+            end: formatUTC(new Date(formatInputDate(data.end))),
+            image: data.image,
+          });
+        })
+        .catch((error) => {
+          console.error('Erro ao buscar a campanha:', error);
         });
-      } catch (error) {}
     }
-  }, [obj, campaign]);
-  //
+  }
+  useEffect(() => {
+    findCampaign();
+    handleClick();
+  }, []);
 
   async function handleConfirmDonation() {
     setOpen(true);
-    await startPayment({
-      description: campaign?.description,
-      title: campaign?.title,
-      transactionAmount: currentValue,
-      installments: 1,
-      campaignId: campaign?.id,
-      userLogin: getLocalStorage().user,
-    })
-      .then((response) => {
-        window.location.href = response.initPoint;
-
-        console.log(response.initPoint);
-      })
-      .catch((error) => {
-        console.log(error);
+    try {
+      const response = await startPayment({
+        description: campaign?.description,
+        title: campaign?.title,
+        transactionAmount: currentValue,
+        installments: 1,
+        campaignId: campaign?.id,
+        userLogin: getLocalStorage().user,
+        backUrl: window.location.href,
+        isDirected: true,
       });
-    setOpen(false);
+      window.location.href = response.initPoint;
+    } catch (error) {
+      console.error('Erro ao iniciar pagamento:', error);
+    } finally {
+      setOpen(false);
+    }
   }
+  useEffect(() => {
+    const urlObj = new URL(window.location.href);
+    const params = new URLSearchParams(urlObj.search);
 
-  const handleOpen = () => setOpenModal(true);
-  const handleCloseModal = () => setOpenModal(false);
+    const paymentId = params.get('payment_id') || '';
+    const status = params.get('status') || '';
+    const paymentType = params.get('payment_type') || '';
+    const preferenceId = params.get('preference_id') || '';
+    setResponsePayment({
+      paymentId: paymentId,
+      status: status,
+      paymentType: paymentType,
+      preferenceId: preferenceId,
+    });
+  }, []);
+
+  useEffect(() => {
+    const updatePay = async () => {
+      if (responsePayment.paymentId) {
+        try {
+          await updatePayment(responsePayment);
+          window.location.href = `http://localhost:5173/view-campaign/${id}`;
+        } catch (error) {
+          console.error('Erro ao atualizar pagamento:', error);
+        }
+      }
+    };
+    updatePay();
+  }, [responsePayment, id]);
+
+
 
   return (
     <>
@@ -311,17 +311,7 @@ const ViewCampanha = () => {
                 <ButtonUi
                   onClick={handleCopy}
                   variant='contained'
-                  sx={{
-                    height: '56px',
-                    display: 'block',
-                    position: 'relative',
-                    left: '-10px',
-                    backgroundColor: 'gray',
-                    color: 'white',
-                    borderRadius: '0px 7px 7px 0px',
-                    boxShadow: 'none',
-                    ':hover': { backgroundColor: 'gray', boxShadow: 'none' },
-                  }}
+                  sx={styleButtonUi}
                 >
                   Copiar
                 </ButtonUi>
