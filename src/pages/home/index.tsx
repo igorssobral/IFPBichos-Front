@@ -26,20 +26,12 @@ import SearchIcon from '@mui/icons-material/Search';
 import SelectSmall from '../../components/ui/selectFilter';
 import { getLocalStorage } from '../../utils/local-storage';
 import usePagination from '../../hooks/pagination';
-import { ResponsePayment } from '../../services/@types/response-payment';
-import { ApiPayment } from '../../services/data-base/payment-service';
+import { stylePagination } from './style';
 
 export const Home = () => {
   const { getAllCampaigns, deleteCampaign } = ApiCampaign();
-  const { updatePayment } = ApiPayment();
   const [campaigns, setCampaigns] = useState<CampaignRaw[]>([]);
   const [campaignsCopy, setCampaignsCopy] = useState<CampaignRaw[]>();
-  const [responsePayment, setResponsePayment] = useState<ResponsePayment>({
-    paymentId: '',
-    status: '',
-    paymentType: '',
-    preferenceId: '',
-  });
 
   const [deleteSucess, setDeleteSucess] = useState(false);
   const [loggedSucess, setLoggedSucess] = useState(false);
@@ -143,17 +135,7 @@ export const Home = () => {
 
   //função pra visualizar detalhes de uma campanha
   const handleViewCampaign = (id: string) => {
-    const obj = campaigns?.find((campaign) => campaign.id === id);
-
-    if (obj) {
-      const serializedObj = JSON.stringify(obj);
-
-      const encodedObj = encodeURIComponent(serializedObj);
-
-      navigate(`/view-campaign/${encodedObj}`);
-    } else {
-      console.error(`Nenhuma campanha encontrada com o ID ${id}`);
-    }
+    navigate(`/view-campaign/${id}`);
   };
 
   //função pra deletar uma campanha
@@ -163,42 +145,11 @@ export const Home = () => {
     fetchCampaigns();
   }
 
-  useEffect(() => {
-    const urlObj = new URL(window.location.href);
-    const params = new URLSearchParams(urlObj.search);
-
-    const paymentId = params.get('payment_id') || '';
-    const status = params.get('status') || '';
-    const paymentType = params.get('payment_type') || '';
-    const preferenceId = params.get('preference_id') || '';
-    setResponsePayment({
-      paymentId: paymentId,
-      status: status,
-      paymentType: paymentType,
-      preferenceId: preferenceId,
-    });
-  }, []);
-
-  useEffect(() => {
-    const updatePay = async () => {
-
-      if (responsePayment.paymentId != '') {
-         await updatePayment(responsePayment);
-       window.location.href = "http://localhost:5173/campanhas"
-      }
-      
-    };
-    updatePay();
-  
-  }, [responsePayment]);
-
   const filteredCampaigns =
     search != ''
-      ? campaigns
-         
-          ?.filter((note) =>
-            note.title.toLowerCase().includes(search.toLowerCase())
-          )
+      ? campaigns?.filter((note) =>
+          note.title.toLowerCase().includes(search.toLowerCase())
+        )
       : campaigns;
 
   //uso do hook de paginação
@@ -301,11 +252,7 @@ export const Home = () => {
       </Grid>
 
       <Container
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          marginBlock: '20px',
-        }}
+        style={stylePagination}
       >
         <Pagination
           count={totalPages}
@@ -366,11 +313,7 @@ export const Home = () => {
 
       {filteredCampaigns?.length !== 0 && (
         <Container
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            marginBlock: '20px',
-          }}
+          style={stylePagination}
         >
           <Pagination
             count={totalPages}
