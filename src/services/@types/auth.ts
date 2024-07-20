@@ -11,6 +11,12 @@ export type User = {
   password: string;
 };
 
+export type UserLogged  ={
+  token: string;
+  userRole: string;
+  user: string; 
+}
+
 export type UserDataBase = {
   [key: string]: {
     name: string;
