@@ -1,11 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios, { AxiosResponse } from 'axios';
-import { getToken } from '../../utils/auth-utils';
 import { ResponsePayment } from '../@types/response-payment';
+import { useAuth } from '../../context/auth-context';
 
 export const ApiPayment = () => {
+  const { user } = useAuth();
+
   const URL = import.meta.env.VITE_APP_DB_URL;
-  const token = getToken();
+  const token = user?.token;
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -15,7 +17,7 @@ export const ApiPayment = () => {
   const startPayment = (payment: any): Promise<any> => {
     return new Promise((resolve, reject) => {
       axios
-        .post(`${URL}/payments`, payment,config)
+        .post(`${URL}/payments`, payment, config)
         .then((response: AxiosResponse<any>) => {
           resolve(response.data);
         })
@@ -28,7 +30,7 @@ export const ApiPayment = () => {
   const updatePayment = (payment: ResponsePayment): Promise<any> => {
     return new Promise((resolve, reject) => {
       axios
-        .patch(`${URL}/payments/${payment.preferenceId}`, payment,config)
+        .patch(`${URL}/payments/${payment.preferenceId}`, payment, config)
         .then((response: AxiosResponse<any>) => {
           resolve(response.data);
         })
