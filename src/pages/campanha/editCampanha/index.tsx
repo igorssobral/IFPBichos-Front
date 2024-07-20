@@ -13,19 +13,11 @@ import ButtonAppBar from "../../../components/layout/appBar";
 import { ButtonGroup } from "../../../components/ui/button-group";
 import CustomTextField from "../../../components/ui/customTextField";
 import { Title } from "../../../components/ui/tittle";
-import { createCampaignSchema } from "../createCampanha/schema";
+import { CreateCampaignSchema, createCampaignSchema } from "../createCampanha/schema";
 import { formatInputDate } from "../../../utils/format-date";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-interface campaignForm {
-  title: string;
-  fundraisingGoal: number;
-  description: string;
-  animal: number;
-  startDate: string;
-  finishedDate: string;
-  file: File | null;
-}
+
 
 export const EditCampanha = () => {
   const { getCampaignById, updateCampaign } = ApiCampaign();
@@ -36,7 +28,7 @@ export const EditCampanha = () => {
     formState: { errors },
     control,
     setValue,
-  } = useForm<campaignForm>({
+  } = useForm<CreateCampaignSchema>({
     resolver: zodResolver(createCampaignSchema),
   });
 
@@ -59,7 +51,7 @@ export const EditCampanha = () => {
   }, []);
 
   async function updateCurrencyCampaign(updatedCampaign: any) {
-    const data = await updateCampaign(`${id}`, {
+    await updateCampaign(`${id}`, {
       start: updatedCampaign.startDate,
       end: updatedCampaign.finishedDate,
       title: updatedCampaign.title,
@@ -72,7 +64,7 @@ export const EditCampanha = () => {
 
   }
 
-  const onSubmit: SubmitHandler<campaignForm> = (data) => {
+  const onSubmit: SubmitHandler<CreateCampaignSchema> = (data) => {
     updateCurrencyCampaign(data);
   };
 
