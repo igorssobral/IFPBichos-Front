@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import './styles.css';
 
 import { Box, Grid, Tooltip } from '@mui/material';
@@ -11,9 +12,9 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import EditIcon from '@mui/icons-material/Edit';
 import React from 'react';
 import { Typography } from '@mui/material';
-import { getLocalStorage } from '../../../utils/local-storage';
 import { styled } from '@mui/material/styles';
-
+import { useAuth } from '../../../context/auth-context';
+import { theme as themes } from '../../../themes/styles';
 type CardProps = {
   campaign: CampaignRaw;
   onEdit: (id: string) => void;
@@ -27,6 +28,8 @@ export const CardModal: React.FC<CardProps> = ({
   onDelete,
   onView,
 }) => {
+  const { user } = useAuth();
+
   const handleEditClick = () => {
     onEdit(campaign.id);
   };
@@ -46,10 +49,12 @@ export const CardModal: React.FC<CardProps> = ({
     },
     [`& .${linearProgressClasses.bar}`]: {
       borderRadius: 15,
-      backgroundColor: theme.palette.mode === 'light' ? '#24CA68' : '#308fe8',
+      backgroundColor:
+        theme.palette.mode === 'light'
+          ? themes.colors.primary
+          : themes.colors.bluePrimary,
     },
   }));
-  // console.log('🚀 ~ campaign.collectionPercentage:', campaign.collectionPercentage)
 
   return (
     <Card
@@ -63,7 +68,7 @@ export const CardModal: React.FC<CardProps> = ({
         backgroundColor: 'rgb(255, 255, 255)',
       }}
     >
-      {getLocalStorage()?.userRole == 'ADMIN' ? (
+      {user?.userRole == 'ADMIN' && (
         <Box className='icons' paddingX={1}>
           <Tooltip title='Editar Campanha'>
             <EditIcon
@@ -81,8 +86,6 @@ export const CardModal: React.FC<CardProps> = ({
             />
           </Tooltip>
         </Box>
-      ) : (
-        ' '
       )}
 
       <Box className='image' onClick={handleViewCampaign}>
@@ -131,7 +134,11 @@ export const CardModal: React.FC<CardProps> = ({
               <Box>
                 <BorderLinearProgress
                   variant='determinate'
-                  value={campaign.collectionPercentage > 100 ? 100 : campaign.collectionPercentage}
+                  value={
+                    campaign.collectionPercentage > 100
+                      ? 100
+                      : campaign.collectionPercentage
+                  }
                 />
               </Box>
             </Grid>
@@ -143,7 +150,11 @@ export const CardModal: React.FC<CardProps> = ({
                 fontWeight={'bold'}
                 fontFamily={'Lato, sans-serif'}
               >
-                {`${campaign.collectionPercentage > 100 ? 100 : campaign.collectionPercentage}%`}
+                {`${
+                  campaign.collectionPercentage > 100
+                    ? 100
+                    : campaign.collectionPercentage
+                }%`}
               </Typography>
             </Grid>
           </Grid>

@@ -4,13 +4,16 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import PopupState, { bindTrigger, bindMenu } from "material-ui-popup-state";
+import { useAuth } from '../../../context/auth-context';
 
-function setLocalStorageContent() {
-  localStorage.clear();
-  window.location.reload();
-}
+
 
 export default function MenuPopupState() {
+  const {logout} = useAuth();
+
+const handleLogout = () => {
+  logout();
+};
   return (
     <PopupState variant="popover" popupId="demo-popup-menu">
       {(popupState) => (
@@ -25,7 +28,7 @@ export default function MenuPopupState() {
             <MenuItem
               onClick={() => {
                 popupState.close();
-                setLocalStorageContent();
+                handleLogout();
               }}
             >
               Sair

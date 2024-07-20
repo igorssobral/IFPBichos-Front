@@ -1,6 +1,4 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import './styles.css';
-
 import {
   Box,
   Container,
@@ -10,7 +8,7 @@ import {
   Typography,
 } from '@mui/material';
 import React, { ChangeEvent, useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 
 import AlertMessage from '../../components/layout/alert';
 import { ApiCampaign } from '../../services/data-base/CampaignService';
@@ -24,11 +22,17 @@ import Radio from '@mui/material/Radio';
 import ResponsiveDialog from '../../components/ui/deleteAaction';
 import SearchIcon from '@mui/icons-material/Search';
 import SelectSmall from '../../components/ui/selectFilter';
-import { getLocalStorage } from '../../utils/local-storage';
+import {
+  isWelcomeShown,
+  setWelcomeShown,
+} from '../../utils/local-storage';
 import usePagination from '../../hooks/pagination';
-import { stylePagination } from './style';
+import { filtersStyle, stylePagination } from './style';
+import { useAuth } from '../../context/auth-context';
 
 export const Home = () => {
+  const { user } = useAuth();
+
   const { getAllCampaigns, deleteCampaign } = ApiCampaign();
   const [campaigns, setCampaigns] = useState<CampaignRaw[]>([]);
   const [campaignsCopy, setCampaignsCopy] = useState<CampaignRaw[]>();
@@ -44,7 +48,6 @@ export const Home = () => {
   const PER_PAGE = 12;
   const totalPages = Math.ceil(campaigns?.length / PER_PAGE);
   const navigate = useNavigate();
-  const location = useLocation();
 
   //função que recebe os dados do componente <Pagination/>
   const handleChangePage = (_e: unknown, p: number) => {
@@ -69,11 +72,9 @@ export const Home = () => {
 
   //verifica se tem algum o usuario logado
   useEffect(() => {
-    const additionalData = location.state;
-    if (additionalData) {
-      setLoggedSucess(additionalData.isLogged);
-    } else {
-      setLoggedSucess(false);
+    if (user && !isWelcomeShown()) {
+      setLoggedSucess(true);
+      setWelcomeShown();
     }
   }, []);
 
@@ -158,17 +159,17 @@ export const Home = () => {
   return (
     <Container>
       <ButtonAppBar title='Campanhas' visible />
-      {loggedSucess && getLocalStorage() && (
+      {loggedSucess && user && (
         <AlertMessage
           isVisible
           setVisible={() => setLoggedSucess(false)}
-          message={`Bem Vindo  ${getLocalStorage().user}`}
+          message={`Bem Vindo  ${user?.user}`}
           title='Sucesso'
         />
       )}
 
       <Grid
-        className='filters'
+        sx={filtersStyle}
         flexDirection={{ xs: 'column', md: 'row', lg: 'row' }}
       >
         <Grid
@@ -251,9 +252,7 @@ export const Home = () => {
         )}
       </Grid>
 
-      <Container
-        style={stylePagination}
-      >
+      <Container style={stylePagination}>
         <Pagination
           count={totalPages}
           variant='outlined'
@@ -312,9 +311,7 @@ export const Home = () => {
       )}
 
       {filteredCampaigns?.length !== 0 && (
-        <Container
-          style={stylePagination}
-        >
+        <Container style={stylePagination}>
           <Pagination
             count={totalPages}
             variant='outlined'

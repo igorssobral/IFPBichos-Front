@@ -15,6 +15,8 @@ import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import HistoryIcon from '@mui/icons-material/History';
 import PaymentIcon from '@mui/icons-material/Payment';
 import { BarChart, LocalAtm } from '@mui/icons-material';
+import { useAuth } from '../../../context/auth-context';
+import { theme } from '../../../themes/styles';
 
 type props = {
   open: boolean;
@@ -22,18 +24,13 @@ type props = {
 };
 
 export const Menu = ({ open, setOpen }: props) => {
+
+  const {user} = useAuth();
+
   const closeDrawer = () => {
     setOpen(false);
   };
-  function getLocalStorage() {
-    const user = localStorage.getItem('user');
-
-    if (user) {
-      const userObject = JSON.parse(user);
-      return userObject;
-    }
-    return null;
-  }
+ 
 
   return (
     <React.Fragment>
@@ -58,10 +55,11 @@ export const Menu = ({ open, setOpen }: props) => {
             onClick={() => setOpen(false)}
             component='a'
             key='home'
+            
             style={{
               cursor: 'pointer',
               padding: '11px',
-              borderBottom: '1px solid #24CA68',
+              borderBottom: `1px solid ${theme.colors.primary}`,
             }}
           >
             <IconButton
@@ -79,7 +77,7 @@ export const Menu = ({ open, setOpen }: props) => {
             </Typography>
           </ListItem>
           <List>
-            {getLocalStorage()?.userRole === 'ADMIN' ? (
+            {user?.userRole === 'ADMIN' ? (
               <ListItem
                 button
                 component='a'

@@ -12,7 +12,6 @@ import {
   Snackbar,
   TextField,
   Typography,
-  
 } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
 import { formatInputDate, formatUTC } from '../../../utils/format-date';
@@ -33,16 +32,19 @@ import { formatValue } from '../../../utils/format-money';
 import dog from '../../../assets/dog.jpg';
 import cat from '../../../assets/gato.jpg';
 import CustomTextField from '../../../components/ui/customTextField';
-import { ButtonGroup } from '../../../components/ui/button-group';
+
 import { ApiPayment } from '../../../services/data-base/payment-service';
-import { getLocalStorage } from '../../../utils/local-storage';
 import { ApiCampaign } from '../../../services/data-base/CampaignService';
 import { ResponsePayment } from '../../../services/@types/response-payment';
 import { BorderLinearProgress, style, styleButtonUi } from './style';
 import { Campaign } from '../../../services/@types/campaign';
+import { useAuth } from '../../../context/auth-context';
+import { theme } from '../../../themes/styles';
+import { ButtonGroup } from '../../../components/ui/button-group';
 
 const ViewCampanha = () => {
   const { id } = useParams<{ id?: string }>();
+  const { user } = useAuth();
   const [campaign, setCampaign] = useState<Campaign | null>();
   const [sharedLink, setSharedLink] = useState<string>('');
   const [isCopy, setIsCopy] = useState(false);
@@ -130,7 +132,7 @@ const ViewCampanha = () => {
         transactionAmount: currentValue,
         installments: 1,
         campaignId: campaign?.id,
-        userLogin: getLocalStorage().user,
+        userLogin: user?.user,
         backUrl: window.location.href,
         isDirected: true,
       });
@@ -162,16 +164,11 @@ const ViewCampanha = () => {
       if (responsePayment.paymentId) {
         try {
           await updatePayment(responsePayment);
-          window.location.href = `http://localhost:5173/view-campaign/${id}`;
-        } catch (error) {
-          console.error('Erro ao atualizar pagamento:', error);
-        }
+        } catch (error) {}
       }
     };
     updatePay();
   }, [responsePayment, id]);
-
-
 
   return (
     <>
@@ -254,7 +251,7 @@ const ViewCampanha = () => {
                   variant='h3'
                   fontWeight={'1000'}
                   textAlign={'center'}
-                  color={'#24CA68'}
+                  color={theme.colors.primary}
                 >
                   {formatValue(Number(campaign?.collectionGoal))}
                 </Typography>
@@ -358,32 +355,53 @@ const ViewCampanha = () => {
           <CircularProgress color='inherit' />
         </Backdrop>
 
-        <Modal open={openModal} onClose={handleCloseModal}>
-          <Box sx={style}>
-            <Typography variant='h5' color={'#24CA68'}>
-              {campaign?.title}
-            </Typography>
-            <Divider sx={{ marginBottom: 5 }} />
-            <Typography variant='subtitle1'>Valor da Doação</Typography>
-            <CustomTextField
-              id=''
-              label=''
-              type='number'
-              placeholder='R$'
-              variant='standard'
-              onChange={(e) => setCurrentValue(e.target.value)}
-            />
-            <ButtonGroup>
-              <Button label='Cancelar' onClick={handleCloseModal} />
-              <Button
-                headlight
-                label='Doar'
-                width='120px'
-                onClick={handleConfirmDonation}
+        {user ? (
+          <Modal open={openModal} onClose={handleCloseModal}>
+            <Box sx={style}>
+              <Typography variant='h5' color={theme.colors.primary}>
+                {campaign?.title}
+              </Typography>
+              <Divider sx={{ marginBottom: 5 }} />
+              <Typography variant='subtitle1'>Valor da Doação</Typography>
+              <CustomTextField
+                id=''
+                label=''
+                type='number'
+                placeholder='R$'
+                variant='standard'
+                onChange={(e) => setCurrentValue(e.target.value)}
               />
-            </ButtonGroup>
-          </Box>
-        </Modal>
+              <ButtonGroup>
+                <Button label='Cancelar' width='200px' onClick={handleCloseModal} />
+                <Button
+                  headlight
+                  label='Doar'
+                  width='200px'
+                  onClick={handleConfirmDonation}
+                />
+              </ButtonGroup>
+            </Box>
+          </Modal>
+        ) : (
+          <Modal open={openModal} onClose={handleCloseModal}>
+            <Box sx={style}>
+              <Typography variant='body1'>
+                Crie uma conta ou faça Login para realizar uma doação!
+              </Typography>
+              <Divider sx={{ marginBottom: 2 }} />
+
+              <ButtonGroup>
+                <Button label='Cadastro' onClick={() => navigate('/signUp')} />
+                <Button
+                  headlight
+                  label='Login'
+                  width='120px'
+                  onClick={() => navigate('/login')}
+                />
+              </ButtonGroup>
+            </Box>
+          </Modal>
+        )}
       </Grid>
     </>
   );

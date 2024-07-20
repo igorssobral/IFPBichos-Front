@@ -1,5 +1,5 @@
 import { LinearProgress, linearProgressClasses, styled } from '@mui/material';
-
+import { theme as themes } from '../../../themes/styles';
 export const style = {
   position: 'absolute' as const,
   top: '50%',
@@ -22,7 +22,10 @@ export const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   },
   [`& .${linearProgressClasses.bar}`]: {
     borderRadius: 15,
-    backgroundColor: theme.palette.mode === 'light' ? '#24CA68' : '#308fe8',
+    backgroundColor:
+      theme.palette.mode === 'light'
+        ? themes.colors.primary
+        : themes.colors.bluePrimary,
   },
 }));
 

@@ -8,11 +8,11 @@ import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import SignUp from '../sign-up';
 import ViewCampanha from '../campanha/viewCampanha';
-import { getLocalStorage } from '../../utils/local-storage';
+import { useAuth } from '../../context/auth-context';
 
 const AppRouter = () => {
-  const isAuthenticated = getLocalStorage();
-  const isAdmin = isAuthenticated?.userRole == 'ADMIN';
+  const { user } = useAuth();
+  const isAdmin = user?.userRole === 'ADMIN';
 
   return (
     <Router>
@@ -20,11 +20,11 @@ const AppRouter = () => {
         <Route path='/' element={<Navigate to='/campanhas' />} />
         <Route
           path='/login'
-          element={isAuthenticated ? <Navigate to='/campanhas' /> : <Login />}
+          element={user ? <Navigate to='/campanhas' /> : <Login />}
         />
         <Route
           path='/signUp'
-          element={isAuthenticated ? <Navigate to='/signup' /> : <SignUp />}
+          element={user ? <Navigate to='/signup' /> : <SignUp />}
         />
         <Route path='/campanhas' element={<Home />} />
         <Route path='/view-campaign/:id' element={<ViewCampanha />} />

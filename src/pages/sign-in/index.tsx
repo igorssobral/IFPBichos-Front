@@ -1,17 +1,18 @@
-import React, { useState } from "react";
-import "./styles.css";
-import { ContainerModal } from "../../components/ui/container";
-import { Button } from "../../components/ui/button";
-import { Title } from "../../components/ui/tittle";
-import { useNavigate } from "react-router";
-import CustomTextField from "../../components/ui/customTextField";
-import { Box } from "@mui/material";
-import ButtonAppBar from "../../components/layout/appBar";
-import { login } from "../../services/auth";
-import AlertMessage from "../../components/layout/alert";
-import { useForm, Controller, SubmitHandler } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { LoginSchema, loginSchema } from "./schema";
+import React, { useState } from 'react';
+import './styles.css';
+import { ContainerModal } from '../../components/ui/container';
+import { Button } from '../../components/ui/button';
+import { Title } from '../../components/ui/tittle';
+import { useNavigate } from 'react-router';
+import CustomTextField from '../../components/ui/customTextField';
+import { Box } from '@mui/material';
+import ButtonAppBar from '../../components/layout/appBar';
+import { login } from '../../services/auth';
+import AlertMessage from '../../components/layout/alert';
+import { useForm, Controller, SubmitHandler } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { LoginSchema, loginSchema } from './schema';
+import { useAuth } from '../../context/auth-context';
 
 export const Login = () => {
   const {
@@ -23,63 +24,62 @@ export const Login = () => {
   });
 
   const [errorlogin, setErrorlogin] = useState(false);
+  const { logged } = useAuth();
 
   const navigate = useNavigate();
 
   async function authenticate(data: LoginSchema) {
-    try {
-      await login({
-        login: data.login,
-        password: data.password,
+    await login({
+      login: data.login,
+      password: data.password,
+    })
+      .then((response) => {
+        logged(response.data);
+        navigate('/campanhas');
+      })
+      .catch((error) => {
+        setErrorlogin(true);
       });
-
-      handleCancelClick();
-    } catch (error) {
-      setErrorlogin(true);
-    }
   }
   const onSubmit: SubmitHandler<LoginSchema> = (data) => {
     authenticate(data);
   };
 
-  const handleCancelClick = () => {
-    const additionalData = {
-      key: "value",
-      isLogged: true,
-    };
-    navigate("/campanhas", { state: additionalData });
-  };
-  const handleCreateAccount = () => {
-    navigate("/signup");
-  };
+  // const handleCancelClick = () => {
+  //   const additionalData = {
+  //     key: 'value',
+  //     isLogged: true,
+  //   };
+  //   navigate('/campanhas', { state: additionalData });
+  // };
 
   return (
     <>
-      <ButtonAppBar title="" visible={false} />
-      <Box display={"flex"} flexDirection={"column"} alignItems={"center"}>
+      <ButtonAppBar title='' visible={false} />
+      <Box display={'flex'} flexDirection={'column'} alignItems={'center'}>
         {errorlogin && (
           <AlertMessage
             isVisible
             setVisible={() => setErrorlogin(false)}
-            severity="error"
-            message="Email ou Senha incorretos!"
-            title="Error"
+            severity='error'
+            message='Email ou Senha incorretos!'
+            title='Error'
           />
         )}
         <ContainerModal>
-          <Title label="Login"></Title>
+          <Title label='Login'></Title>
 
           <form onSubmit={handleSubmit(onSubmit)}>
-            <Box display={"flex"} flexDirection={"column"}>
+            <Box display={'flex'} flexDirection={'column'}>
               <Controller
                 control={control}
-                name="login"
+                name='login'
                 render={({ field }) => (
                   <CustomTextField
-                    id="email"
-                    title="Email"
-                    label="Digite seu email"
-                    type="text"
+                    id='email'
+                    title='Email'
+                    label='Digite seu email'
+                    type='text'
                     helperText={errors.login?.message}
                     {...field}
                   />
@@ -88,29 +88,28 @@ export const Login = () => {
 
               <Controller
                 control={control}
-                name="password"
+                name='password'
                 rules={{ required: false }}
                 render={({ field }) => (
                   <CustomTextField
-                    id="password"
-                    title="Senha"
-                    label="Digite sua senha"
-                    type="password"
+                    id='password'
+                    title='Senha'
+                    label='Digite sua senha'
+                    type='password'
                     helperText={errors.password?.message}
                     {...field}
                   />
                 )}
               />
-              <Button label="Entrar" width="300px" type="submit" headlight />
-              <span className="span_login">Esqueceu sua senha?</span>
+              <Button label='Entrar' width='300px' type='submit' headlight />
+              <span className='span_login'>Esqueceu sua senha?</span>
             </Box>
           </form>
-          <div className="signup">
-            <p >
-            Ainda não tem conta?<a href="/signup">Cadastre-se</a>
-          </p>
+          <div className='signup'>
+            <p>
+              Ainda não tem conta?<a href='/signup'>Cadastre-se</a>
+            </p>
           </div>
-          
         </ContainerModal>
       </Box>
     </>
