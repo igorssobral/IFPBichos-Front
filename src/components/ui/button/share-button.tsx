@@ -12,7 +12,6 @@ export const handleShare = async (callback: (sharedUrl: string) => void) => {
     }
   } catch (error) {
     console.error("Erro ao compartilhar:", error);
-    // Trate o erro de forma adequada, por exemplo, exibindo uma mensagem para o usuário.
   }
 };
 

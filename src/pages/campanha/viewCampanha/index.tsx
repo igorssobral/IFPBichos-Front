@@ -97,7 +97,6 @@ const ViewCampanha = () => {
 
   async function findCampaign() {
     if (id && !campaign) {
-      console.log('🚀 ~ findCampaign ~ id:', id);
       await getCampaignById(id)
         .then((data: Campaign) => {
           setCampaign({

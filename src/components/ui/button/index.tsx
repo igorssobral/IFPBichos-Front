@@ -1,5 +1,6 @@
-import React from "react";
-import ButtonComponent from "@mui/material/Button";
+import React from 'react';
+import ButtonComponent from '@mui/material/Button';
+import { theme } from '../../../themes/styles';
 
 type props = {
   width?: string;
@@ -10,22 +11,29 @@ type props = {
   type?: 'button' | 'submit';
 };
 
-export const Button = ({ width, label, headlight,disabled, onClick,type }: props) => {
+export const Button = ({
+  width,
+  label,
+  headlight,
+  disabled,
+  onClick,
+  type,
+}: props) => {
   return (
     <ButtonComponent
       style={{
         width: `${width}`,
-        height: "40px",
+        height: '40px',
         borderRadius: 11,
-        backgroundColor: `${headlight ? "#24CA68" : "#404040"}`,
-        marginTop: "20px",
-        paddingTop: "10px",
-        fontSize: "15px",
-        fontWeight: "bolder",
-        boxShadow: "none",
+        backgroundColor: `${headlight ? theme.colors.primary : theme.colors.secondary}`,
+        marginTop: '20px',
+        paddingTop: '10px',
+        fontSize: '15px',
+        fontWeight: 'bolder',
+        boxShadow: 'none',
       }}
       type={type}
-      variant="contained"
+      variant='contained'
       onClick={onClick}
       disabled={disabled}
     >

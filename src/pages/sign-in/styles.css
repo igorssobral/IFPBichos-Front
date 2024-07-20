@@ -1,3 +1,8 @@
+
+:root{
+    --primary: #24CA68;
+}
+
 .content {
     display: flex;
     height: 100%;
@@ -19,7 +24,7 @@
 
 .span_login {
     font-size: 0.8rem;
-    color: #24CA68;
+    color: var(--primary);
     text-align: center;
 }
 
@@ -40,7 +45,7 @@
 
 .signup a {
     text-decoration: none;
-    color: #24CA68;
+    color: var(--primary);
     margin-left: 5px;
 }
 

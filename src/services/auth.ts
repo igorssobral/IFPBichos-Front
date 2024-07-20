@@ -1,17 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios";
 import { Credentials } from "./@types/auth";
-import { getToken } from "../utils/auth-utils";
+import { getLocalStorage } from '../utils/local-storage';
 
 const URL = import.meta.env.VITE_APP_DB_URL;
 
 export const login = (credentials: Credentials): Promise<any> => {
+
+  
   return new Promise((resolve, reject) => {
     axios
       .post(`${URL}/auth/login`, credentials)
       .then((response) => {
-        localStorage.setItem("user", JSON.stringify(response.data));
-        resolve(response.data);
+        resolve(response);
       })
       .catch((error) => {
         reject(error);
@@ -32,7 +33,7 @@ export const signup = (credentials: any): Promise<any> => {
   });
 };
 export const isValidToken = (): Promise<any> => {
-  const token = getToken();
+  const token = getLocalStorage('user')?.token;
   return new Promise((resolve, reject) => {
     axios
       .post(`${URL}/auth/isValidToken`, null, {

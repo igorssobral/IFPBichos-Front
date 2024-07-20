@@ -37,7 +37,7 @@ export const Login = () => {
         logged(response.data);
         navigate('/campanhas');
       })
-      .catch((error) => {
+      .catch(() => {
         setErrorlogin(true);
       });
   }

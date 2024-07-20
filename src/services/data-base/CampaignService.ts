@@ -1,11 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import axios from "axios";
-import { AxiosResponse } from "axios";
-import { getToken } from "../../utils/auth-utils";
+import axios from 'axios';
+import { AxiosResponse } from 'axios';
+import { useAuth } from '../../context/auth-context';
 
 export const ApiCampaign = () => {
+  const { user } = useAuth();
+
   const URL = import.meta.env.VITE_APP_DB_URL;
-  const token = getToken();
+  const token = user?.token;
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -20,7 +22,7 @@ export const ApiCampaign = () => {
           resolve(response.data);
         })
         .catch((error: any) => {
-          console.error("Erro ao salvar a campanha:", error);
+          console.error('Erro ao salvar a campanha:', error);
           reject(error);
         });
     });
@@ -34,7 +36,7 @@ export const ApiCampaign = () => {
           resolve(response.data);
         })
         .catch((error: any) => {
-          console.error("Erro ao buscar campanhas:", error);
+          console.error('Erro ao buscar campanhas:', error);
           reject(error);
         });
     });
@@ -64,7 +66,7 @@ export const ApiCampaign = () => {
           resolve(response.data);
         })
         .catch((error: any) => {
-          console.error("Erro ao excluir a campanha:", error);
+          console.error('Erro ao excluir a campanha:', error);
           reject(error);
         });
     });
@@ -73,7 +75,7 @@ export const ApiCampaign = () => {
   const getCampaignById = (campaignId: string): Promise<any> => {
     return new Promise((resolve, reject) => {
       axios
-        .get(`${URL}/campaign/${campaignId}`, config)
+        .get(`${URL}/campaign/${campaignId}`)
         .then((response: AxiosResponse<any>) => {
           resolve(response.data);
         })

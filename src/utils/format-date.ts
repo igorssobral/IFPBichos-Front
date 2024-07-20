@@ -14,7 +14,7 @@ export const formatISO = (date: Date) => {
 	return formatter.format("YYYY-MM-DD");
 }
 
-export const formatDateString = (datetime: String) => {
+export const formatDateString = (datetime: string) => {
 	const [date, time] = datetime.split(" ");
 	const [year, month, day] = date.split("-");
 	return `${day}/${month}/${year} ${time}`;
