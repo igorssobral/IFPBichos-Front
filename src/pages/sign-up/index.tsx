@@ -5,19 +5,17 @@ import { Button } from "../../components/ui/button";
 import { ContainerModal } from "../../components/ui/container";
 import { Box } from "@mui/material";
 import { Title } from "../../components/ui/tittle";
-import { SignUpSchema, signUpSchema } from "./schema";
+import { SignUpSchema, signUpSchema } from "../../schemas/signup-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import ButtonAppBar from "../../components/layout/appBar";
 import { useNavigate } from "react-router-dom";
 import { signup } from "../../services/auth";
-import AlertMessage from "../../components/layout/alert";
+import { toast } from 'react-toastify';
 
 
 //Página de cadastro ddo usuário
 const SignUp = () => {
   const [showAdditionalFields, setShowAdditionalFields] = useState(false);
-  const [registerResponse, setRegisterResponse] = useState();
-  const [registerError, setRegisterError] = useState();
 
   const navigate = useNavigate();
 
@@ -39,15 +37,15 @@ const SignUp = () => {
   };
 
   async function handleRegister(register: SignUpSchema) {
-    const data = await signup({
+    await signup({
       ...register,
       login: register.email,
     })
       .then((response) => {
-        setRegisterResponse(response);
+        toast.success(response);
       })
       .catch((error)=>{
-        setRegisterError(error);
+        toast.error(error);
       });
   }
 
@@ -205,25 +203,6 @@ const SignUp = () => {
             </Box>
           </form>
         </ContainerModal>
-
-        {registerResponse && (
-          <AlertMessage
-            isVisible
-            setVisible={handleBackClick}
-            message={registerResponse}
-            title="Sucesso"
-          />
-        ) }
-
-        {registerError && (
-          <AlertMessage
-            isVisible
-            setVisible={()=>{}}
-            message={registerError}
-            title="Erro"
-            severity="error"
-          />
-        ) }
        
       </Box>
     </>

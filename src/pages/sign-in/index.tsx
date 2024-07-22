@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './styles.css';
 import { ContainerModal } from '../../components/ui/container';
 import { Button } from '../../components/ui/button';
@@ -8,11 +8,11 @@ import CustomTextField from '../../components/ui/customTextField';
 import { Box } from '@mui/material';
 import ButtonAppBar from '../../components/layout/appBar';
 import { login } from '../../services/auth';
-import AlertMessage from '../../components/layout/alert';
 import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { LoginSchema, loginSchema } from './schema';
+import { LoginSchema, loginSchema } from '../../schemas/login-schema';
 import { useAuth } from '../../context/auth-context';
+import { toast } from 'react-toastify';
 
 export const Login = () => {
   const {
@@ -22,10 +22,7 @@ export const Login = () => {
   } = useForm<LoginSchema>({
     resolver: zodResolver(loginSchema),
   });
-
-  const [errorlogin, setErrorlogin] = useState(false);
   const { logged } = useAuth();
-
   const navigate = useNavigate();
 
   async function authenticate(data: LoginSchema) {
@@ -38,34 +35,17 @@ export const Login = () => {
         navigate('/campanhas');
       })
       .catch(() => {
-        setErrorlogin(true);
+        toast.error('Usuário ou senha incorretos!');
       });
   }
   const onSubmit: SubmitHandler<LoginSchema> = (data) => {
     authenticate(data);
   };
-
-  // const handleCancelClick = () => {
-  //   const additionalData = {
-  //     key: 'value',
-  //     isLogged: true,
-  //   };
-  //   navigate('/campanhas', { state: additionalData });
-  // };
-
+  
   return (
     <>
       <ButtonAppBar title='' visible={false} />
       <Box display={'flex'} flexDirection={'column'} alignItems={'center'}>
-        {errorlogin && (
-          <AlertMessage
-            isVisible
-            setVisible={() => setErrorlogin(false)}
-            severity='error'
-            message='Email ou Senha incorretos!'
-            title='Error'
-          />
-        )}
         <ContainerModal>
           <Title label='Login'></Title>
 

@@ -1,3 +1,4 @@
+/* eslint-disable no-empty */
 /* eslint-disable react-hooks/exhaustive-deps */
 import {
   Box,
@@ -9,8 +10,6 @@ import {
 } from '@mui/material';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
-
-import AlertMessage from '../../components/layout/alert';
 import { ApiCampaign } from '../../services/data-base/CampaignService';
 import ButtonAppBar from '../../components/layout/appBar';
 import { CampaignRaw } from '../../services/@types/campaign';
@@ -22,28 +21,33 @@ import Radio from '@mui/material/Radio';
 import ResponsiveDialog from '../../components/ui/deleteAaction';
 import SearchIcon from '@mui/icons-material/Search';
 import SelectSmall from '../../components/ui/selectFilter';
-import {
-  isWelcomeShown,
-  setWelcomeShown,
-} from '../../utils/local-storage';
+import { isWelcomeShown, setWelcomeShown } from '../../utils/local-storage';
 import usePagination from '../../hooks/pagination';
 import { filtersStyle, stylePagination } from './style';
 import { useAuth } from '../../context/auth-context';
+import { ResponsePayment } from '../../services/@types/response-payment';
+import { ApiPayment } from '../../services/data-base/payment-service';
+import { toast } from 'react-toastify';
 
 export const Home = () => {
   const { user } = useAuth();
 
   const { getAllCampaigns, deleteCampaign } = ApiCampaign();
+  const { updatePayment } = ApiPayment();
   const [campaigns, setCampaigns] = useState<CampaignRaw[]>([]);
   const [campaignsCopy, setCampaignsCopy] = useState<CampaignRaw[]>();
 
-  const [deleteSucess, setDeleteSucess] = useState(false);
-  const [loggedSucess, setLoggedSucess] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   const [idDelete, setidDelete] = useState<string | null>(null);
   const [search, setSearch] = useState('');
   const [selectedFilter, setSelectedFilter] = useState<string>('TODOS');
   const [page, setPage] = useState(1);
+  const [responsePayment, setResponsePayment] = useState<ResponsePayment>({
+    paymentId: '',
+    status: '',
+    paymentType: '',
+    preferenceId: '',
+  });
 
   const PER_PAGE = 12;
   const totalPages = Math.ceil(campaigns?.length / PER_PAGE);
@@ -70,11 +74,39 @@ export const Home = () => {
     })();
   }, []);
 
+  useEffect(() => {
+    const urlObj = new URL(window.location.href);
+    const params = new URLSearchParams(urlObj.search);
+
+    const paymentId = params.get('payment_id') || '';
+    const status = params.get('status') || '';
+    const paymentType = params.get('payment_type') || '';
+    const preferenceId = params.get('preference_id') || '';
+
+    setResponsePayment({
+      paymentId: paymentId,
+      status: status,
+      paymentType: paymentType,
+      preferenceId: preferenceId,
+    });
+  }, []);
+
+  useEffect(() => {
+    const updatePay = async () => {
+      if (responsePayment.paymentId && responsePayment.status == 'approved') {
+        try {
+          await updatePayment(responsePayment);
+        } catch (error) {}
+      }
+    };
+    updatePay();
+  }, [responsePayment]);
+
   //verifica se tem algum o usuario logado
   useEffect(() => {
     if (user && !isWelcomeShown()) {
-      setLoggedSucess(true);
       setWelcomeShown();
+      toast.success(`Bem Vindo! ${user.user}`);
     }
   }, []);
 
@@ -141,8 +173,15 @@ export const Home = () => {
 
   //função pra deletar uma campanha
   async function handleDelete(id: string) {
-    await deleteCampaign(`${id}`);
+    await deleteCampaign(`${id}`)
+      .then(() => {
+        toast.success('Campanha excluída com sucesso!');
+      })
+      .catch(() => {
+        toast.error('Ocorreu um erro ao tentar excluir essa campanha');
+      });
     setidDelete(null);
+
     fetchCampaigns();
   }
 
@@ -159,15 +198,6 @@ export const Home = () => {
   return (
     <Container>
       <ButtonAppBar title='Campanhas' visible />
-      {loggedSucess && user && (
-        <AlertMessage
-          isVisible
-          setVisible={() => setLoggedSucess(false)}
-          message={`Bem Vindo  ${user?.user}`}
-          title='Sucesso'
-        />
-      )}
-
       <Grid
         sx={filtersStyle}
         flexDirection={{ xs: 'column', md: 'row', lg: 'row' }}
@@ -242,14 +272,6 @@ export const Home = () => {
             />
           </ListItem>
         </Grid>
-        {deleteSucess && (
-          <AlertMessage
-            isVisible
-            setVisible={() => setDeleteSucess(false)}
-            message='Campanha excluida com sucesso!'
-            title='Sucesso'
-          />
-        )}
       </Grid>
 
       <Container style={stylePagination}>

@@ -1,8 +1,10 @@
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import { CreateCampaignSchema, createCampaignSchema } from './schema';
-import React, { useState } from 'react';
+import {
+  CreateCampaignSchema,
+  createCampaignSchema,
+} from '../../../schemas/create-campaign-schema';
+import React from 'react';
 
-import AlertMessage from '../../../components/layout/alert';
 import { ApiCampaign } from '../../../services/data-base/CampaignService';
 import {
   Box,
@@ -19,6 +21,7 @@ import { Title } from '../../../components/ui/tittle';
 import { useNavigate } from 'react-router';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { formatISO } from '../../../utils/format-date';
+import { toast } from 'react-toastify';
 
 export const CreateCampanha = () => {
   const {
@@ -33,15 +36,14 @@ export const CreateCampanha = () => {
   });
 
   const { saveCampaign } = ApiCampaign();
-  const [createSucess, setCreateSucess] = useState(false);
   const navigate = useNavigate();
 
-  const handleCancelClick = () => {
+  const handleBack = () => {
     navigate('/campanhas');
   };
 
   async function handleSaveCampaign(campaign: CreateCampaignSchema) {
-    saveCampaign({
+    await saveCampaign({
       start: campaign.startDate,
       end: campaign.finishedDate,
       title: campaign.title,
@@ -49,9 +51,15 @@ export const CreateCampanha = () => {
       description: campaign.description,
       image: campaign.file,
       collectionGoal: campaign.fundraisingGoal,
-    });
-    setCreateSucess(true);
-
+    })
+      .then((response) => {
+       
+        handleBack(); 
+        toast.success(response);
+      })
+      .catch((error) => {
+        toast.error(error);
+      });
   }
 
   const onSubmit: SubmitHandler<CreateCampaignSchema> = (data) => {
@@ -184,23 +192,10 @@ export const CreateCampanha = () => {
 
             <ButtonGroup>
               <Button headlight label='Salvar' type='submit' />
-              <Button
-                label='cancelar'
-                headlight={false}
-                onClick={handleCancelClick}
-              />
+              <Button label='cancelar' headlight={false} onClick={handleBack} />
             </ButtonGroup>
           </Box>
         </form>
-
-        {createSucess && (
-          <AlertMessage
-            isVisible
-            setVisible={handleCancelClick}
-            message='Campanha criada com sucesso!'
-            title='Sucesso'
-          />
-        )}
       </Box>
     </>
   );
