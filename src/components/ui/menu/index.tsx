@@ -6,7 +6,7 @@ import {
   ListItemText,
   Typography,
 } from '@mui/material';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import IconButton from '@mui/material/IconButton';
@@ -17,6 +17,8 @@ import PaymentIcon from '@mui/icons-material/Payment';
 import { BarChart, LocalAtm } from '@mui/icons-material';
 import { useAuth } from '../../../context/auth-context';
 import { theme } from '../../../themes/styles';
+import ModalUndirectedDonation from '../../layout/modal-undirected-donation';
+import { ApiPayment } from '../../../services/data-base/payment-service';
 
 type props = {
   open: boolean;
@@ -24,13 +26,32 @@ type props = {
 };
 
 export const Menu = ({ open, setOpen }: props) => {
+  const { getBalance } = ApiPayment();
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [undirectedBalance, setUndirectedBalance] = useState<number>(0);
+  const { user } = useAuth();
 
-  const {user} = useAuth();
+  async function getUndirectedBalance() {
+    await getBalance()
+      .then((response) => {
+        setUndirectedBalance(response.balance);
+      })
+      .catch(() => {});
+  }
+
+  useEffect(() => {
+    if (user?.user && user.userRole === 'ADMIN') {
+      getUndirectedBalance();
+    }
+  }, []);
 
   const closeDrawer = () => {
     setOpen(false);
   };
- 
+  const handleModal = () => {
+    setOpenModal(true);
+    setOpen(false);
+  };
 
   return (
     <React.Fragment>
@@ -55,7 +76,6 @@ export const Menu = ({ open, setOpen }: props) => {
             onClick={() => setOpen(false)}
             component='a'
             key='home'
-            
             style={{
               cursor: 'pointer',
               padding: '11px',
@@ -76,7 +96,7 @@ export const Menu = ({ open, setOpen }: props) => {
               Menu
             </Typography>
           </ListItem>
-          <List>
+          <List sx={{ height: '100%' }}>
             {user?.userRole === 'ADMIN' ? (
               <ListItem
                 button
@@ -92,33 +112,63 @@ export const Menu = ({ open, setOpen }: props) => {
             ) : (
               ''
             )}
-            <ListItem button component='a' href='#' >
+            <ListItem button onClick={handleModal}>
               <ListItemIcon>
-                <LocalAtm/>
+                <LocalAtm />
               </ListItemIcon>
               <ListItemText primary='Doações não direcionadas' />
             </ListItem>
-            <ListItem button component='a' href='#' >
+            <ListItem button component='a' href='#'>
               <ListItemIcon>
-                <PaymentIcon/>
+                <PaymentIcon />
               </ListItemIcon>
               <ListItemText primary='Realizar assinatura' />
             </ListItem>
-            <ListItem button component='a' href='#' >
+            <ListItem button component='a' href='#'>
               <ListItemIcon>
                 <HistoryIcon />
               </ListItemIcon>
               <ListItemText primary='Histórico de doações' />
             </ListItem>
-            <ListItem button component='a' href='#' >
+            <ListItem button component='a' href='#'>
               <ListItemIcon>
-                <BarChart/>
+                <BarChart />
               </ListItemIcon>
               <ListItemText primary='Aplicação de Recursos' />
+            </ListItem>
+            <ListItem
+              sx={{
+                position: 'absolute',
+                bottom: 0,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 1,
+              }}
+            >
+              <Typography variant='body1' fontWeight={400}>
+                Saldo Unidirecional:
+              </Typography>
+              <Typography
+              variant='subtitle1'
+              fontWeight={'bold'}
+              borderBottom={2}
+                sx={{
+                  color: `${theme.colors.primary}`
+                }}
+              >
+                R$ {undirectedBalance}
+              </Typography>
             </ListItem>
           </List>
         </Drawer>
       </SwipeableDrawer>
+
+      {openModal && (
+        <ModalUndirectedDonation
+          visible={openModal}
+          onClose={() => setOpenModal(false)}
+        />
+      )}
     </React.Fragment>
   );
 };

@@ -40,8 +40,22 @@ export const ApiPayment = () => {
         });
     });
   };
+  const getBalance = (): Promise<any> => {
+    return new Promise((resolve, reject) => {
+      axios
+        .get(`${URL}/balance`, config)
+        .then((response: AxiosResponse<any>) => {
+          resolve(response.data);
+        })
+        .catch((error: any) => {
+          console.error('Erro ao buscar saldo unidirecional:', error);
+          reject(error);
+        });
+    });
+  };
   return {
     startPayment,
     updatePayment,
+    getBalance,
   };
 };
