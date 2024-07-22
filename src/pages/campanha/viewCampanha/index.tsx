@@ -41,17 +41,15 @@ import { Campaign } from '../../../services/@types/campaign';
 import { useAuth } from '../../../context/auth-context';
 import { theme } from '../../../themes/styles';
 import { ButtonGroup } from '../../../components/ui/button-group';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import {
+  DonationSchema,
+  donationSchema,
+} from '../../../schemas/donation-schema';
+import { toast } from 'react-toastify';
 
 const ViewCampanha = () => {
-  const { id } = useParams<{ id?: string }>();
-  const { user } = useAuth();
-  const [campaign, setCampaign] = useState<Campaign | null>();
-  const [sharedLink, setSharedLink] = useState<string>('');
-  const [isCopy, setIsCopy] = useState(false);
-  const [openModal, setOpenModal] = useState(false);
-  const [open, setOpen] = useState(false);
-  const [currentValue, setCurrentValue] = useState<string>('');
-
   const [responsePayment, setResponsePayment] = useState<ResponsePayment>({
     paymentId: '',
     status: '',
@@ -59,6 +57,21 @@ const ViewCampanha = () => {
     preferenceId: '',
   });
 
+  const {
+    handleSubmit,
+    formState: { errors },
+    control,
+  } = useForm<DonationSchema>({
+    resolver: zodResolver(donationSchema),
+  });
+
+  const { id } = useParams<{ id?: string }>();
+  const { user } = useAuth();
+  const [campaign, setCampaign] = useState<Campaign | null>();
+  const [sharedLink, setSharedLink] = useState<string>('');
+  const [isCopy, setIsCopy] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+  const [open, setOpen] = useState(false);
   const { startPayment, updatePayment } = ApiPayment();
   const { getCampaignById } = ApiCampaign();
   const navigate = useNavigate();
@@ -122,13 +135,13 @@ const ViewCampanha = () => {
     handleClick();
   }, []);
 
-  async function handleConfirmDonation() {
+  async function handleConfirmDonation(data: DonationSchema) {
     setOpen(true);
     try {
       const response = await startPayment({
         description: campaign?.description,
         title: campaign?.title,
-        transactionAmount: currentValue,
+        transactionAmount: data.donation,
         installments: 1,
         campaignId: campaign?.id,
         userLogin: user?.user,
@@ -142,6 +155,11 @@ const ViewCampanha = () => {
       setOpen(false);
     }
   }
+
+  const onSubmit: SubmitHandler<DonationSchema> = (data) => {
+    handleConfirmDonation(data);
+  };
+
   useEffect(() => {
     const urlObj = new URL(window.location.href);
     const params = new URLSearchParams(urlObj.search);
@@ -150,6 +168,7 @@ const ViewCampanha = () => {
     const status = params.get('status') || '';
     const paymentType = params.get('payment_type') || '';
     const preferenceId = params.get('preference_id') || '';
+
     setResponsePayment({
       paymentId: paymentId,
       status: status,
@@ -163,7 +182,10 @@ const ViewCampanha = () => {
       if (responsePayment.paymentId) {
         try {
           await updatePayment(responsePayment);
-        } catch (error) {}
+          toast.success('Doação realizada com sucesso!')
+        } catch (error) {
+          toast.success('Doação não realizada!')
+        }
       }
     };
     updatePay();
@@ -356,30 +378,42 @@ const ViewCampanha = () => {
 
         {user ? (
           <Modal open={openModal} onClose={handleCloseModal}>
-            <Box sx={style}>
-              <Typography variant='h5' color={theme.colors.primary}>
-                {campaign?.title}
-              </Typography>
-              <Divider sx={{ marginBottom: 5 }} />
-              <Typography variant='subtitle1'>Valor da Doação</Typography>
-              <CustomTextField
-                id=''
-                label=''
-                type='number'
-                placeholder='R$'
-                variant='standard'
-                onChange={(e) => setCurrentValue(e.target.value)}
-              />
-              <ButtonGroup>
-                <Button label='Cancelar' width='200px' onClick={handleCloseModal} />
-                <Button
-                  headlight
-                  label='Doar'
-                  width='200px'
-                  onClick={handleConfirmDonation}
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <Box sx={style}>
+                <Typography variant='h5' color={theme.colors.primary}>
+                  {campaign?.title}
+                </Typography>
+                <Divider sx={{ marginBottom: 5 }} />
+                <Typography variant='subtitle1'>Valor da Doação</Typography>
+
+                <Controller
+                  control={control}
+                  name='donation'
+                  render={({ field }) => (
+                    <CustomTextField
+                      {...field}
+                      id='donation'
+                      label=''
+                      type='number'
+                      placeholder='R$'
+                      variant='outlined'
+                      helperText={errors.donation?.message}
+                      onChange={(e) =>
+                        field.onChange(parseFloat(e.target.value))
+                      }
+                    />
+                  )}
                 />
-              </ButtonGroup>
-            </Box>
+                <ButtonGroup>
+                  <Button
+                    label='Cancelar'
+                    width='200px'
+                    onClick={handleCloseModal}
+                  />
+                  <Button headlight label='Doar' width='200px' type='submit' />
+                </ButtonGroup>
+              </Box>
+            </form>
           </Modal>
         ) : (
           <Modal open={openModal} onClose={handleCloseModal}>

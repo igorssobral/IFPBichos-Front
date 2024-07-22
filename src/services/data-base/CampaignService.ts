@@ -18,12 +18,11 @@ export const ApiCampaign = () => {
     return new Promise((resolve, reject) => {
       axios
         .post(`${URL}/campaign`, campaignData, config)
-        .then((response: AxiosResponse<any>) => {
-          resolve(response.data);
+        .then(() => {
+          resolve('Campanha criada com sucesso!');
         })
-        .catch((error: any) => {
-          console.error('Erro ao salvar a campanha:', error);
-          reject(error);
+        .catch(() => {
+          reject('Erro ao salvar a campanha:');
         });
     });
   };

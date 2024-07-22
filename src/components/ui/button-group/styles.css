@@ -5,3 +5,11 @@
     align-items: center;
     gap: 20px;
 }
+
+@media screen and (max-width: 768px){ 
+    .button-content{
+        flex-direction: column-reverse;
+        gap: 0px;
+    }
+}
+    
