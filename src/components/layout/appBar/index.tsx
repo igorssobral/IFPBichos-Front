@@ -49,7 +49,7 @@ export default function ButtonAppBar({ title, visible }: Props) {
         }}
       >
         <Toolbar sx={{ display: 'flex', alignItems: 'center' }}>
-          {visible && (
+          {user && (
             <IconButton
               size='large'
               edge='start'

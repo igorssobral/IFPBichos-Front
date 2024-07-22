@@ -4,10 +4,10 @@ import { GoogleLogin, GoogleLoginResponse, GoogleLoginResponseOffline } from 're
 const GoogleLoginComponent: React.FC = () => {
   const responseGoogle = (response: GoogleLoginResponse | GoogleLoginResponseOffline) => {
     if ('profileObj' in response) {
-      console.log('ID:', response.profileObj.googleId);
-      console.log('Name:', response.profileObj.name);
-      console.log('Image URL:', response.profileObj.imageUrl);
-      console.log('Email:', response.profileObj.email);
+      // console.log('ID:', response.profileObj.googleId);
+      // console.log('Name:', response.profileObj.name);
+      // console.log('Image URL:', response.profileObj.imageUrl);
+      // console.log('Email:', response.profileObj.email);
     }
   };
 
