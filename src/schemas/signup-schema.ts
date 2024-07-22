@@ -30,7 +30,7 @@ export const signUpSchema = z
         required_error: "Campo não pode ser vazio!",
       })
       .min(1, { message: "Digite seu cpf" })
-      .regex(/^[0-9]{3}\.?[0-9]{3}\.?[0-9]{3}\-?[0-9]{2}$/, {
+      .regex(/^[0-9]{3}\.?[0-9]{3}\.?[0-9]{3}-?[0-9]{2}$/, {
         message: "CPF inválido",
       })
       .refine((cpf) => isValidCPF(cpf), { message: "CPF inválido" }), // Adicionando validação do CPF
