@@ -93,7 +93,7 @@ export const Home = () => {
 
   useEffect(() => {
     const updatePay = async () => {
-      if (responsePayment.paymentId && responsePayment.status == 'approved') {
+      if (responsePayment.paymentId && responsePayment.status === 'approved') {
         try {
           await updatePayment(responsePayment);
         } catch (error) {}

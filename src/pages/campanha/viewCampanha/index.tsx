@@ -179,13 +179,15 @@ const ViewCampanha = () => {
 
   useEffect(() => {
     const updatePay = async () => {
-      if (responsePayment.paymentId) {
-        try {
-          await updatePayment(responsePayment);
-          toast.success('Doação realizada com sucesso!')
-        } catch (error) {
-          toast.success('Doação não realizada!')
-        }
+      if (responsePayment.paymentId && responsePayment.status === 'approved') {
+        await updatePayment(responsePayment)
+          .then(() => {
+            toast.success('Doação realizada com sucesso!');
+            window.location.href = `http://localhost:5173/view-campaign/${id}`
+          })
+          .catch(() => {
+            toast.success('Doação não realizada!');
+          });
       }
     };
     updatePay();

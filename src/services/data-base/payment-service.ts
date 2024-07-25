@@ -22,7 +22,6 @@ export const ApiPayment = () => {
           resolve(response.data);
         })
         .catch((error: any) => {
-          console.error('Erro ao salvar a campanha:', error);
           reject(error);
         });
     });
@@ -35,7 +34,6 @@ export const ApiPayment = () => {
           resolve(response.data);
         })
         .catch((error: any) => {
-          console.error('Erro ao salvar a campanha:', error);
           reject(error);
         });
     });
@@ -48,7 +46,6 @@ export const ApiPayment = () => {
           resolve(response.data);
         })
         .catch((error: any) => {
-          console.error('Erro ao buscar saldo unidirecional:', error);
           reject(error);
         });
     });
