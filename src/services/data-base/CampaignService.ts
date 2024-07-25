@@ -47,7 +47,7 @@ export const ApiCampaign = () => {
   ): Promise<any> => {
     return new Promise((resolve, reject) => {
       axios
-        .put(`${URL}/campaign/${campaignId}`, updatedData, config)
+        .patch(`${URL}/campaign/${campaignId}`, updatedData, config)
         .then((response: AxiosResponse<any>) => {
           resolve(response.data);
         })

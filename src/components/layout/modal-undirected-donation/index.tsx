@@ -46,7 +46,6 @@ export default function ModalUndirectedDonation({ onClose, visible }: props) {
     try {
       const response = await startPayment({
         title: 'Doação não direcionada.',
-        description: 'Doação não direcionada.',
         transactionAmount: data.donation,
         installments: 1,
         campaignId: null,
