@@ -42,6 +42,7 @@ const SignUp = () => {
       login: register.email,
     })
       .then((response) => {
+        navigate('/login')
         toast.success(response);
       })
       .catch((error)=>{
