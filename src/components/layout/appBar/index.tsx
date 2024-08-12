@@ -7,7 +7,6 @@ import Button from '@mui/material/Button';
 import { Grid } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import { Logo } from '../../../assets/Logo';
-import MailIcon from '@mui/icons-material/Mail';
 import { Menu } from '../../ui/menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import MenuPopupState from '../../ui/miniMenu';
@@ -16,6 +15,7 @@ import Typography from '@mui/material/Typography';
 import { useNavigate } from 'react-router';
 import { useAuth } from '../../../context/auth-context';
 import { theme } from '../../../themes/styles';
+import NotificationBadge from '../notification-badge';
 
 type Props = {
   title: string;
@@ -84,23 +84,18 @@ export default function ButtonAppBar({ title, visible }: Props) {
           </Grid>
 
           <Grid
-            display={'flex'}
-            gap={{ lg: 1 }}
-            alignItems={'center'}
-            justifyContent={'center'}
-            marginLeft={
-              title.length > 0
-                ? {
-                    lg: 'calc(50% - 22rem)',
-                    xs: 'calc(50% - 9rem)',
-                  }
-                : {
-                    lg: 'calc(50% - 13rem)',
-                    xs: 'calc(50% - 1.8rem)',
-                  }
-            }
+            position={'absolute'}
+            left={{xs:'30%', lg: '40%'}}
+
+         
           >
-            <Typography fontSize={{ lg: 30, xs: 21 }}>{title}</Typography>
+            <Typography
+              fontSize={{ lg: 30, xs: 20 }}
+              textAlign={'center'}
+              width={{xs: 170,lg: 370}}
+            >
+              {title}
+            </Typography>
           </Grid>
 
           {visible && (
@@ -109,10 +104,8 @@ export default function ButtonAppBar({ title, visible }: Props) {
                 <Grid
                   display={'flex'}
                   alignItems={'center'}
-                  marginLeft={{
-                    lg: 'calc(50% - 25rem)',
-                    xs: 'calc(50% - 18rem)',
-                  }}
+                  position={'absolute'}
+                  right={{xs: 20 ,lg:50}}
                 >
                   <Typography visibility={{ xs: 'hidden', md: 'visible' }}>
                     {user.user}
@@ -121,19 +114,16 @@ export default function ButtonAppBar({ title, visible }: Props) {
                   <MenuPopupState />
                   {user != null && (
                     <Badge badgeContent={0} color='warning'>
-                      <MailIcon fontSize='medium' />
+                      <NotificationBadge />
                     </Badge>
                   )}
                 </Grid>
               ) : (
                 <Grid
-                  display={'flex'}
-                  alignItems={'center'}
-                  position={'fixed'}
-                  gap={0}
+                  position={'absolute'}
                   left={{
                     xs: '75%',
-                    md: '93%',
+                    md: '90%',
                   }}
                 >
                   <Button color='inherit' onClick={redirect}>

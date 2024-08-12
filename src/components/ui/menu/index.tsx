@@ -124,7 +124,7 @@ export const Menu = ({ open, setOpen }: props) => {
               </ListItemIcon>
               <ListItemText primary='Realizar assinatura' />
             </ListItem>
-            <ListItem button component='a' href='#'>
+            <ListItem button component='a' href='/donation-history'>
               <ListItemIcon>
                 <HistoryIcon />
               </ListItemIcon>

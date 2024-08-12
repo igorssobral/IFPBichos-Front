@@ -84,11 +84,26 @@ export const ApiCampaign = () => {
     });
   };
 
+  const getDonationHistory = (login: string): Promise<any> => {
+    console.log(`${URL}/donator/donations?login=${login}`)
+    return new Promise((resolve, reject) => {
+      axios
+        .get(`${URL}/donator/donations?login=${login}`,config)
+        .then((response: AxiosResponse<any>) => {
+          resolve(response.data);
+        })
+        .catch((error: any) => {
+          reject(error);
+        });
+    });
+  };
+
   return {
     saveCampaign,
     updateCampaign,
     getAllCampaigns,
     deleteCampaign,
     getCampaignById,
+    getDonationHistory
   };
 };

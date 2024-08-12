@@ -1,10 +1,10 @@
-import React from "react";
-import { FormLabel } from "../formLabel";
-import TextField, { TextFieldProps } from "@mui/material/TextField";
+import React from 'react';
+import { FormLabel } from '../formLabel';
+import TextField, { TextFieldProps } from '@mui/material/TextField';
 
-interface CustomTextFieldProps extends Omit<TextFieldProps, "error"> {
+interface CustomTextFieldProps extends Omit<TextFieldProps, 'error'> {
   id: string;
-  label: string;
+  label?: string;
   placeholder?: string;
   type: string;
   multiline?: boolean;
@@ -29,27 +29,24 @@ const CustomTextField: React.FC<CustomTextFieldProps> = ({
   ...rest
 }) => (
   <>
-    <FormLabel label={label} htmlFor={id} />
+    <FormLabel label={label || ''} htmlFor={id} />
     <TextField
       id={id}
-      variant="outlined"
-      size="small"
+      variant='outlined'
+      size='small'
       type={type}
       multiline={multiline || false}
       placeholder={placeholder}
       InputLabelProps={{ shrink: inputLabelProps }}
       error={helperText ? true : false}
       helperText={helperText}
-      
-     
-      
       {...rest}
       InputProps={{
         style: {
-          width: width || "300px",
-          height: height || "40px",
-          borderRadius: "7px",
-          fontSize: fontSize || "15px",
+          width: width || '300px',
+          height: height || '40px',
+          borderRadius: '7px',
+          fontSize: fontSize || '15px',
         },
       }}
     />

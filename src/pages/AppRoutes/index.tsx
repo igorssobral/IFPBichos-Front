@@ -9,6 +9,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import SignUp from '../sign-up';
 import ViewCampanha from '../campanha/viewCampanha';
 import { useAuth } from '../../context/auth-context';
+import { DonationHistory } from '../donationHistory';
 
 const AppRouter = () => {
   const { user } = useAuth();
@@ -36,7 +37,14 @@ const AppRouter = () => {
           path='/editcampanha/:id'
           element={isAdmin ? <EditCampanha /> : <Navigate to='/login' />}
         />
+        
+        <Route
+          path='/donation-history'
+          element={<DonationHistory/>}
+        />
       </Routes>
+        
+      
     </Router>
   );
 };
