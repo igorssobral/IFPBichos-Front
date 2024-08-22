@@ -34,7 +34,7 @@ export const DonationHistory = () => {
   const [month, setMonth] = useState<Dayjs | null>(dayjs().startOf('month'));
   const [year, setYear] = useState<Dayjs | null>(dayjs().startOf('year'));
 
-const navigate = useNavigate();
+  const navigate = useNavigate();
   
   useEffect(() => {
     const getDonations = async () => {
@@ -68,68 +68,61 @@ const navigate = useNavigate();
     <Container
       maxWidth={'xl'}
       sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
-      
     >
       <ButtonAppBar visible title='Histórico de Doações' />
 
       <Grid
-        mt={10}
-        width={{xs: '98%',lg:'85%'}}
+        mt={5}
+        width={{xs: '98%', lg: '85%'}}
         display={'flex'}
         flexDirection={'column'}
         alignItems={'center'}
-
       >
         {/* Filtros */}
         <Grid
-        
-          width={{xs: '98%',lg:'80%'}}
+          width={{xs: '100%', md: '80%'}}
           display={'flex'}
           alignItems={{ lg: 'center', xs: 'start' }}
-          flexDirection={{ xs: 'column', md: 'row', lg: 'row' }}
-          justifyContent={'space-evenly'}
-          gap={1}
+          flexDirection={{ xs: 'column', md: 'row' }}
+          justifyContent={'space-between'}
+          gap={{ xs: 2, md: 1 }}
+          mb={3}
         >
-          <Button label='voltar' onClick={()=> navigate('/')}/>
-          <Grid sx={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-            <Grid sx={{ display: 'flex', alignItems: 'center' }}>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DemoContainer components={['DatePicker', 'DatePicker']}>
-                  <Grid
-                    sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
-                    width={200}
-                  >
-                    <FormLabel>Mês</FormLabel>{' '}
-                    <DatePicker
-                      value={month}
-                      openTo='month'
-                      view='month'
-                      views={['month']}
-                      onChange={(month) => setMonth(month)}
-                    />
-                  </Grid>
+          <Button label='voltar' onClick={() => navigate('/')} />
+          <Grid sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DemoContainer components={['DatePicker', 'DatePicker']}>
+                <Grid
+                  sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
+                >
+                  <FormLabel>Mês</FormLabel>
+                  <DatePicker
+                    value={month}
+                    openTo='month'
+                    views={['month']}
+                    onChange={(month) => setMonth(month)}
+                  />
+                </Grid>
 
-                  <Grid
-                    sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
-                    width={200}
-                  >
-                    <FormLabel>Ano</FormLabel>
-                    <DatePicker
-                      value={year}
-                      openTo='year'
-                      views={['year']}
-                      onChange={(year) => setYear(year)}
-                    />
-                  </Grid>
-                </DemoContainer>
-              </LocalizationProvider>
-            </Grid>
+                <Grid
+                  sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
+                >
+                  <FormLabel>Ano</FormLabel>
+                  <DatePicker
+                    value={year}
+                    openTo='year'
+                    views={['year']}
+                    onChange={(year) => setYear(year)}
+                  />
+                </Grid>
+              </DemoContainer>
+            </LocalizationProvider>
           </Grid>
           <Grid display={'flex'} gap={1} alignItems={'center'}>
             <FormLabel>Total Doado:</FormLabel>
             <Typography
               paddingInline={2}
-              fontSize={17}
+              fontSize={{ xs: 14, sm: 16 }}
               sx={{ backgroundColor: 'white' }}
               border={1}
               borderColor={theme.colors.blackOpacity}
@@ -139,114 +132,117 @@ const navigate = useNavigate();
           </Grid>
         </Grid>
 
-        <Container>
+        <Container sx={{ padding: 0 }}>
           <Grid
-            display={'flex'}
+            container
             justifyContent={'space-around'}
             bgcolor={theme.colors.primary}
-            padding={2}
+            padding={1}
             borderRadius={4}
-            mt={5}
+            mt={2}
           >
             <Typography
-              width={250}
+              flex={{ xs: 1, sm: 1, md: 1 }}
               textAlign={'center'}
               color={'white'}
-              fontSize={20}
+              fontSize={{ xs: 14, sm: 16, md: 18 }}
             >
               Campanha
             </Typography>
             <Typography
-              width={250}
+              flex={{ xs: 1, sm: 1, md: 1 }}
               textAlign={'center'}
               color={'white'}
-              fontSize={20}
+              fontSize={{ xs: 14, sm: 16, md: 18 }}
             >
               Data
             </Typography>
             <Typography
-              width={250}
+              flex={{ xs: 1, sm: 1, md: 1 }}
               textAlign={'center'}
               color={'white'}
-              fontSize={20}
+              fontSize={{ xs: 14, sm: 16, md: 18 }}
             >
               Valor
             </Typography>
             <Typography
-              width={250}
+              flex={{ xs: 1, sm: 1, md: 1 }}
               textAlign={'center'}
               color={'white'}
-              fontSize={20}
+              fontSize={{ xs: 14, sm: 16, md: 18 }}
             >
               Status
             </Typography>
           </Grid>
 
-          <Grid marginTop={5} height={600} overflow={'auto'} padding={1}>
-            {filteredDonationsHistory?.length != 0 ? (
+          <Grid marginTop={2} height={550} overflow={'auto'} padding={1}>
+            {filteredDonationsHistory?.length !== 0 ? (
               filteredDonationsHistory?.map((data) => (
                 <Grid
-                  display={'flex'}
+                  key={data.date}
+                  container
                   justifyContent={'space-around'}
                   bgcolor={'white'}
                   padding={2}
                   borderRadius={4}
                   mt={1}
+                  gap={{lg:2}}
+                  flexWrap={{ xs: 'wrap', md: 'nowrap' }}
                 >
                   <Typography
-                    width={250}
+                    flex={{ xs: 1, sm: 1, md: 1 }}
                     color={theme.colors.secondary}
                     border={1}
                     whiteSpace={'nowrap'}
-                    overflow={'clip'}
+                    overflow={'hidden'}
                     textOverflow={'ellipsis'}
                     borderColor={theme.colors.blackOpacity}
                     borderRadius={2}
                     textAlign={'center'}
-                    fontSize={18}
+                    fontSize={{ xs: 14, sm: 16, md: 18 }}
                     fontWeight={400}
                     padding={0.5}
                   >
                     {data.titulo}
                   </Typography>
                   <Typography
-                    width={250}
+                    flex={{ xs: 1, sm: 1, md: 1 }}
                     color={theme.colors.secondary}
                     border={1}
                     borderColor={theme.colors.blackOpacity}
                     borderRadius={2}
                     textAlign={'center'}
-                    fontSize={18}
+                    fontSize={{ xs: 14, sm: 16, md: 18 }}
                     fontWeight={400}
                     padding={0.5}
                   >
                     {formatUTC(new Date(formatInputDate(data.date)))}
                   </Typography>
                   <Typography
-                    width={250}
+                    flex={{ xs: 1, sm: 1, md: 1 }}
                     color={
-                      data.status == 'APPROVED' ? theme.colors.primary : 'RED'
+                      data.status === 'APPROVED' ? theme.colors.primary : 'RED'
                     }
                     border={1}
                     borderColor={theme.colors.blackOpacity}
                     borderRadius={2}
                     textAlign={'center'}
-                    fontSize={18}
+                    fontSize={{ xs: 14, sm: 16, md: 18 }}
                     fontWeight={600}
                     padding={0.5}
                   >
                     {formatValue(data.value)}
                   </Typography>
                   <Typography
-                    width={250}
+                    flex={{ xs: 1, sm: 1, md: 1 }}
                     color={
-                      data.status == 'APPROVED' ? theme.colors.primary : 'RED'
+                      data.status === 'APPROVED' ? theme.colors.primary : 'RED'
                     }
                     border={1}
                     borderColor={theme.colors.blackOpacity}
                     borderRadius={2}
                     textAlign={'center'}
-                    fontSize={18}
+                    fontSize={{ xs: 14, sm: 16, md: 18 }}
                     fontWeight={600}
                     padding={0.5}
                   >
@@ -255,7 +251,7 @@ const navigate = useNavigate();
                 </Grid>
               ))
             ) : (
-              <Typography textAlign={'center'}>Nenhuma doação realizada nesse período</Typography>
+              <Typography fontWeight={'bold'}>Sem resultados</Typography>
             )}
           </Grid>
         </Container>
