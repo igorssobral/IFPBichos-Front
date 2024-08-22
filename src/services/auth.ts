@@ -1,13 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import axios from "axios";
-import { Credentials } from "./@types/auth";
+import axios from 'axios';
+import { Credentials } from './@types/auth';
 import { getLocalStorage } from '../utils/local-storage';
 
 const URL = import.meta.env.VITE_APP_DB_URL;
 
 export const login = (credentials: Credentials): Promise<any> => {
-
-  
   return new Promise((resolve, reject) => {
     axios
       .post(`${URL}/auth/login`, credentials)
@@ -25,10 +23,10 @@ export const signup = (credentials: any): Promise<any> => {
     axios
       .post(`${URL}/auth/userRegistration`, credentials)
       .then(() => {
-        resolve("Cadastro realizado com sucesso!");
+        resolve('Cadastro realizado com sucesso!');
       })
       .catch(() => {
-        reject("Cadastro não realizaado, tente novamente!");
+        reject('Cadastro não realizaado, tente novamente!');
       });
   });
 };
@@ -38,8 +36,8 @@ export const isValidToken = (): Promise<any> => {
     axios
       .post(`${URL}/auth/isValidToken`, null, {
         params: {
-          token: token
-        }
+          token: token,
+        },
       })
       .then((response) => {
         resolve(response.data);
@@ -49,6 +47,3 @@ export const isValidToken = (): Promise<any> => {
       });
   });
 };
-
-
-

@@ -18,7 +18,7 @@ const handleLogout = () => {
     <PopupState variant="popover" popupId="demo-popup-menu">
       {(popupState) => (
         <React.Fragment>
-          <Button {...bindTrigger(popupState)}>
+          <Button  {...bindTrigger(popupState)}>
             <ArrowDropDownIcon sx={{ color: "white" }} />
           </Button>
           <Menu
