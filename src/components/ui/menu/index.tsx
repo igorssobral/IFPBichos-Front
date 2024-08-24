@@ -130,7 +130,7 @@ export const Menu = ({ open, setOpen }: props) => {
               </ListItemIcon>
               <ListItemText primary='Histórico de doações' />
             </ListItem>
-            <ListItem button component='a' href='#'>
+            <ListItem button component='a' href='/resources-aplication'>
               <ListItemIcon>
                 <BarChart />
               </ListItemIcon>
