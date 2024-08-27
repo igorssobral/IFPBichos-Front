@@ -10,7 +10,8 @@ import SignUp from '../sign-up';
 import ViewCampanha from '../campanha/viewCampanha';
 import { useAuth } from '../../context/auth-context';
 import { DonationHistory } from '../donationHistory';
-import { ResourcesAplication } from '../resourcesAplication';
+import ResourcesApplication from '../resourcesAplication';
+
 
 const AppRouter = () => {
   const { user } = useAuth();
@@ -45,7 +46,7 @@ const AppRouter = () => {
         />
         <Route
           path='/resources-aplication'
-          element={<ResourcesAplication/>}
+          element={<ResourcesApplication/>}
         />
       </Routes>
         

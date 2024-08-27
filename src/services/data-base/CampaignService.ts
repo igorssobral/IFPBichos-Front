@@ -85,10 +85,22 @@ export const ApiCampaign = () => {
   };
 
   const getDonationHistory = (login: string): Promise<any> => {
-    console.log(`${URL}/donator/donations?login=${login}`)
+    console.log(`${URL}/donator/donations?login=${login}`);
     return new Promise((resolve, reject) => {
       axios
-        .get(`${URL}/donator/donations?login=${login}`,config)
+        .get(`${URL}/donator/donations?login=${login}`, config)
+        .then((response: AxiosResponse<any>) => {
+          resolve(response.data);
+        })
+        .catch((error: any) => {
+          reject(error);
+        });
+    });
+  };
+  const getTotalBalance = (): Promise<any> => {
+    return new Promise((resolve, reject) => {
+      axios
+        .get(`${URL}/campaign/total-balance`, config)
         .then((response: AxiosResponse<any>) => {
           resolve(response.data);
         })
@@ -104,6 +116,7 @@ export const ApiCampaign = () => {
     getAllCampaigns,
     deleteCampaign,
     getCampaignById,
-    getDonationHistory
+    getDonationHistory,
+    getTotalBalance,
   };
 };
