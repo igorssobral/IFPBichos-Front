@@ -1,14 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Box,
   Container,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
   FormLabel,
   Grid,
-  Slide,
   Typography,
 } from '@mui/material';
 import React, { useState } from 'react';
@@ -27,9 +21,8 @@ import { formatValue } from '../../utils/format-money';
 import dayjs, { Dayjs } from 'dayjs';
 import 'dayjs/locale/pt-br';
 import { useBalance } from '../../hooks/use-balance';
-import { ButtonGroup } from '../../components/ui/button-group';
-import { TransitionProps } from '@mui/material/transitions';
-import CustomTextField from '../../components/ui/customTextField';
+import { ReportWithdrawal } from '../../components/layout/modal-report-withdrawal';
+import { ManualDonationModal } from '../../components/layout/modal-manual-donation';
 
 dayjs.locale('pt-br');
 
@@ -40,6 +33,10 @@ const ResourcesApplication = () => {
   const [value, setValue] = useState('1');
   const [open, setOpen] = useState(false);
   const [openModalRetirada, setOpenModalRetirada] = useState(false);
+
+  const handleCloseModal = () => setOpen(false);
+  const handleCloseModalRetirada = () => setOpenModalRetirada(false);
+
   const entradas = [
     {
       acao: 'Doação Avulsa',
@@ -69,15 +66,6 @@ const ResourcesApplication = () => {
       valorRetirado: 300.0,
     },
   ];
-
-  const Transition = React.forwardRef(function Transition(
-    props: TransitionProps & {
-      children: React.ReactElement<any, any>;
-    },
-    ref: React.Ref<unknown>
-  ) {
-    return <Slide direction='up' ref={ref} {...props} />;
-  });
 
   const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
@@ -297,124 +285,14 @@ const ResourcesApplication = () => {
       </Grid>
 
       {open && (
-        <React.Fragment>
-          <Dialog
-            open={open}
-            onClose={() => setOpen(false)}
-            fullWidth
-            TransitionComponent={Transition}
-            keepMounted
-            aria-labelledby='responsive-dialog-title'
-          >
-            <DialogTitle
-              id='responsive-dialog-title'
-              textAlign={'center'}
-              color={theme.colors.primary}
-            >
-              {'Informar Valor'}
-            </DialogTitle>
-            <DialogContent sx={{ display: 'flex', justifyContent: 'center' }}>
-              <form action=''>
-                <Box display={'flex'} flexDirection={'column'}>
-                  <CustomTextField type='text' label='Ação' id='acao' />
-                  <CustomTextField
-                    type='text'
-                    label='Motivação'
-                    id='motivation'
-                    multiline
-                    height='100px'
-                    minRows={4}
-                    maxRows={4}
-                  />
-                  <CustomTextField
-                    type='text'
-                    label='Valor Arrecadado'
-                    id='value'
-                    placeholder='R$'
-                  />
-                </Box>
-                <DialogActions>
-                  <ButtonGroup>
-                    <Button
-                      label='Salvar'
-                      headlight
-                      width='100px'
-                      onClick={() => {}}
-                    />
-                    <Button
-                      label='Cancelar'
-                      width='100px'
-                      onClick={() => setOpen(false)}
-                    />
-                  </ButtonGroup>
-                </DialogActions>
-              </form>
-            </DialogContent>
-          </Dialog>
-        </React.Fragment>
+        <ManualDonationModal isVisible={open} onClose={handleCloseModal} />
       )}
+
       {openModalRetirada && (
-        <React.Fragment>
-          <Dialog
-            open={openModalRetirada}
-            onClose={() => setOpenModalRetirada(false)}
-            fullWidth
-            TransitionComponent={Transition}
-            keepMounted
-            aria-labelledby='responsive-dialog-title'
-          >
-            <DialogTitle
-              id='responsive-dialog-title'
-              textAlign={'center'}
-              color={theme.colors.redPrimary}
-            >
-              {'Informar Retirada'}
-            </DialogTitle>
-            <DialogContent sx={{ display: 'flex', justifyContent: 'center' }}>
-              <form action=''>
-                <Box display={'flex'} flexDirection={'column'}>
-                  <CustomTextField type='text' label='Campanha' id='acao' />
-                  <CustomTextField
-                    type='text'
-                    label='Ação'
-                    id='motivation'
-                    multiline
-                    height='100px'
-                    minRows={4}
-                    maxRows={4}
-                  />
-                  <CustomTextField
-                    type='text'
-                    label='Valor'
-                    id='value'
-                    placeholder='R$'
-                  />
-                  <CustomTextField
-                    type='file'
-                    label='Comprovante'
-                    id='value'
-                    placeholder='R$'
-                  />
-                </Box>
-                <DialogActions>
-                  <ButtonGroup>
-                    <Button
-                      label='Salvar'
-                      headlight
-                      width='100px'
-                      onClick={() => {}}
-                    />
-                    <Button
-                      label='Cancelar'
-                      width='100px'
-                      onClick={() => setOpenModalRetirada(false)}
-                    />
-                  </ButtonGroup>
-                </DialogActions>
-              </form>
-            </DialogContent>
-          </Dialog>
-        </React.Fragment>
+        <ReportWithdrawal
+          isVisible={openModalRetirada}
+          onClose={handleCloseModalRetirada}
+        />
       )}
     </Container>
   );
