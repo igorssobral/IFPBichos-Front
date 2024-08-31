@@ -40,6 +40,19 @@ export const ApiCampaign = () => {
         });
     });
   };
+  const getAllCampaignsFinished = (): Promise<any> => {
+    return new Promise((resolve, reject) => {
+      axios
+        .get(`${URL}/campaign/getAllFinished`)
+        .then((response: AxiosResponse<any>) => {
+          resolve(response.data);
+        })
+        .catch((error: any) => {
+          console.error('Erro ao buscar campanhas:', error);
+          reject(error);
+        });
+    });
+  };
 
   const updateCampaign = (
     campaignId: string,
@@ -114,6 +127,7 @@ export const ApiCampaign = () => {
     saveCampaign,
     updateCampaign,
     getAllCampaigns,
+    getAllCampaignsFinished,
     deleteCampaign,
     getCampaignById,
     getDonationHistory,
