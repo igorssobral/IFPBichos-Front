@@ -8,6 +8,7 @@ export const useBalance = () => {
   const [campaignsBalance, setCampaignsBalance] = useState<number>(0);
   const { getBalance } = ApiPayment();
   const { getTotalBalance } = ApiCampaign();
+  const [sync, setSync] = useState(false);
 
   useEffect(() => {
     const fetchBalances = async () => {
@@ -22,7 +23,11 @@ export const useBalance = () => {
     };
 
     fetchBalances();
-  }, []);
+  }, [sync]);
 
-  return { undirectedBalance, campaignsBalance };
+  function handleSync() {
+    setSync(!sync);
+  }
+
+  return { undirectedBalance, campaignsBalance, handleSync };
 };
