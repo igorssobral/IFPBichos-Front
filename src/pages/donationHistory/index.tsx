@@ -44,7 +44,7 @@ export const DonationHistory = () => {
       }
     };
     getDonations();
-  }, []);
+  }, [user]);
 
   const filteredDonationsHistory = donationHistory?.filter((note) => {
     const noteDate = dayjs(note.date);

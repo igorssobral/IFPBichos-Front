@@ -10,13 +10,18 @@ import { theme } from '../../../themes/styles';
 import CustomTextField from '../../ui/customTextField';
 import { Button } from '../../ui/button';
 import { ButtonGroup } from '../../ui/button-group';
+import { useAuth } from '../../../context/auth-context';
+import { ApiPayment } from '../../../services/data-base/payment-service';
+import { toast } from 'react-toastify';
 
 type Props = {
   isVisible: boolean;
   onClose: () => void;
+  sync: () => void;
 };
-export const ManualDonationModal = ({ isVisible, onClose }: Props) => {
-
+export const ManualDonationModal = ({ isVisible, onClose, sync }: Props) => {
+  const { user } = useAuth();
+  const { donationManual } = ApiPayment();
   const {
     handleSubmit: handleManualDonationSubmit,
     formState: { errors: manualDonationErrors },
@@ -30,24 +35,24 @@ export const ManualDonationModal = ({ isVisible, onClose }: Props) => {
   ) => {
     handleSaveManualDonation(data);
   };
-  async function handleSaveManualDonation(campaign: ManualDonationSchema) {
-    console.log('🚀 ~ handleSaveManualDonation ~ campaign:', campaign);
-    // await saveCampaign({
-    //   start: campaign.startDate,
-    //   end: campaign.finishedDate,
-    //   title: campaign.title,
-    //   animal: campaign.animal,
-    //   description: campaign.description,
-    //   image: campaign.file,
-    //   collectionGoal: campaign.fundraisingGoal,
-    // })
-    //   .then((response) => {
-    //     // handleBack();
-    //     toast.success(response);
-    //   })
-    //   .catch((error) => {
-    //     toast.error(error);
-    //   });
+  async function handleSaveManualDonation(donation: ManualDonationSchema) {
+    console.log('🚀 ~ handleSaveManualDonation ~ donation:', donation);
+    await donationManual({
+      title: donation.action,
+      description: donation.motivation,
+      donationValue: donation.ammountCollect,
+      userLogin: user?.user,
+    })
+      .then((response) => {
+        console.log('🚀 ~ .then ~ response:', response);
+        onClose();
+        sync();
+        toast.success(response);
+      })
+      .catch((error) => {
+        console.log('🚀 ~ handleSaveManualDonation ~ error:', error);
+        toast.error(error);
+      });
   }
   const style = {
     position: 'absolute' as const,
@@ -123,11 +128,7 @@ export const ManualDonationModal = ({ isVisible, onClose }: Props) => {
               width='100px'
               onClick={() => {}}
             />
-            <Button
-              label='Cancelar'
-              width='100px'
-              onClick={onClose}
-            />
+            <Button label='Cancelar' width='100px' onClick={onClose} />
           </ButtonGroup>
         </Box>
       </form>
