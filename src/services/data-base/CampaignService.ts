@@ -111,7 +111,6 @@ export const ApiCampaign = () => {
   };
 
   const getDonationHistory = (login: string): Promise<any> => {
-    console.log(`${URL}/donator/donations?login=${login}`);
     return new Promise((resolve, reject) => {
       axios
         .get(`${URL}/donator/donations?login=${login}`, config)

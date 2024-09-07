@@ -15,7 +15,6 @@ export const ApiRealocationResources = () => {
   
 
   const saveRealocationResources = (withdrawal: any): Promise<any> => {
-    console.log('🚀 ~ saveWithdrawal ~ withdrawal:', withdrawal)
     return new Promise((resolve, reject) => {
       axios
         .post(`${URL}/resources-realocations`, withdrawal, config)

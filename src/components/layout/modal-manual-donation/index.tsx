@@ -36,7 +36,6 @@ export const ManualDonationModal = ({ isVisible, onClose, sync }: Props) => {
     handleSaveManualDonation(data);
   };
   async function handleSaveManualDonation(donation: ManualDonationSchema) {
-    console.log('🚀 ~ handleSaveManualDonation ~ donation:', donation);
     await donationManual({
       title: donation.action,
       description: donation.motivation,
@@ -44,13 +43,11 @@ export const ManualDonationModal = ({ isVisible, onClose, sync }: Props) => {
       userLogin: user?.user,
     })
       .then((response) => {
-        console.log('🚀 ~ .then ~ response:', response);
         onClose();
         sync();
         toast.success(response);
       })
       .catch((error) => {
-        console.log('🚀 ~ handleSaveManualDonation ~ error:', error);
         toast.error(error);
       });
   }

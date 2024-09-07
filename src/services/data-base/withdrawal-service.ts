@@ -14,7 +14,6 @@ export const ApiWithdrawal = () => {
   };
 
   const saveWithdrawal = (withdrawal: any): Promise<any> => {
-    console.log('🚀 ~ saveWithdrawal ~ withdrawal:', withdrawal)
     return new Promise((resolve, reject) => {
       axios
         .post(`${URL}/action-campaign`, withdrawal, config)
