@@ -1,11 +1,5 @@
-import {
-  Box,
-  Container,
-  FormLabel,
-  Grid,
-  Typography,
-} from '@mui/material';
-import React, { useState } from 'react';
+import { Box, Container, FormLabel, Grid, Typography } from '@mui/material';
+import React, { useEffect, useState } from 'react';
 import ButtonAppBar from '../../components/layout/appBar';
 import { Button } from '../../components/ui/button';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -23,49 +17,163 @@ import 'dayjs/locale/pt-br';
 import { useBalance } from '../../hooks/use-balance';
 import { ReportWithdrawal } from '../../components/layout/modal-report-withdrawal';
 import { ManualDonationModal } from '../../components/layout/modal-manual-donation';
+import { ApiCampaign } from '../../services/data-base/CampaignService';
+import { CampaignRaw } from '../../services/@types/campaign';
+import { formatInputDate, formatUTC } from '../../utils/format-date';
+import { ApiPayment } from '../../services/data-base/payment-service';
+import { Donation } from '../../services/@types/donation';
+import { ApiWithdrawal } from '../../services/data-base/withdrawal-service';
+import { Withdrawals } from '../../services/@types/withdrawal';
+import { ResourcesRealocation } from '../../components/layout/modal-resources-realocation';
 
 dayjs.locale('pt-br');
 
+type CombinedData = {
+  id: number | string;
+  title: string;
+  description: string;
+  date: string;
+  value: number;
+  balance?: number;
+  collectionGoal?: number;
+};
 const ResourcesApplication = () => {
+  const { getAllCampaignsFinished } = ApiCampaign();
+  const { getDonationManual } = ApiPayment();
+  const { getAllWithdrawals } = ApiWithdrawal();
+
+  const [combinedData, setCombinedData] = useState<CombinedData[]>([]);
+  const [withdrawals, setWithdrawals] = useState<Withdrawals[]>([]);
   const [month, setMonth] = useState<Dayjs | null>(dayjs().startOf('month'));
-  const { undirectedBalance, campaignsBalance } = useBalance();
+  const [monthWithdrawal, setMonthWithdrawal] = useState<Dayjs | null>(
+    dayjs().startOf('month')
+  );
+  const { undirectedBalance, campaignsBalance, handleSync } = useBalance();
   const navigate = useNavigate();
   const [value, setValue] = useState('1');
   const [open, setOpen] = useState(false);
   const [openModalRetirada, setOpenModalRetirada] = useState(false);
+  const [openModalResources, setOpenModalResources] = useState(false);
+  const [selectedEntrada, setSelectedEntrada] = useState<CombinedData>(); // controla o item selecionado
 
-  const handleCloseModal = () => setOpen(false);
-  const handleCloseModalRetirada = () => setOpenModalRetirada(false);
+  const fetchData = async () => {
+    try {
+      // Disparar as requisições de forma concorrente para melhorar a performance
+      const [fetchedCampaigns, fetchedDonations] = await Promise.all([
+        getAllCampaignsFinished(),
+        getDonationManual(),
+      ]);
 
-  const entradas = [
-    {
-      acao: 'Doação Avulsa',
-      motivacao: 'Contribuição voluntária',
-      data: '10/08/2024',
-      valorArrecadado: 150.0,
-    },
-    {
-      acao: 'Doação Avulsa',
-      motivacao: 'Arrecadação no Campus',
-      data: '15/08/2024',
-      valorArrecadado: 500.0,
-    },
-  ];
+      // Combinar dados e atualizar os estados
+      const combined = combineData(fetchedCampaigns, fetchedDonations);
+      setCombinedData(combined);
+    } catch (error) {
+      console.error('Erro ao buscar os dados:', error);
+      // Aqui você pode adicionar um tratamento de erro, como exibir uma mensagem para o usuário
+    }
+  };
 
-  const saidas = [
-    {
-      campanha: 'Campanha',
-      acao: 'Compra de Brinquedos',
-      data: '20/08/2024',
-      valorRetirado: 200.0,
-    },
-    {
-      campanha: 'Castração',
-      acao: 'Compra de Alimentos',
-      data: '22/08/2024',
-      valorRetirado: 300.0,
-    },
-  ];
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchWithdrawals = async () => {
+    const fetchWithdrawals = await getAllWithdrawals();
+    setWithdrawals(fetchWithdrawals);
+  };
+  useEffect(() => {
+    if (value == '2') {
+      fetchWithdrawals();
+    }
+  }, [value]);
+
+  const filteredWithdrawal = withdrawals?.filter((note) => {
+    if (Array.isArray(note.completionDate)) {
+      const noteDate = dayjs(
+        new Date(
+          note.completionDate[0],
+          note.completionDate[1] - 1,
+          note.completionDate[2],
+          note.completionDate[3] || 0,
+          note.completionDate[4] || 0,
+          note.completionDate[5] || 0
+        )
+      );
+
+      const isMonthMatch = monthWithdrawal
+        ? noteDate.month() === monthWithdrawal.month()
+        : true;
+
+      return isMonthMatch;
+    }
+
+    return false;
+  });
+
+  const combineData = (
+    campaigns: CampaignRaw[],
+    donations: Donation[]
+  ): CombinedData[] => {
+    const campaignsData = campaigns.map((campaign) => ({
+      id: campaign.id,
+      title: campaign.title,
+      description: campaign.description,
+      date: campaign.end,
+      value: campaign.balance,
+      balance: campaign.balance,
+      collectionGoal: campaign.collectionGoal,
+    }));
+
+    const donationsData = donations.map((donation) => ({
+      id: donation.id,
+      title: donation.title,
+      description: donation.description,
+      date: donation.date,
+      value: donation.donationValue,
+    }));
+
+    return [...campaignsData, ...donationsData];
+  };
+
+  const filteredCombinedData = combinedData?.filter((note) => {
+    if (Array.isArray(note.date)) {
+      const noteDate = dayjs(
+        new Date(
+          note.date[0],
+          note.date[1] - 1,
+          note.date[2],
+          note.date[3] || 0,
+          note.date[4] || 0,
+          note.date[5] || 0
+        )
+      );
+
+      const isMonthMatch = month ? noteDate.month() === month.month() : true;
+
+      return isMonthMatch;
+    }
+
+    return false;
+  });
+
+  const handleCloseModal = () => {
+    setOpen(false);
+    fetchData();
+  };
+  const handleCloseModalRetirada = () => {
+    setOpenModalRetirada(false);
+    fetchWithdrawals();
+  };
+
+  const handleOpenModalResources = (entrada: CombinedData) => {
+    setSelectedEntrada(entrada);
+    setOpenModalResources(true);
+  };
+
+  const handleCloseModalResources = () => {
+    setOpenModalResources(false);
+    fetchData();
+  };
 
   const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
@@ -78,7 +186,7 @@ const ResourcesApplication = () => {
       bgcolor={theme.colors.primary}
       padding={2}
       borderRadius={4}
-      mt={5}
+      mt={2}
     >
       {headers.map((header, index) => (
         <Typography
@@ -114,7 +222,7 @@ const ResourcesApplication = () => {
     >
       <ButtonAppBar visible title='Gerenciar Recursos' />
       <Grid
-        mt={10}
+        mt={2}
         width={{ xs: '98%', lg: '85%' }}
         display='flex'
         flexDirection='column'
@@ -152,10 +260,14 @@ const ResourcesApplication = () => {
                       >
                         <FormLabel>Mês</FormLabel>
                         <DatePicker
-                          value={month}
+                          value={value == '1' ? month : monthWithdrawal}
                           openTo='month'
                           views={['month']}
-                          onChange={(newMonth) => setMonth(newMonth)}
+                          onChange={(newMonth) =>
+                            value == '1'
+                              ? setMonth(newMonth)
+                              : setMonthWithdrawal(newMonth)
+                          }
                         />
                       </Grid>
                     </LocalizationProvider>
@@ -185,7 +297,7 @@ const ResourcesApplication = () => {
                   <Grid display='flex' gap={1} alignItems='center'>
                     <FormLabel>Saldo Campanhas:</FormLabel>
                     <Typography
-                      paddingInline={2}
+                      paddingInline={1}
                       fontSize={17}
                       sx={{ backgroundColor: 'white' }}
                       border={1}
@@ -214,34 +326,75 @@ const ResourcesApplication = () => {
                   'Data',
                   'Valor Arrecadado',
                 ])}
-                {entradas.map((entrada, index) => (
-                  <Grid
-                    key={index}
-                    display='flex'
-                    justifyContent='space-around'
-                    padding={2}
-                    bgcolor={theme.colors.white}
-                    borderRadius={5}
-                    marginY={2}
-                  >
-                    <Typography width={250} textAlign='center'>
-                      {entrada.acao}
-                    </Typography>
-                    <Typography width={250} textAlign='center'>
-                      {entrada.motivacao}
-                    </Typography>
-                    <Typography width={250} textAlign='center'>
-                      {entrada.data}
-                    </Typography>
-                    <Typography
-                      width={250}
-                      textAlign='center'
-                      color={theme.colors.primary}
+                <Box
+                  height={{ md: '50vh', xl: '60vh' }}
+                  sx={{ paddingInline: 0, overflowY: 'scroll' }}
+                >
+                  {filteredCombinedData?.map((entrada, index) => (
+                    <Grid
+                      key={index}
+                      display='flex'
+                      justifyContent='space-around'
+                      padding={2}
+                      bgcolor={theme.colors.white}
+                      borderRadius={5}
+                      marginY={2}
+                      // onClick={() => handleOpenModalResources(entrada)} // Adiciona o evento de clique
+                      // style={{ cursor: 'pointer' }}
                     >
-                      {formatValue(entrada.valorArrecadado)}
-                    </Typography>
-                  </Grid>
-                ))}
+                      <Typography
+                        width={200}
+                        textAlign='center'
+                        maxHeight={65}
+                        whiteSpace={'nowrap'}
+                        overflow={'clip'}
+                        textOverflow={'ellipsis'}
+                      >
+                        {entrada.title}
+                      </Typography>
+                      <Typography
+                        width={250}
+                        textAlign='start'
+                        maxHeight={65}
+                        whiteSpace={'nowrap'}
+                        overflow={'clip'}
+                        textOverflow={'ellipsis'}
+                      >
+                        {entrada.description}
+                      </Typography>
+                      <Typography width={70} textAlign='center'>
+                        {formatUTC(new Date(formatInputDate(entrada.date)))}
+                      </Typography>
+                      <Typography
+                        width={250}
+                        textAlign='center'
+                        color={
+                          (entrada?.balance ?? 0) >=
+                            (entrada?.collectionGoal ?? 0) ||
+                          entrada?.collectionGoal == undefined
+                            ? theme.colors.primary
+                            : 'orange'
+                        }
+                        onClick={() => {
+                          if (
+                            (entrada?.balance ?? 0) <
+                            (entrada?.collectionGoal ?? 0)
+                          )
+                            handleOpenModalResources(entrada); // Abre o modal apenas se a cor for "orange"
+                        }}
+                        style={{
+                          cursor:
+                            (entrada?.balance ?? 0) <
+                            (entrada?.collectionGoal ?? 0)
+                              ? 'pointer'
+                              : 'default',
+                        }}
+                      >
+                        {formatValue(entrada?.value)}
+                      </Typography>
+                    </Grid>
+                  ))}
+                </Box>
               </TabPanel>
               <TabPanel value='2' sx={{ paddingInline: 0 }}>
                 {renderTabPanelHeader([
@@ -250,34 +403,55 @@ const ResourcesApplication = () => {
                   'Data',
                   'Valor Retirado',
                 ])}
-                {saidas.map((saida, index) => (
-                  <Grid
-                    key={index}
-                    display='flex'
-                    justifyContent='space-around'
-                    padding={2}
-                    bgcolor={theme.colors.white}
-                    borderRadius={5}
-                    marginY={2}
-                  >
-                    <Typography width={200} textAlign='center'>
-                      {saida.campanha}
-                    </Typography>
-                    <Typography width={200} textAlign='center'>
-                      {saida.acao}
-                    </Typography>
-                    <Typography width={150} textAlign='center'>
-                      {saida.data}
-                    </Typography>
-                    <Typography
-                      width={150}
-                      textAlign='center'
-                      color={theme.colors.redPrimary}
+                <Box
+                  height={{ md: '50vh', xl: '60vh' }}
+                  sx={{ paddingInline: 0, overflowY: 'scroll' }}
+                >
+                  {filteredWithdrawal?.map((saida, index) => (
+                    <Grid
+                      key={index}
+                      display='flex'
+                      justifyContent='space-around'
+                      padding={2}
+                      bgcolor={theme.colors.white}
+                      borderRadius={5}
+                      marginY={2}
                     >
-                      {formatValue(saida.valorRetirado)}
-                    </Typography>
-                  </Grid>
-                ))}
+                      <Typography
+                        width={200}
+                        textAlign='center'
+                        maxHeight={65}
+                        whiteSpace={'nowrap'}
+                        overflow={'clip'}
+                        textOverflow={'ellipsis'}
+                      >
+                        {saida.action}
+                      </Typography>
+                      <Typography
+                        width={200}
+                        textAlign='center'
+                        maxHeight={65}
+                        whiteSpace={'nowrap'}
+                        overflow={'clip'}
+                        textOverflow={'ellipsis'}
+                      >
+                        {saida.justification}
+                      </Typography>
+                      <Typography width={200} textAlign='center'>
+                        {formatUTC(
+                          new Date(formatInputDate(saida.completionDate))
+                        )}
+                      </Typography>
+                      <Typography
+                        width={150}
+                        textAlign='center'
+                        color={theme.colors.redPrimary}
+                      >
+                        {formatValue(saida.cost)}
+                      </Typography>
+                    </Grid>
+                  ))}
+                </Box>
               </TabPanel>
             </TabContext>
           </Box>
@@ -285,15 +459,27 @@ const ResourcesApplication = () => {
       </Grid>
 
       {open && (
-        <ManualDonationModal isVisible={open} onClose={handleCloseModal} />
+        <ManualDonationModal
+          isVisible={open}
+          onClose={handleCloseModal}
+          sync={handleSync}
+        />
       )}
 
       {openModalRetirada && (
         <ReportWithdrawal
           isVisible={openModalRetirada}
           onClose={handleCloseModalRetirada}
+          sync={handleSync}
         />
       )}
+
+      <ResourcesRealocation
+        isVisible={openModalResources}
+        campaign={selectedEntrada}
+        onClose={handleCloseModalResources}
+        sync={handleSync}
+      />
     </Container>
   );
 };
