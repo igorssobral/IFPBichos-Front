@@ -1,90 +1,71 @@
-import React, { useEffect, useState } from 'react';
-import {
-  reportWithdrawalSchema,
-  ReportWithdrawalSchema,
-} from '../../../schemas/report-withdrawal-schema';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useEffect } from 'react';
+
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { theme } from '../../../themes/styles';
-import {
-  Box,
-  DialogTitle,
-  FormHelperText,
-  InputLabel,
-  MenuItem,
-  Modal,
-  Select,
-} from '@mui/material';
+import { Box, DialogTitle, Modal } from '@mui/material';
 import CustomTextField from '../../ui/customTextField';
 import { ButtonGroup } from '../../ui/button-group';
 import { Button } from '../../ui/button';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { CampaignRaw } from '../../../services/@types/campaign';
-import { ApiCampaign } from '../../../services/data-base/CampaignService';
-import { ApiWithdrawal } from '../../../services/data-base/withdrawal-service';
+
+import {
+  campaignSchema,
+  CampaignSchema,
+} from '../../../schemas/campaign-schema';
+import { ApiRealocationResources } from '../../../services/data-base/realocation-resources-service';
 import { toast } from 'react-toastify';
+import { useBalance } from '../../../hooks/use-balance';
 
 type Props = {
   isVisible: boolean;
+  campaign: any;
   onClose: () => void;
   sync: () => void;
 };
 
-export const ReportWithdrawal = ({ isVisible, onClose, sync }: Props) => {
-  const { getAllCampaignsFinishedBalance } = ApiCampaign();
-  const { saveWithdrawal } = ApiWithdrawal();
+export const ResourcesRealocation = ({
+  isVisible,
+  campaign,
+  onClose,
+  sync,
+}: Props) => {
+const {undirectedBalance} = useBalance();
+  const { saveRealocationResources } = ApiRealocationResources();
 
-  const [campaigns, setCampaigns] = useState<CampaignRaw[]>([]);
-
-  const [selectedCampaign, setSelectedCampaign] = useState<CampaignRaw | null>(
-    null
-  );
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const fetchedCampaigns = await getAllCampaignsFinishedBalance();
-
-
-      setCampaigns(fetchedCampaigns);
-    };
-
-    fetchData();
-  }, []);
-
-  const {
-    handleSubmit: handleReportWithdrawalSubmit,
-    formState: { errors: reportWithdrawalErrors },
-    control: reportWithdrawalControl,
-    setValue,
-  } = useForm<ReportWithdrawalSchema>({
-    resolver: zodResolver(reportWithdrawalSchema),
-  });
+  const { handleSubmit, formState, control, setValue } =
+    useForm<CampaignSchema>({
+      resolver: zodResolver(campaignSchema(undirectedBalance)),
+    });
 
   useEffect(() => {
-    if (selectedCampaign) {
-      setValue('action', selectedCampaign.description);
-      setValue('value', selectedCampaign.balance);
+    if (campaign) {
+      setValue('title', campaign.title);
+      setValue('description', campaign.description);
+      setValue('collectionGoal', campaign.collectionGoal);
+      setValue('balance', campaign.balance);
     }
-  }, [selectedCampaign, setValue]);
+  }, [campaign, setValue]);
 
-  async function handleReportWithdrawal(value: ReportWithdrawalSchema) {
-    await saveWithdrawal({
-      campaignId: value.campaign,
-      receipt: null,
+  async function handleResourcesRealocation(value: CampaignSchema) {
+    await saveRealocationResources({
+      campaignId: campaign.id,
+      value: value.undirectedBalance,
+      typeRealocation: 'withdrawal',
     })
       .then((response) => {
         onClose();
         sync();
-        toast.success(response);
+         toast.success(response);
       })
       .catch((error) => {
-        toast.error(error);
+       
+         toast.error(error);
       });
   }
 
-  const onSubmitReportWithdrawal: SubmitHandler<ReportWithdrawalSchema> = (
-    data
-  ) => {
-    handleReportWithdrawal(data);
+  const onSubmitReportWithdrawal: SubmitHandler<CampaignSchema> = (data) => {
+    handleResourcesRealocation(data);
   };
 
   const style = {
@@ -101,17 +82,17 @@ export const ReportWithdrawal = ({ isVisible, onClose, sync }: Props) => {
   };
   return (
     <Modal open={isVisible} onClose={onClose}>
-      <form onSubmit={handleReportWithdrawalSubmit(onSubmitReportWithdrawal)}>
+      <form onSubmit={handleSubmit(onSubmitReportWithdrawal)}>
         <Box sx={style} display={'flex'} flexDirection={'column'}>
           <DialogTitle
             id='responsive-dialog-title'
             textAlign={'center'}
-            color={theme.colors.redPrimary}
+            color={theme.colors.primary}
           >
-            {'Informar Retirada'}
+            {'Realocar Recursos'}
           </DialogTitle>
 
-          <Controller
+          {/* <Controller
             control={reportWithdrawalControl}
             name='campaign'
             render={({ field }) => (
@@ -147,51 +128,82 @@ export const ReportWithdrawal = ({ isVisible, onClose, sync }: Props) => {
                 </FormHelperText>
               </>
             )}
-          />
-        
+          /> */}
           <Controller
-            control={reportWithdrawalControl}
-            name='action'
+            control={control}
+            name='title'
             render={({ field }) => (
               <CustomTextField
                 {...field}
                 type='text'
-                label='Ação'
+                label='Campanha'
+                id='acao'
+                value={field.value || 'Nenhuma campanha selecionada'}
+                helperText={formState.errors?.title?.message}
+              />
+            )}
+          />
+          <Controller
+            control={control}
+            name='description'
+            render={({ field }) => (
+              <CustomTextField
+                {...field}
+                type='text'
+                label='Descrição'
                 id='motivation'
                 multiline
                 height='100px'
                 minRows={4}
                 maxRows={4}
-                helperText={reportWithdrawalErrors?.action?.message}
+                helperText={formState.errors?.description?.message}
                 disabled
               />
             )}
           />
           <Controller
-            control={reportWithdrawalControl}
-            name='value'
+            control={control}
+            name='collectionGoal'
             render={({ field }) => (
               <CustomTextField
                 {...field}
-                type='text'
-                label='Valor'
+                type='number'
+                label='Meta'
                 id='value'
                 placeholder='R$'
-                helperText={reportWithdrawalErrors?.value?.message}
+                helperText={formState.errors?.balance?.message}
                 disabled
               />
             )}
           />
           <Controller
-            control={reportWithdrawalControl}
-            name='file'
+            control={control}
+            name='balance'
             render={({ field }) => (
               <CustomTextField
-                type='file'
-                label='Comprovante'
-                id='value'
-                helperText={reportWithdrawalErrors?.file?.message}
                 {...field}
+                type='number'
+                label='Arrecadado'
+                id='value'
+                placeholder='R$'
+                helperText={formState.errors?.balance?.message}
+                disabled
+              />
+            )}
+          />
+          <Controller
+            control={control}
+            name='undirectedBalance'
+            render={({ field }) => (
+              <CustomTextField
+                {...field}
+                type='number'
+                label='Usar saldo avulso'
+                id='value'
+                placeholder='Use o saldo avulso e complete a meta'
+                helperText={formState?.errors.undirectedBalance?.message}
+                onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                inputProps={{ max:  campaign.collectionGoal - campaign.balance }}
               />
             )}
           />
