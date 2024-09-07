@@ -53,6 +53,19 @@ export const ApiCampaign = () => {
         });
     });
   };
+  const getAllCampaignsFinishedBalance = (): Promise<any> => {
+    return new Promise((resolve, reject) => {
+      axios
+        .get(`${URL}/campaign/finishedBalance`,config)
+        .then((response: AxiosResponse<any>) => {
+          resolve(response.data);
+        })
+        .catch((error: any) => {
+          console.error('Erro ao buscar campanhas:', error);
+          reject(error);
+        });
+    });
+  };
 
   const updateCampaign = (
     campaignId: string,
@@ -128,6 +141,7 @@ export const ApiCampaign = () => {
     updateCampaign,
     getAllCampaigns,
     getAllCampaignsFinished,
+    getAllCampaignsFinishedBalance,
     deleteCampaign,
     getCampaignById,
     getDonationHistory,
