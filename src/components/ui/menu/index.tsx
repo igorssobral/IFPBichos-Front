@@ -113,12 +113,16 @@ export const Menu = ({ open, setOpen }: props) => {
               </ListItemIcon>
               <ListItemText primary='Histórico de doações' />
             </ListItem>
-            <ListItem button component='a' href='/resources-aplication'>
-              <ListItemIcon>
-                <BarChart />
-              </ListItemIcon>
-              <ListItemText primary='Aplicação de Recursos' />
-            </ListItem>
+            {user?.userRole === 'ADMIN' ? (
+              <ListItem button component='a' href='/resources-aplication'>
+                <ListItemIcon>
+                  <BarChart />
+                </ListItemIcon>
+                <ListItemText primary='Aplicação de Recursos' />
+              </ListItem>
+            ) : (
+              ''
+            )}
           </List>
         </Drawer>
       </SwipeableDrawer>
