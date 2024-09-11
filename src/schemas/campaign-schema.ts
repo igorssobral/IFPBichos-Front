@@ -1,6 +1,5 @@
 import { z } from 'zod';
 
-// Função que recebe o undirectedBalance e retorna o schema de validação
 export const campaignSchema = (undirectedBalance: number) =>
   z.object({
     title: z
@@ -16,10 +15,14 @@ export const campaignSchema = (undirectedBalance: number) =>
       .min(1, { message: 'A descrição não pode estar vazia' }),
 
     undirectedBalance: z
-      .number({ required_error: 'Digite um valor!' })
-      .min(1, { message: 'Valor mínimo R$1' })
-      .positive({ message: 'A doação deve ser um valor positivo!' })
-      .max(undirectedBalance, {
+      .union([
+        z.string().transform((val) => (val.trim() === '' ? 0 : Number(val))), 
+        z.number(),
+      ])
+      .refine((val) => typeof val === 'number' && !isNaN(val), { message: 'Digite um valor válido!' }) 
+      .refine((val) => val > 0, { message: 'A doação deve ser um valor positivo!' }) 
+      .refine((val) => val >= 1, { message: 'Valor mínimo R$1' }) 
+      .refine((val) => val <= undirectedBalance, {
         message: `O valor não pode ser maior que R$${undirectedBalance}`,
       }), 
   });
