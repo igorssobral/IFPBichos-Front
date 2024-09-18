@@ -40,6 +40,32 @@ export const ApiCampaign = () => {
         });
     });
   };
+  const getAllCampaignsFinished = (): Promise<any> => {
+    return new Promise((resolve, reject) => {
+      axios
+        .get(`${URL}/campaign/getAllFinished`)
+        .then((response: AxiosResponse<any>) => {
+          resolve(response.data);
+        })
+        .catch((error: any) => {
+          console.error('Erro ao buscar campanhas:', error);
+          reject(error);
+        });
+    });
+  };
+  const getAllCampaignsFinishedBalance = (): Promise<any> => {
+    return new Promise((resolve, reject) => {
+      axios
+        .get(`${URL}/campaign/finishedBalance`,config)
+        .then((response: AxiosResponse<any>) => {
+          resolve(response.data);
+        })
+        .catch((error: any) => {
+          console.error('Erro ao buscar campanhas:', error);
+          reject(error);
+        });
+    });
+  };
 
   const updateCampaign = (
     campaignId: string,
@@ -85,10 +111,21 @@ export const ApiCampaign = () => {
   };
 
   const getDonationHistory = (login: string): Promise<any> => {
-    console.log(`${URL}/donator/donations?login=${login}`)
     return new Promise((resolve, reject) => {
       axios
-        .get(`${URL}/donator/donations?login=${login}`,config)
+        .get(`${URL}/donator/donations?login=${login}`, config)
+        .then((response: AxiosResponse<any>) => {
+          resolve(response.data);
+        })
+        .catch((error: any) => {
+          reject(error);
+        });
+    });
+  };
+  const getTotalBalance = (): Promise<any> => {
+    return new Promise((resolve, reject) => {
+      axios
+        .get(`${URL}/campaign/total-balance`, config)
         .then((response: AxiosResponse<any>) => {
           resolve(response.data);
         })
@@ -102,8 +139,11 @@ export const ApiCampaign = () => {
     saveCampaign,
     updateCampaign,
     getAllCampaigns,
+    getAllCampaignsFinished,
+    getAllCampaignsFinishedBalance,
     deleteCampaign,
     getCampaignById,
-    getDonationHistory
+    getDonationHistory,
+    getTotalBalance,
   };
 };

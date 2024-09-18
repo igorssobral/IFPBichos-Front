@@ -6,7 +6,7 @@ import {
   ListItemText,
   Typography,
 } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import IconButton from '@mui/material/IconButton';
@@ -18,7 +18,6 @@ import { BarChart, LocalAtm } from '@mui/icons-material';
 import { useAuth } from '../../../context/auth-context';
 import { theme } from '../../../themes/styles';
 import ModalUndirectedDonation from '../../layout/modal-undirected-donation';
-import { ApiPayment } from '../../../services/data-base/payment-service';
 
 type props = {
   open: boolean;
@@ -26,24 +25,8 @@ type props = {
 };
 
 export const Menu = ({ open, setOpen }: props) => {
-  const { getBalance } = ApiPayment();
   const [openModal, setOpenModal] = useState<boolean>(false);
-  const [undirectedBalance, setUndirectedBalance] = useState<number>(0);
   const { user } = useAuth();
-
-  async function getUndirectedBalance() {
-    await getBalance()
-      .then((response) => {
-        setUndirectedBalance(response.balance);
-      })
-      .catch(() => {});
-  }
-
-  useEffect(() => {
-    if (user?.user && user.userRole === 'ADMIN') {
-      getUndirectedBalance();
-    }
-  }, []);
 
   const closeDrawer = () => {
     setOpen(false);
@@ -130,35 +113,16 @@ export const Menu = ({ open, setOpen }: props) => {
               </ListItemIcon>
               <ListItemText primary='Histórico de doações' />
             </ListItem>
-            <ListItem button component='a' href='#'>
-              <ListItemIcon>
-                <BarChart />
-              </ListItemIcon>
-              <ListItemText primary='Aplicação de Recursos' />
-            </ListItem>
-            <ListItem
-              sx={{
-                position: 'absolute',
-                bottom: 0,
-                display: 'flex',
-                alignItems: 'center',
-                gap: 1,
-              }}
-            >
-              <Typography variant='body1' fontWeight={400}>
-                Saldo Unidirecional:
-              </Typography>
-              <Typography
-              variant='subtitle1'
-              fontWeight={'bold'}
-              borderBottom={2}
-                sx={{
-                  color: `${theme.colors.primary}`
-                }}
-              >
-                R$ {undirectedBalance}
-              </Typography>
-            </ListItem>
+            {user?.userRole === 'ADMIN' ? (
+              <ListItem button component='a' href='/resources-aplication'>
+                <ListItemIcon>
+                  <BarChart />
+                </ListItemIcon>
+                <ListItemText primary='Aplicação de Recursos' />
+              </ListItem>
+            ) : (
+              ''
+            )}
           </List>
         </Drawer>
       </SwipeableDrawer>
