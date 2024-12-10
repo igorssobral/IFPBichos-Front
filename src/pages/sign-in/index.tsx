@@ -82,7 +82,7 @@ export const Login = () => {
                 )}
               />
               <Button label='Entrar' width='300px' type='submit' headlight />
-              <span className='span_login'>Esqueceu sua senha?</span>
+              <a href='/recovery-password' className='span_login'>Esqueceu sua senha?</a>
             </Box>
           </form>
           <div className='signup'>

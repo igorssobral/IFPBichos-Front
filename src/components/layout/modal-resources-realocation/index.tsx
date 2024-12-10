@@ -30,7 +30,7 @@ export const ResourcesRealocation = ({
   onClose,
   sync,
 }: Props) => {
-const {undirectedBalance} = useBalance();
+  const { undirectedBalance } = useBalance();
   const { saveRealocationResources } = ApiRealocationResources();
 
   const { handleSubmit, formState, control, setValue } =
@@ -44,8 +44,14 @@ const {undirectedBalance} = useBalance();
       setValue('description', campaign.description);
       setValue('collectionGoal', campaign.collectionGoal);
       setValue('balance', campaign.balance);
+      setValue('undirectedBalance', campaign.collectionGoal - campaign.balance);
+
     }
   }, [campaign, setValue]);
+
+  function handleClose() {
+    onClose();
+  }
 
   async function handleResourcesRealocation(value: CampaignSchema) {
     await saveRealocationResources({
@@ -54,13 +60,12 @@ const {undirectedBalance} = useBalance();
       typeRealocation: 'withdrawal',
     })
       .then((response) => {
-        onClose();
+        handleClose();
         sync();
-         toast.success(response);
+        toast.success(response);
       })
       .catch((error) => {
-       
-         toast.error(error);
+        toast.error(error);
       });
   }
 
@@ -80,8 +85,9 @@ const {undirectedBalance} = useBalance();
     p: 4,
     borderRadius: 2,
   };
+  
   return (
-    <Modal open={isVisible} onClose={onClose}>
+    <Modal open={isVisible} onClose={handleClose}>
       <form onSubmit={handleSubmit(onSubmitReportWithdrawal)}>
         <Box sx={style} display={'flex'} flexDirection={'column'}>
           <DialogTitle
@@ -92,43 +98,6 @@ const {undirectedBalance} = useBalance();
             {'Realocar Recursos'}
           </DialogTitle>
 
-          {/* <Controller
-            control={reportWithdrawalControl}
-            name='campaign'
-            render={({ field }) => (
-              <>
-                <InputLabel sx={{ marginTop: '10px' }}>Campanha</InputLabel>
-                <Select
-                style={{width: '90%'}}
-                  value={field.value || 0}
-                  placeholder='Selecione'
-                  onChange={(event) => {
-                    const selectedId = event.target.value;
-                    field.onChange(selectedId);
-
-                    // Encontre a campanha selecionada e atualize o estado
-                    const selected = campaigns.find(
-                      (campaign) => campaign.id === selectedId
-                    );
-
-                    setSelectedCampaign(selected || null);
-                  }}
-                  error={!!reportWithdrawalErrors.campaign?.message}
-                  sx={{ marginBottom: '10px', borderRadius: 2 }}
-                >
-                  <MenuItem value={0}>Selecione</MenuItem>
-                  {campaigns.map((campaign) => (
-                    <MenuItem key={campaign.id} value={campaign.id}>
-                      {campaign.title}
-                    </MenuItem>
-                  ))}
-                </Select>
-                <FormHelperText error>
-                  {reportWithdrawalErrors.campaign?.message}
-                </FormHelperText>
-              </>
-            )}
-          /> */}
           <Controller
             control={control}
             name='title'
@@ -203,7 +172,7 @@ const {undirectedBalance} = useBalance();
                 placeholder='Use o saldo avulso e complete a meta'
                 helperText={formState?.errors.undirectedBalance?.message}
                 onChange={(e) => field.onChange(parseFloat(e.target.value))}
-                inputProps={{ max:  campaign.collectionGoal - campaign.balance }}
+                inputProps={{ max: campaign.collectionGoal - campaign.balance }}
               />
             )}
           />
@@ -216,7 +185,7 @@ const {undirectedBalance} = useBalance();
               type='submit'
               onClick={() => {}}
             />
-            <Button label='Cancelar' width='100px' onClick={onClose} />
+            <Button label='Cancelar' width='100px' onClick={handleClose} />
           </ButtonGroup>
         </Box>
       </form>

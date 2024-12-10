@@ -51,6 +51,7 @@ export const ManualDonationModal = ({ isVisible, onClose, sync }: Props) => {
         toast.error(error);
       });
   }
+  
   const style = {
     position: 'absolute' as const,
     top: '50%',

@@ -44,6 +44,7 @@ export const createCampaignSchema = z.object({
   file: z
     .string({ required_error: 'Selecione uma imagem!' })
     .min(1, { message: 'O arquivo é obrigatório' })
+    .optional()
     .refine((file) => file?.trim() !== '', {
       message: 'O arquivo é obrigatório',
     }),

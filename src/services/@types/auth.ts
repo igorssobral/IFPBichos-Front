@@ -2,6 +2,13 @@ export type Credentials = {
   login: string;
   password: string;
 };
+export type ForgotasswordRequest = {
+  email: string;
+};
+export type ResetPasswordRequest = {
+  token: string;
+  newPassword: string;
+};
 
 export type User = {
   name: string;
@@ -26,3 +33,5 @@ export type UserDataBase = {
     password: string;
   };
 };
+
+

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Box, Container, FormLabel, Grid, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import ButtonAppBar from '../../components/layout/appBar';
@@ -54,22 +55,19 @@ const ResourcesApplication = () => {
   const [open, setOpen] = useState(false);
   const [openModalRetirada, setOpenModalRetirada] = useState(false);
   const [openModalResources, setOpenModalResources] = useState(false);
-  const [selectedEntrada, setSelectedEntrada] = useState<CombinedData>(); // controla o item selecionado
+  const [selectedEntrada, setSelectedEntrada] = useState<CombinedData>(); 
 
   const fetchData = async () => {
     try {
-      // Disparar as requisições de forma concorrente para melhorar a performance
       const [fetchedCampaigns, fetchedDonations] = await Promise.all([
         getAllCampaignsFinished(),
         getDonationManual(),
       ]);
 
-      // Combinar dados e atualizar os estados
       const combined = combineData(fetchedCampaigns, fetchedDonations);
       setCombinedData(combined);
     } catch (error) {
       console.error('Erro ao buscar os dados:', error);
-      // Aqui você pode adicionar um tratamento de erro, como exibir uma mensagem para o usuário
     }
   };
 
@@ -162,6 +160,7 @@ const ResourcesApplication = () => {
   };
   const handleCloseModalRetirada = () => {
     setOpenModalRetirada(false);
+    fetchData();
     fetchWithdrawals();
   };
 
@@ -303,7 +302,7 @@ const ResourcesApplication = () => {
                       border={1}
                       borderColor={theme.colors.blackOpacity}
                     >
-                      {formatValue(campaignsBalance)}
+                      {formatValue(campaignsBalance || 0)}
                     </Typography>
                   </Grid>
                   <Button
@@ -339,8 +338,6 @@ const ResourcesApplication = () => {
                       bgcolor={theme.colors.white}
                       borderRadius={5}
                       marginY={2}
-                      // onClick={() => handleOpenModalResources(entrada)} // Adiciona o evento de clique
-                      // style={{ cursor: 'pointer' }}
                     >
                       <Typography
                         width={200}
@@ -380,7 +377,7 @@ const ResourcesApplication = () => {
                             (entrada?.balance ?? 0) <
                             (entrada?.collectionGoal ?? 0)
                           )
-                            handleOpenModalResources(entrada); // Abre o modal apenas se a cor for "orange"
+                            handleOpenModalResources(entrada); 
                         }}
                         style={{
                           cursor:
