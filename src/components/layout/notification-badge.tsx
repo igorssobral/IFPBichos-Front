@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import Badge from '@mui/material/Badge';
@@ -22,7 +23,7 @@ interface CampaignNotificationDTO {
 }
 
 const NotificationBadge: React.FC = () => {
-  const [socket, setSocket] = useState<WebSocket | null>(null);
+  const [_, setSocket] = useState<WebSocket | null>(null);
   const [notifications, setNotifications] = useState<CampaignNotificationDTO[]>([]);
   const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
   const [snackbarMessage, setSnackbarMessage] = useState<string>('');
@@ -54,7 +55,7 @@ const NotificationBadge: React.FC = () => {
   };
 
   useEffect(() => {
-    const ws = new WebSocket('ws://localhost:8080/ws/notifications');
+    const ws = new WebSocket('ws://https://ifpbichos-back.onrender.com/ws/notifications');
     setSocket(ws);
 
     ws.onopen = () => {
@@ -75,7 +76,8 @@ const NotificationBadge: React.FC = () => {
       console.error('WebSocket error:', error);
     };
 
-    ws.onclose = (event) => {
+    ws.onclose = (_event) => {
+
     };
 
     return () => {
