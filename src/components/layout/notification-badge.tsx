@@ -75,7 +75,7 @@ const NotificationBadge: React.FC = () => {
       console.error('WebSocket error:', error);
     };
 
-    ws.onclose = (event) => {
+    ws.onclose = () => {
     };
 
     return () => {
