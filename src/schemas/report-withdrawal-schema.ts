@@ -14,6 +14,7 @@ export const reportWithdrawalSchema = z.object({
   file: z
     .string({ required_error: 'Adicione um comprovante!' })
     .min(1, { message: 'O arquivo é obrigatório' })
+    .optional()
     .refine((file) => file?.trim() !== '', {
       message: 'O arquivo é obrigatório',
     }),
