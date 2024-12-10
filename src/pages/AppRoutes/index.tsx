@@ -21,10 +21,10 @@ const AppRouter = () => {
   return (
     <Router>
       <Routes>
-        <Route path='/' element={<Navigate to='/' />} />
+        <Route path='/' element={<Navigate to='/campanhas' />} />
         <Route
           path='/login'
-          element={user ? <Navigate to='/' /> : <Login />}
+          element={user ? <Navigate to='/campanhas' /> : <Login />}
         />
         <Route path='/recovery-password' element={<RecoveryPassword />} />
         <Route path='/reset-password' element={<ResetPassword />} />
