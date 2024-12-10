@@ -58,11 +58,9 @@ const NotificationBadge: React.FC = () => {
     setSocket(ws);
 
     ws.onopen = () => {
-      console.log('WebSocket connection established');
     };
 
     ws.onmessage = (event) => {
-      console.log('Mensagem recebida:', event.data);
       try {
         const data: CampaignNotificationDTO = JSON.parse(event.data);
         setNotifications((prevNotifications) => [...prevNotifications, data]);
@@ -78,7 +76,6 @@ const NotificationBadge: React.FC = () => {
     };
 
     ws.onclose = (event) => {
-      console.log('WebSocket connection closed:', event.reason);
     };
 
     return () => {

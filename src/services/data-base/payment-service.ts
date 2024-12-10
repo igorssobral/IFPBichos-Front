@@ -26,6 +26,30 @@ export const ApiPayment = () => {
         });
     });
   };
+  const donationManual = (payment: any): Promise<any> => {
+    return new Promise((resolve, reject) => {
+      axios
+        .post(`${URL}/payments/donation-manual`, payment, config)
+        .then((response: AxiosResponse<any>) => {
+          resolve(response.data);
+        })
+        .catch((error: any) => {
+          reject(error);
+        });
+    });
+  };
+  const getDonationManual = (): Promise<any> => {
+    return new Promise((resolve, reject) => {
+      axios
+        .get(`${URL}/comissionMember/manual-donations`, config)
+        .then((response: AxiosResponse<any>) => {
+          resolve(response.data);
+        })
+        .catch((error: any) => {
+          reject(error);
+        });
+    });
+  };
   const updatePayment = (payment: ResponsePayment): Promise<any> => {
     return new Promise((resolve, reject) => {
       axios
@@ -52,6 +76,8 @@ export const ApiPayment = () => {
   };
   return {
     startPayment,
+    donationManual,
+    getDonationManual,
     updatePayment,
     getBalance,
   };
