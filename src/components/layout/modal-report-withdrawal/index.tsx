@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import {
   reportWithdrawalSchema,
@@ -42,7 +43,6 @@ export const ReportWithdrawal = ({ isVisible, onClose, sync }: Props) => {
   useEffect(() => {
     const fetchData = async () => {
       const fetchedCampaigns = await getAllCampaignsFinishedBalance();
-
 
       setCampaigns(fetchedCampaigns);
     };
@@ -118,7 +118,7 @@ export const ReportWithdrawal = ({ isVisible, onClose, sync }: Props) => {
               <>
                 <InputLabel sx={{ marginTop: '10px' }}>Campanha</InputLabel>
                 <Select
-                style={{width: '90%'}}
+                  style={{ width: '90%' }}
                   value={field.value || 0}
                   placeholder='Selecione'
                   onChange={(event) => {
@@ -148,7 +148,7 @@ export const ReportWithdrawal = ({ isVisible, onClose, sync }: Props) => {
               </>
             )}
           />
-        
+
           <Controller
             control={reportWithdrawalControl}
             name='action'
