@@ -22,6 +22,7 @@ interface CampaignNotificationDTO {
 }
 
 const NotificationBadge: React.FC = () => {
+  // eslint-disable-next-line no-unused-vars
   const [_, setSocket] = useState<WebSocket | null>(null);
   const [notifications, setNotifications] = useState<CampaignNotificationDTO[]>([]);
   const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
