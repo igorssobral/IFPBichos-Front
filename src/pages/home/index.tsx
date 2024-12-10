@@ -305,7 +305,7 @@ export const Home = () => {
           }}
           gap={5}
         >
-          {_DATA.currentData().map((campaign) => {
+          {_DATA?.currentData().map((campaign) => {
             return (
               <CardModal
                 key={campaign.id}
