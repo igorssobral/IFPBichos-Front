@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import Badge from '@mui/material/Badge';
 import MailIcon from '@mui/icons-material/Mail';
@@ -21,7 +22,7 @@ interface CampaignNotificationDTO {
 }
 
 const NotificationBadge: React.FC = () => {
-  const [socket, setSocket] = useState<WebSocket | null>(null);
+  const [_, setSocket] = useState<WebSocket | null>(null);
   const [notifications, setNotifications] = useState<CampaignNotificationDTO[]>([]);
   const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
   const [snackbarMessage, setSnackbarMessage] = useState<string>('');
