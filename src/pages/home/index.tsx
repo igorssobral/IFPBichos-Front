@@ -305,17 +305,18 @@ export const Home = () => {
           }}
           gap={5}
         >
-          {_DATA?.currentData().map((campaign) => {
-            return (
-              <CardModal
-                key={campaign.id}
-                campaign={campaign}
-                onEdit={handleEdit}
-                onView={handleViewCampaign}
-                onDelete={() => setidDelete(campaign.id)}
-              />
-            );
-          })}
+          {Array.isArray(_DATA?.currentData()) &&
+            _DATA?.currentData().map((campaign) => {
+              return (
+                <CardModal
+                  key={campaign.id}
+                  campaign={campaign}
+                  onEdit={handleEdit}
+                  onView={handleViewCampaign}
+                  onDelete={() => setidDelete(campaign.id)}
+                />
+              );
+            })}
         </Box>
 
         {idDelete && (
