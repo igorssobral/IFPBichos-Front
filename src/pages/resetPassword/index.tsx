@@ -33,7 +33,6 @@ export const ResetPassword = () => {
     const params = new URLSearchParams(urlObj.search);
 
     const tokenResetPassword = params.get('token') || '';
-    console.log('🚀 ~ useEffect ~ tokenResetPassword:', tokenResetPassword);
     setTokenResetPassword(tokenResetPassword);
   }, []);
 

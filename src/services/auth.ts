@@ -44,7 +44,6 @@ export const recoveryPassword = (credentials: ForgotasswordRequest): Promise<any
   });
 };
 export const resetPassword = (credentials: ResetPasswordRequest): Promise<any> => {
-  console.log('🚀 ~ resetPassword ~ credentials:', credentials)
   return new Promise((resolve, reject) => {
     axios
       .post(`${URL}/auth/reset-password`, credentials)
