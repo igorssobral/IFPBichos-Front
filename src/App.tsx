@@ -23,6 +23,7 @@ function App() {
           pauseOnHover
           theme='light'
           transition={Bounce}
+          aria-live='polite'
         />
       </AuthProvider>
     </div>

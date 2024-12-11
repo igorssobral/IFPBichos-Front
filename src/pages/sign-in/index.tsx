@@ -41,7 +41,7 @@ export const Login = () => {
   const onSubmit: SubmitHandler<LoginSchema> = (data) => {
     authenticate(data);
   };
-  
+
   return (
     <>
       <ButtonAppBar title='' visible={false} />
@@ -57,7 +57,6 @@ export const Login = () => {
                 render={({ field }) => (
                   <CustomTextField
                     id='email'
-                    title='Email'
                     label='Digite seu email'
                     type='text'
                     helperText={errors.login?.message}
@@ -69,11 +68,9 @@ export const Login = () => {
               <Controller
                 control={control}
                 name='password'
-                rules={{ required: false }}
                 render={({ field }) => (
                   <CustomTextField
                     id='password'
-                    title='Senha'
                     label='Digite sua senha'
                     type='password'
                     helperText={errors.password?.message}
@@ -82,7 +79,9 @@ export const Login = () => {
                 )}
               />
               <Button label='Entrar' width='300px' type='submit' headlight />
-              <a href='/recovery-password' className='span_login'>Esqueceu sua senha?</a>
+              <a href='/recovery-password' className='span_login'>
+                Esqueceu sua senha?
+              </a>
             </Box>
           </form>
           <div className='signup'>

@@ -2,16 +2,16 @@ export const handleShare = async (callback: (sharedUrl: string) => void) => {
   try {
     const shareData = {
       title: document.title,
-      text: "Confira esta página",
+      text: 'Confira esta página',
       url: window.location.href,
     };
 
     // Chama a função de retorno de chamada com o link compartilhado
-    if (typeof callback === "function") {
+    if (typeof callback === 'function') {
       callback(shareData.url);
     }
   } catch (error) {
-    console.error("Erro ao compartilhar:", error);
+    or('Erro ao compartilhar:', error);
   }
 };
 
@@ -21,12 +21,12 @@ export const handleShareSocial = async () => {
       await navigator.share({
         title: document.title,
         text: 'Confira esta página',
-        url: window.location.href
+        url: window.location.href,
       });
     } else {
       throw new Error('API de compartilhamento não suportada.');
     }
   } catch (error) {
-    console.error('Erro ao compartilhar:', error);
+    or('Erro ao compartilhar:', error);
   }
 };

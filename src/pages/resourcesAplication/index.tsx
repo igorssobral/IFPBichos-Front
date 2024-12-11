@@ -55,7 +55,7 @@ const ResourcesApplication = () => {
   const [open, setOpen] = useState(false);
   const [openModalRetirada, setOpenModalRetirada] = useState(false);
   const [openModalResources, setOpenModalResources] = useState(false);
-  const [selectedEntrada, setSelectedEntrada] = useState<CombinedData>(); 
+  const [selectedEntrada, setSelectedEntrada] = useState<CombinedData>();
 
   const fetchData = async () => {
     try {
@@ -67,7 +67,7 @@ const ResourcesApplication = () => {
       const combined = combineData(fetchedCampaigns, fetchedDonations);
       setCombinedData(combined);
     } catch (error) {
-      console.error('Erro ao buscar os dados:', error);
+      or('Erro ao buscar os dados:', error);
     }
   };
 
@@ -327,7 +327,7 @@ const ResourcesApplication = () => {
                 ])}
                 <Box
                   height={{ md: '50vh', xl: '60vh' }}
-                  sx={{ paddingInline: 0, overflowY: 'scroll' }}
+                  sx={{ paddingInline: 0, overflowY: 'auto' }}
                 >
                   {filteredCombinedData?.map((entrada, index) => (
                     <Grid
@@ -377,7 +377,7 @@ const ResourcesApplication = () => {
                             (entrada?.balance ?? 0) <
                             (entrada?.collectionGoal ?? 0)
                           )
-                            handleOpenModalResources(entrada); 
+                            handleOpenModalResources(entrada);
                         }}
                         style={{
                           cursor:
@@ -402,7 +402,7 @@ const ResourcesApplication = () => {
                 ])}
                 <Box
                   height={{ md: '50vh', xl: '60vh' }}
-                  sx={{ paddingInline: 0, overflowY: 'scroll' }}
+                  sx={{ paddingInline: 0, overflowY: 'auto' }}
                 >
                   {filteredWithdrawal?.map((saida, index) => (
                     <Grid

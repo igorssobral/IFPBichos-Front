@@ -12,7 +12,6 @@ export const ApiRealocationResources = () => {
       Authorization: `Bearer ${token}`,
     },
   };
-  
 
   const saveRealocationResources = (withdrawal: any): Promise<any> => {
     return new Promise((resolve, reject) => {
@@ -35,7 +34,7 @@ export const ApiRealocationResources = () => {
   //         resolve(response.data);
   //       })
   //       .catch((error: any) => {
-  //         console.error('Erro ao buscar campanhas:', error);
+  //          or('Erro ao buscar campanhas:', error);
   //         reject(error);
   //       });
   //   });
