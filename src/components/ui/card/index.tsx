@@ -6,6 +6,8 @@ import LinearProgress, {
   linearProgressClasses,
 } from '@mui/material/LinearProgress';
 
+import dog from '../../../assets/dog.jpg';
+import cat from '../../../assets/gato.jpg';
 import { CampaignRaw } from '../../../services/@types/campaign';
 import { Card } from '@mui/material';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
@@ -91,12 +93,12 @@ export const CardModal: React.FC<CardProps> = ({
       <Box className='image' onClick={handleViewCampaign}>
         {campaign?.animal === 'GATO' ? (
           <img
-            src={campaign.image || 'src/assets/gato.jpg'}
+            src={campaign.image || cat}
             alt={campaign.title}
           />
         ) : (
           <img
-            src={campaign.image || 'src/assets/dog.jpg'}
+            src={campaign.image || dog}
             alt={campaign.title}
           />
         )}
