@@ -38,7 +38,7 @@ export const Login = () => {
         toast.error('Usuário ou senha incorretos!');
       });
   }
-  const onSubmit: SubmitHandler<LoginSchema> = (data) => {
+  const onSubmit: SubmitHandler<LoginSchema> = (data: { password: string; login: string; }) => {
     authenticate(data);
   };
 

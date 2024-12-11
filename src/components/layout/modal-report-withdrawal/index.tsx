@@ -4,7 +4,7 @@ import {
   reportWithdrawalSchema,
   ReportWithdrawalSchema,
 } from '../../../schemas/report-withdrawal-schema';
-import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import { theme } from '../../../themes/styles';
 import {
   Box,

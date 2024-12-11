@@ -62,7 +62,7 @@ export const CreateCampanha = () => {
       });
   }
 
-  const onSubmit: SubmitHandler<CreateCampaignSchema> = (data) => {
+  const onSubmit: SubmitHandler<CreateCampaignSchema> = (data: CreateCampaignSchema) => {
     handleSaveCampaign(data);
   };
 

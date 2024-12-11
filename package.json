@@ -28,7 +28,6 @@
     "react": "^18.2.0",
     "react-currency-input-field": "^3.8.0",
     "react-dom": "^18.2.0",
-    "react-google-login": "^5.2.2",
     "react-hook-form": "^7.51.0",
     "react-number-format": "^5.4.0",
     "react-router-dom": "^6.20.1",

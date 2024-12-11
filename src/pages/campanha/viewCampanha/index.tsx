@@ -153,7 +153,7 @@ const ViewCampanha = () => {
     }
   }
 
-  const onSubmit: SubmitHandler<DonationSchema> = (data) => {
+  const onSubmit: SubmitHandler<DonationSchema> = (data: { donation: number; }) => {
     handleConfirmDonation(data);
   };
 
@@ -180,8 +180,7 @@ const ViewCampanha = () => {
         await updatePayment(responsePayment)
           .then(() => {
             toast.success('Doação realizada com sucesso!');
-            window.location.href = `http://localhost:5173/view-campaign/${id}`;
-            window.location.href = `http://localhost:5173/view-campaign/${id}`;
+            window.location.href = `https://ifpbichos-back.onrender.com/view-campaign/${id}`;
           })
           .catch(() => {
             toast.success('Doação não realizada!');
