@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/prefer-as-const */
@@ -124,7 +125,7 @@ const ViewCampanha = () => {
             image: data.image,
           });
         })
-        .catch((error) => {});
+        .catch((_error) => {});
     }
   }
   useEffect(() => {

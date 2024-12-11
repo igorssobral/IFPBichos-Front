@@ -57,7 +57,6 @@ const ResourcesApplication = () => {
   const [openModalRetirada, setOpenModalRetirada] = useState(false);
   const [openModalResources, setOpenModalResources] = useState(false);
   const [selectedEntrada, setSelectedEntrada] = useState<CombinedData>();
-  const [selectedEntrada, setSelectedEntrada] = useState<CombinedData>();
 
   const fetchData = async () => {
     try {
@@ -329,7 +328,6 @@ const ResourcesApplication = () => {
                 <Box
                   height={{ md: '50vh', xl: '60vh' }}
                   sx={{ paddingInline: 0, overflowY: 'auto' }}
-                  sx={{ paddingInline: 0, overflowY: 'auto' }}
                 >
                   {filteredCombinedData?.map((entrada, index) => (
                     <Grid
@@ -405,7 +403,6 @@ const ResourcesApplication = () => {
                 ])}
                 <Box
                   height={{ md: '50vh', xl: '60vh' }}
-                  sx={{ paddingInline: 0, overflowY: 'auto' }}
                   sx={{ paddingInline: 0, overflowY: 'auto' }}
                 >
                   {filteredWithdrawal?.map((saida, index) => (

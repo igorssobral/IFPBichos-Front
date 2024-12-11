@@ -96,7 +96,6 @@ export default function ModalUndirectedDonation({ onClose, visible }: props) {
                 variant='outlined'
                 helperText={errors.donation?.message}
                 onChange={(e) => field.onChange(parseFloat(e.target.value))}
-                onChange={(e) => field.onChange(parseFloat(e.target.value))}
               />
             )}
           />
