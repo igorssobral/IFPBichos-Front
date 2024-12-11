@@ -327,7 +327,7 @@ const ResourcesApplication = () => {
                 ])}
                 <Box
                   height={{ md: '50vh', xl: '60vh' }}
-                  sx={{ paddingInline: 0, overflowY: 'scroll' }}
+                  sx={{ paddingInline: 0, overflowY: 'auto' }}
                 >
                   {filteredCombinedData?.map((entrada, index) => (
                     <Grid
@@ -402,7 +402,7 @@ const ResourcesApplication = () => {
                 ])}
                 <Box
                   height={{ md: '50vh', xl: '60vh' }}
-                  sx={{ paddingInline: 0, overflowY: 'scroll' }}
+                  sx={{ paddingInline: 0, overflowY: 'auto' }}
                 >
                   {filteredWithdrawal?.map((saida, index) => (
                     <Grid
