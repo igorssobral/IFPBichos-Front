@@ -18,7 +18,7 @@ import {
 
 export const ResetPassword = () => {
   const [tokenResetPassword, setTokenResetPassword] = useState<string>('');
-  const [passwordResetSucess, setPasswordResetSucess] = useState(true);
+  const [passwordResetSucess, setPasswordResetSucess] = useState(false);
   const {
     handleSubmit,
     formState: { errors },
