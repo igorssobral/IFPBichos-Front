@@ -12,7 +12,6 @@ export const ApiRealocationResources = () => {
       Authorization: `Bearer ${token}`,
     },
   };
-  
 
   const saveRealocationResources = (withdrawal: any): Promise<any> => {
     return new Promise((resolve, reject) => {
@@ -26,20 +25,6 @@ export const ApiRealocationResources = () => {
         });
     });
   };
-
-  // const getAllWithdrawals = (): Promise<any> => {
-  //   return new Promise((resolve, reject) => {
-  //     axios
-  //       .get(`${URL}/action-campaign`, config)
-  //       .then((response: AxiosResponse<any>) => {
-  //         resolve(response.data);
-  //       })
-  //       .catch((error: any) => {
-  //         console.error('Erro ao buscar campanhas:', error);
-  //         reject(error);
-  //       });
-  //   });
-  // };
 
   return {
     saveRealocationResources,

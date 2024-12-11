@@ -15,7 +15,7 @@ interface CustomTextFieldProps extends Omit<TextFieldProps, 'error'> {
   error?: boolean;
 }
 
-const CustomTextField: React.FC<CustomTextFieldProps> = ({
+const CustomTextField = React.forwardRef<HTMLInputElement, CustomTextFieldProps>(({
   id,
   label,
   placeholder,
@@ -27,19 +27,20 @@ const CustomTextField: React.FC<CustomTextFieldProps> = ({
   inputLabelProps,
   helperText,
   ...rest
-}) => (
+}, ref) => (
   <>
     <FormLabel label={label || ''} htmlFor={id} />
     <TextField
       id={id}
-      variant='outlined'
-      size='small'
+      variant="outlined"
+      size="small"
       type={type}
       multiline={multiline || false}
       placeholder={placeholder}
       InputLabelProps={{ shrink: inputLabelProps }}
-      error={helperText ? true : false}
+      error={!!helperText}
       helperText={helperText}
+      inputRef={ref} // Atribuir a ref aqui
       {...rest}
       InputProps={{
         style: {
@@ -51,6 +52,6 @@ const CustomTextField: React.FC<CustomTextFieldProps> = ({
       }}
     />
   </>
-);
+));
 
 export default CustomTextField;

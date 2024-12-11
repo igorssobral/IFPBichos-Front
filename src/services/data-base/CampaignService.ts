@@ -35,7 +35,6 @@ export const ApiCampaign = () => {
           resolve(response.data);
         })
         .catch((error: any) => {
-          console.error('Erro ao buscar campanhas:', error);
           reject(error);
         });
     });
@@ -48,7 +47,6 @@ export const ApiCampaign = () => {
           resolve(response.data);
         })
         .catch((error: any) => {
-          console.error('Erro ao buscar campanhas:', error);
           reject(error);
         });
     });
@@ -61,7 +59,6 @@ export const ApiCampaign = () => {
           resolve(response.data);
         })
         .catch((error: any) => {
-          console.error('Erro ao buscar campanhas:', error);
           reject(error);
         });
     });
@@ -91,7 +88,6 @@ export const ApiCampaign = () => {
           resolve(response.data);
         })
         .catch((error: any) => {
-          console.error('Erro ao excluir a campanha:', error);
           reject(error);
         });
     });

@@ -1,3 +1,4 @@
+/* eslint-disable no-empty */
 import {
   Backdrop,
   Box,
@@ -55,7 +56,6 @@ export default function ModalUndirectedDonation({ onClose, visible }: props) {
       });
       window.location.href = response.initPoint;
     } catch (error) {
-      console.error('Erro ao iniciar pagamento:', error);
     }
     setOpen(false);
     handleClose();
@@ -95,8 +95,7 @@ export default function ModalUndirectedDonation({ onClose, visible }: props) {
                 placeholder='R$'
                 variant='outlined'
                 helperText={errors.donation?.message}
-                onChange={(e) => 
-                  field.onChange(parseFloat(e.target.value))}
+                onChange={(e) => field.onChange(parseFloat(e.target.value))}
               />
             )}
           />

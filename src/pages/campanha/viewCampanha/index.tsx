@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/prefer-as-const */
 /* eslint-disable no-empty */
@@ -101,7 +102,6 @@ const ViewCampanha = () => {
         setIsCopy(true);
       }
     } catch (error) {
-      console.error('Erro ao copiar o link:', error);
     }
   };
   const handleOpen = () => setOpenModal(true);
@@ -126,7 +126,6 @@ const ViewCampanha = () => {
           });
         })
         .catch((error) => {
-          console.error('Erro ao buscar a campanha:', error);
         });
     }
   }
@@ -150,7 +149,6 @@ const ViewCampanha = () => {
       });
       window.location.href = response.initPoint;
     } catch (error) {
-      console.error('Erro ao iniciar pagamento:', error);
     } finally {
       setOpen(false);
     }
@@ -183,7 +181,7 @@ const ViewCampanha = () => {
         await updatePayment(responsePayment)
           .then(() => {
             toast.success('Doação realizada com sucesso!');
-            window.location.href = `http://localhost:5173/view-campaign/${id}`
+            window.location.href = `http://localhost:5173/view-campaign/${id}`;
           })
           .catch(() => {
             toast.success('Doação não realizada!');

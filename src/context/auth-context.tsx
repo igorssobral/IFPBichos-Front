@@ -6,6 +6,7 @@ import {
   removeLocalStorage,
   setLocalStorage,
 } from '../utils/local-storage';
+import { decodeJwt } from '../utils/decode-jwt';
 
 interface AuthContextType {
   user: UserLogged | null;
@@ -23,7 +24,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const logged = (userData: UserLogged) => {
     setLocalStorage('user', userData);
 
-    setUser(userData);
+    const decoded = decodeJwt(userData.token);
+    setUser({
+      token: userData.token,
+      user: decoded.sub || '',
+      userRole: decoded.role,
+    });
   };
 
   const logout = () => {

@@ -15,8 +15,8 @@ import { theme } from '../../themes/styles';
 
 interface CampaignNotificationDTO {
   id: string;
-  start: string; 
-  end: string; 
+  start: string;
+  end: string;
   title: string;
   description?: string | null;
 }
@@ -24,7 +24,9 @@ interface CampaignNotificationDTO {
 const NotificationBadge: React.FC = () => {
   // eslint-disable-next-line no-unused-vars
   const [_, setSocket] = useState<WebSocket | null>(null);
-  const [notifications, setNotifications] = useState<CampaignNotificationDTO[]>([]);
+  const [notifications, setNotifications] = useState<CampaignNotificationDTO[]>(
+    []
+  );
   const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
   const [snackbarMessage, setSnackbarMessage] = useState<string>('');
 
@@ -55,11 +57,12 @@ const NotificationBadge: React.FC = () => {
   };
 
   useEffect(() => {
-    const ws = new WebSocket(`wss://ifpbichos-back.onrender.com/ws/notifications`);
+    const ws = new WebSocket(
+      `wss://ifpbichos-back.onrender.com/ws/notifications`
+    );
     setSocket(ws);
 
-    ws.onopen = () => {
-    };
+    ws.onopen = () => {};
 
     ws.onmessage = (event) => {
       try {
@@ -68,16 +71,15 @@ const NotificationBadge: React.FC = () => {
         setSnackbarMessage(`Nova campanha criada: ${data.title}`);
         handleNotification(`Nova campanha criada: ${data.title}`);
       } catch (e) {
-        console.error('Erro ao parsear a mensagem:', e);
+        or('Erro ao parsear a mensagem:', e);
       }
     };
 
     ws.onerror = (error) => {
-      console.error('WebSocket error:', error);
+      or('WebSocket error:', error);
     };
 
-    ws.onclose = () => {
-    };
+    ws.onclose = () => {};
 
     return () => {
       if (ws) {
@@ -97,7 +99,7 @@ const NotificationBadge: React.FC = () => {
       >
         <IconButton>
           <Badge badgeContent={notifications.length} color='warning'>
-            <MailIcon fontSize='medium' sx={{color: 'white'}} />
+            <MailIcon fontSize='medium' sx={{ color: 'white' }} />
           </Badge>
         </IconButton>
       </Button>
@@ -126,10 +128,20 @@ const NotificationBadge: React.FC = () => {
             <MenuItem
               key={notification.id}
               onClick={handleNavigate(notification.id)}
-              sx={{ borderRadius: 1 ,borderBottom: 1, borderColor: theme.colors.blackOpacity}}
+              sx={{
+                borderRadius: 1,
+                borderBottom: 1,
+                borderColor: theme.colors.blackOpacity,
+              }}
             >
-              <Grid display={'flex'} gap={1} justifyContent={'center'} padding={1}>
-                <NotificationsActiveOutlined /> Nova campanha: <Typography >{notification.title}</Typography>
+              <Grid
+                display={'flex'}
+                gap={1}
+                justifyContent={'center'}
+                padding={1}
+              >
+                <NotificationsActiveOutlined /> Nova campanha:{' '}
+                <Typography>{notification.title}</Typography>
               </Grid>
             </MenuItem>
           ))

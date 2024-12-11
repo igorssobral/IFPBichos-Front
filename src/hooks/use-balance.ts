@@ -1,3 +1,4 @@
+/* eslint-disable no-empty */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from 'react';
 import { ApiCampaign } from '../services/data-base/CampaignService';
@@ -18,7 +19,6 @@ export const useBalance = () => {
         setUndirectedBalance(undirected.balance);
         setCampaignsBalance(campaigns);
       } catch (error) {
-        console.error('Erro ao buscar saldos', error);
       }
     };
 

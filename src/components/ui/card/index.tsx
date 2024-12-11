@@ -17,6 +17,7 @@ import { Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useAuth } from '../../../context/auth-context';
 import { theme as themes } from '../../../themes/styles';
+import { Button } from '../button';
 type CardProps = {
   campaign: CampaignRaw;
   onEdit: (id: string) => void;
@@ -60,13 +61,14 @@ export const CardModal: React.FC<CardProps> = ({
 
   return (
     <Card
+    elevation={3}
       sx={{
         width: '300px',
         height: '420px',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        borderRadius: '15px',
+        borderRadius: '10px',
         backgroundColor: 'rgb(255, 255, 255)',
       }}
     >
@@ -170,6 +172,10 @@ export const CardModal: React.FC<CardProps> = ({
             Arrecadado R${campaign.balance.toFixed(2)}
           </Typography>
         </Box>
+          <Box width={"100%"} sx={{display: 'flex', justifyContent: 'center'}}>
+                    <Button headlight label='fazer doação' type='button' onClick={handleViewCampaign}/>
+
+          </Box>
       </Box>
     </Card>
   );
