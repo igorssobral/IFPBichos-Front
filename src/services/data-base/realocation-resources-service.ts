@@ -13,6 +13,7 @@ export const ApiRealocationResources = () => {
     },
   };
 
+
   const saveRealocationResources = (withdrawal: any): Promise<any> => {
     return new Promise((resolve, reject) => {
       axios

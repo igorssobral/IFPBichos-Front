@@ -101,8 +101,7 @@ const ViewCampanha = () => {
         await navigator.clipboard.writeText(sharedLink);
         setIsCopy(true);
       }
-    } catch (error) {
-    }
+    } catch (error) {}
   };
   const handleOpen = () => setOpenModal(true);
   const handleCloseModal = () => setOpenModal(false);
@@ -125,8 +124,7 @@ const ViewCampanha = () => {
             image: data.image,
           });
         })
-        .catch((error) => {
-        });
+        .catch((error) => {});
     }
   }
   useEffect(() => {
@@ -181,6 +179,7 @@ const ViewCampanha = () => {
         await updatePayment(responsePayment)
           .then(() => {
             toast.success('Doação realizada com sucesso!');
+            window.location.href = `http://localhost:5173/view-campaign/${id}`;
             window.location.href = `http://localhost:5173/view-campaign/${id}`;
           })
           .catch(() => {

@@ -18,8 +18,7 @@ export const useBalance = () => {
         const campaigns = await getTotalBalance();
         setUndirectedBalance(undirected.balance);
         setCampaignsBalance(campaigns);
-      } catch (error) {
-      }
+      } catch (error) {}
     };
 
     fetchBalances();
