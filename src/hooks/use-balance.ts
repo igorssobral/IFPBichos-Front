@@ -18,7 +18,7 @@ export const useBalance = () => {
         setUndirectedBalance(undirected.balance);
         setCampaignsBalance(campaigns);
       } catch (error) {
-        console.error('Erro ao buscar saldos', error);
+        or('Erro ao buscar saldos', error);
       }
     };
 

@@ -23,6 +23,10 @@ export type UserLogged  ={
   userRole: string;
   user: string; 
 }
+export type Token  ={
+  token: string;
+ 
+}
 
 
 export type UserDataBase = {

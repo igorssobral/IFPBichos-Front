@@ -34,7 +34,7 @@ export const ApiWithdrawal = () => {
           resolve(response.data);
         })
         .catch((error: any) => {
-          console.error('Erro ao buscar campanhas:', error);
+          or('Erro ao buscar campanhas:', error);
           reject(error);
         });
     });
