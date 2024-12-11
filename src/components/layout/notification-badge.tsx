@@ -55,7 +55,7 @@ const NotificationBadge: React.FC = () => {
   };
 
   useEffect(() => {
-    const ws = new WebSocket(`ws://ifpbichos-back.onrender.com/ws/notifications`);
+    const ws = new WebSocket(`wss://ifpbichos-back.onrender.com/ws/notifications`);
     setSocket(ws);
 
     ws.onopen = () => {
