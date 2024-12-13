@@ -318,8 +318,8 @@ export const Home = () => {
         
       </Grid>
 
-      <Grid  >
-          <ListItem sx={{width:'max-content'}}>
+      <Grid width={{xs:'70%',md:'max-content'}} >
+          <ListItem >
             <CustomTextField
               label=''
               title=''

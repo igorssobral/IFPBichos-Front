@@ -36,7 +36,7 @@ const CustomTextField = React.forwardRef<HTMLInputElement, CustomTextFieldProps>
       InputLabelProps={{ shrink: inputLabelProps }}
       error={!!helperText}
       helperText={helperText}
-      inputRef={ref} // Atribuir a ref aqui
+      inputRef={ref}
       {...rest}
       InputProps={{
         style: {
