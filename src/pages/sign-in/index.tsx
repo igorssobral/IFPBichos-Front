@@ -59,6 +59,7 @@ export const Login = () => {
                     id='email'
                     label='Digite seu email'
                     type='text'
+                    placeholder='name@email.com'
                     helperText={errors.login?.message}
                     {...field}
                   />
@@ -73,6 +74,7 @@ export const Login = () => {
                     id='password'
                     label='Digite sua senha'
                     type='password'
+                    placeholder='********'
                     helperText={errors.password?.message}
                     {...field}
                   />

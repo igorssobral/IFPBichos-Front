@@ -78,6 +78,7 @@ const SignUp = () => {
                         title="Nome"
                         label="Digite seu nome"
                         type="text"
+                        placeholder='nome'
                         helperText={errors.name?.message}
                         {...field}
                       />
@@ -94,6 +95,7 @@ const SignUp = () => {
                         title="CPF"
                         label="Digite seu CPF"
                         type="text"
+                        placeholder='12345678910'
                         helperText={errors.CPF?.message}
                         {...field}
                       />
@@ -110,6 +112,7 @@ const SignUp = () => {
                         title="Telefone"
                         label="Digite seu telefone"
                         type="text"
+                        placeholder='0000000000'
                         helperText={errors.phoneNumber?.message}
                         {...field}
                       />
@@ -129,6 +132,7 @@ const SignUp = () => {
                         title="Email"
                         label="Digite seu email"
                         type="email"
+                        placeholder='name@email.com'
                         helperText={errors.email?.message}
                         {...field}
                       />
@@ -144,6 +148,7 @@ const SignUp = () => {
                         title="Senha"
                         label="Digite sua senha"
                         type="password"
+                        placeholder='********'
                         helperText={errors.password?.message}
                         {...field}
                       />
@@ -159,6 +164,7 @@ const SignUp = () => {
                         title="Confirmar Senha"
                         label="Confirme sua senha"
                         type="password"
+                        placeholder='********'
                         helperText={errors.confirmPassword?.message}
                         {...field}
                       />
