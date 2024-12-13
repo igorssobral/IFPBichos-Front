@@ -319,7 +319,7 @@ export const Home = () => {
       </Grid>
 
       <Grid  >
-          <ListItem >
+          <ListItem sx={{width:'max-content'}}>
             <CustomTextField
               label=''
               title=''
@@ -330,13 +330,13 @@ export const Home = () => {
               type={'text'}
               focused={false}
               fontSize='13px'
-              sx={{width:'100%'}}
+              fullWidth
               
             />
             <SearchIcon
               fontSize='small'
               color='disabled'
-              sx={{ position: 'absolute', right: '15px' }}
+              sx={{ position: 'absolute', right: '20px' }}
             />
           </ListItem>
         </Grid>
