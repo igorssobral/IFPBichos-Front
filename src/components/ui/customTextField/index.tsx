@@ -8,8 +8,6 @@ interface CustomTextFieldProps extends Omit<TextFieldProps, 'error'> {
   placeholder?: string;
   type: string;
   multiline?: boolean;
-  width?: string;
-  height?: string;
   fontSize?: string;
   inputLabelProps?: boolean;
   error?: boolean;
@@ -21,8 +19,6 @@ const CustomTextField = React.forwardRef<HTMLInputElement, CustomTextFieldProps>
   placeholder,
   type,
   multiline,
-  width,
-  height,
   fontSize,
   inputLabelProps,
   helperText,
@@ -44,8 +40,6 @@ const CustomTextField = React.forwardRef<HTMLInputElement, CustomTextFieldProps>
       {...rest}
       InputProps={{
         style: {
-          width: width || '300px',
-          height: height || '40px',
           borderRadius: '7px',
           fontSize: fontSize || '15px',
         },

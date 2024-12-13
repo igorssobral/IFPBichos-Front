@@ -3,7 +3,7 @@ import FormLabels from "@mui/material/FormLabel";
 
 type props = {
   label: string;
-  htmlFor: string;
+  htmlFor?: string;
 };
 export const FormLabel = ({ label, htmlFor }: props) => {
   return (

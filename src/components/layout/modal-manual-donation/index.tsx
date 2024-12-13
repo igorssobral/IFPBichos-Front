@@ -95,7 +95,6 @@ export const ManualDonationModal = ({ isVisible, onClose, sync }: Props) => {
                 label='Motivação'
                 id='motivation'
                 multiline
-                height='100px'
                 minRows={4}
                 maxRows={4}
                 helperText={manualDonationErrors?.motivation?.message}

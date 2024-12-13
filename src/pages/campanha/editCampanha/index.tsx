@@ -115,7 +115,6 @@ export const EditCampanha = () => {
                   placeholder='Digite uma descrição'
                   multiline
                   type='text'
-                  height='100px'
                   minRows={4}
                   maxRows={4}
                   helperText={errors?.description?.message}

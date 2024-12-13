@@ -2,14 +2,14 @@ import React from 'react';
 import ButtonComponent from '@mui/material/Button';
 import { theme } from '../../../themes/styles';
 
-type props = {
+type Props = {
   width?: string;
   label: string;
   headlight?: boolean;
   disabled?: boolean;
   onClick?: () => void;
   type?: 'button' | 'submit';
-};
+} & React.ComponentProps<typeof ButtonComponent>; 
 
 export const Button = ({
   width,
@@ -18,7 +18,8 @@ export const Button = ({
   disabled,
   onClick,
   type,
-}: props) => {
+  ...rest 
+}: Props) => {
   return (
     <ButtonComponent
       style={{
@@ -33,9 +34,10 @@ export const Button = ({
         boxShadow: 'none',
       }}
       type={type}
-      variant='contained'
+      variant="contained"
       onClick={onClick}
       disabled={disabled}
+      {...rest} 
     >
       {label}
     </ButtonComponent>

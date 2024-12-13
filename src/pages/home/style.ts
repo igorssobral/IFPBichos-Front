@@ -1,10 +1,9 @@
 export const filtersStyle = {
-  width: '90%',
+  width: '100%',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  gap: '10%',
-  margin: '50px auto',
+  margin: '0 auto',
 };
 export const stylePagination = {
   display: 'flex',

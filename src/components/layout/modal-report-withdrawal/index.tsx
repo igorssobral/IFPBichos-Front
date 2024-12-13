@@ -159,7 +159,6 @@ export const ReportWithdrawal = ({ isVisible, onClose, sync }: Props) => {
                 label='Ação'
                 id='motivation'
                 multiline
-                height='100px'
                 minRows={4}
                 maxRows={4}
                 helperText={reportWithdrawalErrors?.action?.message}

@@ -13,7 +13,7 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import HistoryIcon from '@mui/icons-material/History';
-import PaymentIcon from '@mui/icons-material/Payment';
+// import PaymentIcon from '@mui/icons-material/Payment';
 import { BarChart, LocalAtm } from '@mui/icons-material';
 import { useAuth } from '../../../context/auth-context';
 import { theme } from '../../../themes/styles';
@@ -101,12 +101,12 @@ export const Menu = ({ open, setOpen }: props) => {
               </ListItemIcon>
               <ListItemText primary='Doações não direcionadas' />
             </ListItem>
-            <ListItem button component='a' href='#'>
+            {/* <ListItem button component='a' href='#'>
               <ListItemIcon>
                 <PaymentIcon />
               </ListItemIcon>
               <ListItemText primary='Realizar assinatura' />
-            </ListItem>
+            </ListItem> */}
             <ListItem button component='a' href='/donation-history'>
               <ListItemIcon>
                 <HistoryIcon />

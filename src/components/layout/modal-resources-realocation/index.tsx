@@ -122,7 +122,6 @@ export const ResourcesRealocation = ({
                 label='Descrição'
                 id='motivation'
                 multiline
-                height='100px'
                 minRows={4}
                 maxRows={4}
                 helperText={formState.errors?.description?.message}
