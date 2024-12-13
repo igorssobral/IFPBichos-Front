@@ -26,6 +26,12 @@
     font-size: 0.8rem;
     color: var(--primary);
     text-align: center;
+    margin-top: 5px;
+    transition: all 0.2s ease-in-out;
+}
+
+.span_login:hover{
+    color: #000;
 }
 
 .signup {
@@ -35,6 +41,8 @@
     justify-content: center;
     align-items: center;
 }
+
+
 
 .signup p {
     width: 100%;
@@ -48,7 +56,9 @@
     color: var(--primary);
     margin-left: 5px;
 }
-
+.signup a:hover{
+    text-decoration: underline;
+}
 .buttons-signup{
     display: flex;
     gap: 10px;

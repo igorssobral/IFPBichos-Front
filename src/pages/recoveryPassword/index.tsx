@@ -69,6 +69,7 @@ export const RecoveryPassword = () => {
                         title='Digite seu email'
                         label='Email de recuperação'
                         type='email'
+                        placeholder='nome@email.com'
                         helperText={errors.email?.message}
                         {...field}
                       />

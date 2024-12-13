@@ -88,6 +88,7 @@ export const ResetPassword = () => {
                         title='Senha'
                         label='Nova senha'
                         type='password'
+                        placeholder='********'
                         helperText={errors.password?.message}
                         {...field}
                       />
@@ -103,6 +104,7 @@ export const ResetPassword = () => {
                         title='Senha'
                         label='Repita a nova senha'
                         type='password'
+                        placeholder='********'
                         helperText={errors.confirmPassword?.message}
                         {...field}
                       />

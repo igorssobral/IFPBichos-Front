@@ -25,13 +25,14 @@ export const Button = ({
       style={{
         width: `${width}`,
         height: '40px',
-        borderRadius: 11,
+        borderRadius: 6,
         backgroundColor: `${headlight ? theme.colors.primary : theme.colors.secondary}`,
         marginTop: '20px',
         paddingTop: '10px',
         fontSize: '15px',
         fontWeight: 'bolder',
         boxShadow: 'none',
+        
       }}
       type={type}
       variant="contained"
