@@ -3,6 +3,7 @@
 import {
   Box,
   Container,
+  Drawer,
   Grid,
   ListItem,
   Pagination,
@@ -28,6 +29,7 @@ import { useAuth } from '../../context/auth-context';
 import { ResponsePayment } from '../../services/@types/response-payment';
 import { ApiPayment } from '../../services/data-base/payment-service';
 import { toast } from 'react-toastify';
+import { Button } from '../../components/ui/button';
 
 export const Home = () => {
   const { user } = useAuth();
@@ -36,7 +38,7 @@ export const Home = () => {
   const { updatePayment } = ApiPayment();
   const [campaigns, setCampaigns] = useState<CampaignRaw[]>([]);
   const [campaignsCopy, setCampaignsCopy] = useState<CampaignRaw[]>();
-
+  const [isFilterOpen, setFilterOpen] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   const [idDelete, setidDelete] = useState<string | null>(null);
   const [search, setSearch] = useState('');
@@ -198,19 +200,82 @@ export const Home = () => {
   return (
     <Container>
       <ButtonAppBar title='Campanhas' visible />
+      <Grid style={filtersStyle} container spacing={2} sx={{ flexDirection: { xs: 'column-reverse', md: 'row' } }}>
+      {/* Botão para abrir filtros no mobile */}
+      <Button
+       label='Filtros'
+        onClick={() => setFilterOpen(true)}
+        sx={{ display: { xs: 'block', md: 'none' } }} 
+      >
+        Filtros
+      </Button>
+
+      <Drawer
+        anchor="bottom"
+        open={isFilterOpen}
+        onClose={() => setFilterOpen(false)}
+        
+      >
+        <Box p={2}>
+          <Grid display={'flex'} flexDirection={'column'} justifyContent={'center'} alignItems={'center'}>
+            <Grid item xs={6}>
+              <ListItem>
+                Filtros:
+                <SelectSmall
+                  handleFilter={(value) => {
+                    setSelectedFilter(value);
+                    handleFilterByType(value);
+                    setIsChecked(false);
+                  }}
+                  selectedValue={selectedFilter}
+                />
+              </ListItem>
+            </Grid>
+            
+            <Grid item xs={7}>
+              <ListItem>
+                <FormControlLabel
+                  value="end"
+                  control={
+                    <Radio
+                      checked={isChecked}
+                      color="success"
+                      onChange={handleChange}
+                    />
+                  }
+                  label="Próximo da meta"
+                />
+              </ListItem>
+            </Grid>
+            <Grid item xs={12}>
+              <ListItem>
+                <FormControlLabel
+                  value="start"
+                  control={<DeleteForeverIcon color="action" />}
+                  label="Limpar Filtros"
+                  onClick={resetFilters}
+                />
+              </ListItem>
+            </Grid>
+          </Grid>
+        </Box>
+      </Drawer>
+
       <Grid
-        sx={filtersStyle}
         flexDirection={{ xs: 'column', md: 'row', lg: 'row' }}
+        display={{xs:'none', md:'flex'}}
       >
         <Grid
           display={'flex'}
-          alignItems={{ lg: 'center', xs: 'start' }}
-          flexDirection={{ xs: 'column', md: 'row', lg: 'row' }}
-          justifyContent={'start'}
+          width={'100%'}
+          alignItems={{ lg: 'center', xs: 'center' }}
+          flexDirection={{  md: 'row', lg: 'row' }}
+          container
+          spacing={{xs: 2,md:3}}
+          
         >
-          <Grid>
-            <ListItem>
-              {' '}
+          <Grid item xs={7} md={3}>
+            <ListItem sx={{display: 'flex', justifyContent: 'center'}}>
               Filtros:
               <SelectSmall
                 handleFilter={(value) => {
@@ -222,8 +287,8 @@ export const Home = () => {
               />
             </ListItem>
           </Grid>
-          <Grid>
-            <ListItem>
+          <Grid  item xs={5} md={5}>
+            <ListItem >
               <FormControlLabel
                 value='end'
                 control={
@@ -238,7 +303,7 @@ export const Home = () => {
             </ListItem>
           </Grid>
 
-          <Grid marginLeft={1}>
+          <Grid item mx={{xs:'auto'}}  md={4}>
             <ListItem>
               <FormControlLabel
                 value='start'
@@ -250,7 +315,10 @@ export const Home = () => {
           </Grid>
         </Grid>
 
-        <Grid>
+        
+      </Grid>
+
+      <Grid >
           <ListItem>
             <CustomTextField
               label=''
@@ -260,8 +328,6 @@ export const Home = () => {
               placeholder='pesquise por campanhas'
               id='title'
               type={'text'}
-              width='250px'
-              height='30px'
               focused={false}
               fontSize='13px'
             />
@@ -272,7 +338,7 @@ export const Home = () => {
             />
           </ListItem>
         </Grid>
-      </Grid>
+    </Grid>
 
       <Container style={stylePagination}>
         <Pagination
@@ -296,7 +362,6 @@ export const Home = () => {
         <Box
           display={'grid'}
           width={{ xs: '100%', lg: '100%' }}
-          marginBottom={5}
           justifyItems={'center'}
           gridTemplateColumns={{
             sm: 'repeat(1, 1fr)',
