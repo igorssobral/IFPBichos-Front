@@ -324,7 +324,6 @@ export const Home = () => {
               label=''
               title=''
               onChange={handleSearch}
-              inputLabelProps={false}
               placeholder='pesquise por campanhas'
               id='title'
               type={'text'}
