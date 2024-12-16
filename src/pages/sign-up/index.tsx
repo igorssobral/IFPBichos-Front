@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
 import CustomTextField from "../../components/ui/customTextField";
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { Controller, SubmitHandler, useForm, UseFormReturn } from "react-hook-form";
 import { Button } from "../../components/ui/button";
 import { ContainerModal } from "../../components/ui/container";
 import { Box } from "@mui/material";
@@ -13,7 +14,86 @@ import { signup } from "../../services/auth";
 import { toast } from 'react-toastify';
 
 
-//Página de cadastro ddo usuário
+
+interface SignUpFormProps {
+  control: UseFormReturn<SignUpSchema>['control'];
+  errors: any; 
+  showAdditionalFields: boolean;
+  handleSubmit: any; 
+  onSubmit: (data: SignUpSchema) => void;
+  handleNextClick: () => void;
+  handleBackClick: () => void;
+}
+
+const renderTextField = (
+  name: string,
+  label: string,
+  placeholder: string,
+  type: string,
+  errors: any,
+  control: any
+) => (
+  <Controller
+    control={control}
+    name={name}
+    render={({ field }) => (
+      <CustomTextField
+        id={name}
+        label={label}
+        type={type}
+        placeholder={placeholder}
+        helperText={errors[name]?.message}
+        {...field}
+      />
+    )}
+  />
+);
+
+const SignUpForm: React.FC<SignUpFormProps> = ({
+  control,
+  errors,
+  showAdditionalFields,
+  handleSubmit,
+  onSubmit,
+  handleNextClick,
+  handleBackClick,
+}) => (
+  <form onSubmit={handleSubmit(onSubmit)}>
+    <Box display={"flex"} flexDirection={"column"}>
+      {/* Campos principais */}
+      {!showAdditionalFields && (
+        <>
+          {renderTextField("name", "Digite seu nome", "nome", "text", errors, control)}
+          {renderTextField("CPF", "Digite seu CPF", "12345678910", "text", errors, control)}
+          {renderTextField("phoneNumber", "Digite seu telefone", "0000000000", "text", errors, control)}
+        </>
+      )}
+
+      {showAdditionalFields && (
+        <>
+          {renderTextField("email", "Digite seu email", "name@email.com", "email", errors, control)}
+          {renderTextField("password", "Digite sua senha", "********", "password", errors, control)}
+          {renderTextField("confirmPassword", "Confirme sua senha", "********", "password", errors, control)}
+        </>
+      )}
+
+      <div className="buttons-signup">
+        {!showAdditionalFields ? (
+          <>
+            <Button label="próximo" width="150px" type="button" headlight onClick={handleNextClick} />
+            <Button label="voltar" width="150px" onClick={handleBackClick} />
+          </>
+        ) : (
+          <>
+            <Button label="Cadastrar" headlight width="150px" type="submit" />
+            <Button label="voltar" width="150px" onClick={handleNextClick} />
+          </>
+        )}
+      </div>
+    </Box>
+  </form>
+);
+
 const SignUp = () => {
   const [showAdditionalFields, setShowAdditionalFields] = useState(false);
 
@@ -63,154 +143,19 @@ const SignUp = () => {
       <ButtonAppBar title="" visible={false} />
       <Box display={"flex"} flexDirection={"column"} alignItems={"center"}>
         <ContainerModal>
-          <Title label="Cadastro"></Title>
+          <Title label="Cadastro" />
 
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <Box display={"flex"} flexDirection={"column"}>
-              {!showAdditionalFields && (
-                <>
-                  <Controller
-                    control={control}
-                    name="name"
-                    render={({ field }) => (
-                      <CustomTextField
-                        id="name"
-                        title="Nome"
-                        label="Digite seu nome"
-                        type="text"
-                        placeholder='nome'
-                        helperText={errors.name?.message}
-                        {...field}
-                      />
-                    )}
-                  />
-
-                  <Controller
-                    control={control}
-                    name="CPF"
-                    render={({ field }) => (
-                    
-                      <CustomTextField
-                        id="cpf"
-                        title="CPF"
-                        label="Digite seu CPF"
-                        type="text"
-                        placeholder='12345678910'
-                        helperText={errors.CPF?.message}
-                        {...field}
-                      />
-                    
-                     )}
-                  />
-
-                  <Controller
-                    control={control}
-                    name="phoneNumber"
-                    render={({ field }) => (
-                      <CustomTextField
-                        id="phone"
-                        title="Telefone"
-                        label="Digite seu telefone"
-                        type="text"
-                        placeholder='0000000000'
-                        helperText={errors.phoneNumber?.message}
-                        {...field}
-                      />
-                    )}
-                  />
-                </>
-              )}
-
-              {showAdditionalFields && (
-                <>
-                  <Controller
-                    control={control}
-                    name="email"
-                    render={({ field }) => (
-                      <CustomTextField
-                        id="email"
-                        title="Email"
-                        label="Digite seu email"
-                        type="email"
-                        placeholder='name@email.com'
-                        helperText={errors.email?.message}
-                        {...field}
-                      />
-                    )}
-                  />
-
-                  <Controller
-                    control={control}
-                    name="password"
-                    render={({ field }) => (
-                      <CustomTextField
-                        id="password"
-                        title="Senha"
-                        label="Digite sua senha"
-                        type="password"
-                        placeholder='********'
-                        helperText={errors.password?.message}
-                        {...field}
-                      />
-                    )}
-                  />
-
-                  <Controller
-                    control={control}
-                    name="confirmPassword"
-                    render={({ field }) => (
-                      <CustomTextField
-                        id="confirmPassword"
-                        title="Confirmar Senha"
-                        label="Confirme sua senha"
-                        type="password"
-                        placeholder='********'
-                        helperText={errors.confirmPassword?.message}
-                        {...field}
-                      />
-                    )}
-                  />
-                </>
-              )}
-
-              <div className="buttons-signup">
-                {!showAdditionalFields && (
-                  <>
-                    <Button
-                      label="próximo"
-                      width="150px"
-                      type="button"
-                      headlight
-                      onClick={handleNextClick}
-                    />
-
-                    <Button
-                      label="voltar"
-                      width="150px"
-                      onClick={handleBackClick}
-                    />
-                  </>
-                )}
-                {showAdditionalFields && (
-                  <>
-                    <Button
-                      label="Cadastrar"
-                      headlight
-                      width="150px"
-                      type="submit"
-                    />
-                    <Button
-                      label="voltar"
-                      width="150px"
-                      onClick={handleNextClick}
-                    />
-                  </>
-                )}
-              </div>
-            </Box>
-          </form>
+          <SignUpForm
+            control={control}
+            errors={errors}
+            showAdditionalFields={showAdditionalFields}
+            handleSubmit={handleSubmit}
+            onSubmit={onSubmit}
+            handleNextClick={handleNextClick}
+            handleBackClick={handleBackClick}
+          />
+          
         </ContainerModal>
-       
       </Box>
     </>
   );

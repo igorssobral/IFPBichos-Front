@@ -1,10 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import {
-  CreateCampaignSchema,
-  createCampaignSchema,
-} from '../../../schemas/create-campaign-schema';
+import { CreateCampaignSchema, createCampaignSchema } from '../../../schemas/create-campaign-schema';
 import React from 'react';
-
 import { ApiCampaign } from '../../../services/data-base/CampaignService';
 import {
   Box,
@@ -23,6 +20,26 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { formatISO } from '../../../utils/format-date';
 import { toast } from 'react-toastify';
 
+const renderController = (
+  control: any,
+  name: string,
+  Component: React.ElementType,
+  helperText: string,
+  additionalProps: any = {}
+) => (
+  <Controller
+    control={control}
+    name={name}
+    render={({ field }) => (
+      <Component
+        {...field}
+        helperText={helperText}
+        {...additionalProps}
+      />
+    )}
+  />
+);
+
 export const CreateCampanha = () => {
   const {
     handleSubmit,
@@ -30,39 +47,33 @@ export const CreateCampanha = () => {
     control,
   } = useForm<CreateCampaignSchema>({
     resolver: zodResolver(createCampaignSchema),
-    defaultValues: {
-      startDate: formatISO(new Date()),
-    },
+    defaultValues: { startDate: formatISO(new Date()) },
   });
 
   const { saveCampaign } = ApiCampaign();
   const navigate = useNavigate();
 
-  const handleBack = () => {
-    navigate('/campanhas');
+  const handleBack = () => navigate('/campanhas');
+
+  const handleSaveCampaign = async (campaign: CreateCampaignSchema) => {
+    try {
+      const response = await saveCampaign({
+        start: campaign.startDate,
+        end: campaign.finishedDate,
+        title: campaign.title,
+        animal: campaign.animal,
+        description: campaign.description,
+        image: campaign.file,
+        collectionGoal: campaign.fundraisingGoal,
+      });
+      toast.success(response);
+      handleBack();
+    } catch (error: any) {
+      toast.error(error);
+    }
   };
 
-  async function handleSaveCampaign(campaign: CreateCampaignSchema) {
-    await saveCampaign({
-      start: campaign.startDate,
-      end: campaign.finishedDate,
-      title: campaign.title,
-      animal: campaign.animal,
-      description: campaign.description,
-      image: campaign.file,
-      collectionGoal: campaign.fundraisingGoal,
-    })
-      .then((response) => {
-       
-        handleBack(); 
-        toast.success(response);
-      })
-      .catch((error) => {
-        toast.error(error);
-      });
-  }
-
-  const onSubmit: SubmitHandler<CreateCampaignSchema> = (data: CreateCampaignSchema) => {
+  const onSubmit: SubmitHandler<CreateCampaignSchema> = (data) => {
     handleSaveCampaign(data);
   };
 
@@ -73,125 +84,67 @@ export const CreateCampanha = () => {
         <Title label='Nova Campanha' />
         <form onSubmit={handleSubmit(onSubmit)}>
           <Box display={'flex'} flexDirection={'column'}>
-            <Controller
-              control={control}
-              name='title'
-              render={({ field }) => (
-                <CustomTextField
-                  id='title'
-                  label='Titulo'
-                  placeholder='Digite o titulo'
-                  type='text'
-                  helperText={errors?.title?.message}
-                  {...field}
-                />
-              )}
-            />
+            {renderController(control, 'title', CustomTextField, errors?.title?.message || '', {
+              label: 'Título',
+              placeholder: 'Digite o título',
+              type: 'text',
+            })}
+
+            {renderController(control, 'description', CustomTextField, errors?.description?.message || '', {
+              label: 'Descrição',
+              placeholder: 'Digite uma descrição',
+              multiline: true,
+              minRows: 4,
+              maxRows: 4,
+            })}
 
             <Controller
               control={control}
-              name='description'
-              rules={{ required: false }}
-              render={({ field }) => (
-                <CustomTextField
-                  id='description'
-                  label='Descrição'
-                  placeholder='Digite uma descrição'
-                  multiline
-                  type='text'
-                  minRows={4}
-                  maxRows={4}
-                  helperText={errors?.description?.message}
-                  {...field}
-                />
-              )}
-            />
-
-            <Controller
-              control={control}
-              name='animal'
+              name="animal"
               render={({ field }) => (
                 <>
                   <InputLabel sx={{ marginTop: '10px' }}>Animal</InputLabel>
                   <Select
                     value={field.value || 'Selecione'}
-                    placeholder='Selecione'
+                    placeholder="Selecione"
                     onChange={field.onChange}
                     error={!!errors.animal?.message}
                     sx={{ marginBottom: '10px', borderRadius: 2 }}
                   >
-                    <MenuItem value={'Selecione'}>Selecione</MenuItem>
-                    <MenuItem value={'GATO'}>Gato</MenuItem>
-                    <MenuItem value={'CACHORRO'}>Cachorro</MenuItem>
+                    <MenuItem value="Selecione">Selecione</MenuItem>
+                    <MenuItem value="GATO">Gato</MenuItem>
+                    <MenuItem value="CACHORRO">Cachorro</MenuItem>
                   </Select>
-                  <FormHelperText error>
-                    {errors.animal?.message}
-                  </FormHelperText>
+                  <FormHelperText error>{errors.animal?.message}</FormHelperText>
                 </>
               )}
             />
-            <Controller
-              control={control}
-              name='fundraisingGoal'
-              render={({ field }) => (
-                <CustomTextField
-                  id='fundraisingGoal'
-                  label='Meta de arrecadação'
-                  placeholder='Digite uma meta'
-                  type='number'
-                  helperText={errors?.fundraisingGoal?.message}
-                  {...field}
-                />
-              )}
-            />
 
-            <Controller
-              control={control}
-              name='startDate'
-              render={({ field }) => (
-                <CustomTextField
-                  id='startDate'
-                  label='Data Inicio'
-                  type='date'
-                  inputLabelProps={false}
-                  helperText={errors?.startDate?.message}
-                  disabled={true}
-                  {...field}
-                />
-              )}
-            />
-            <Controller
-              control={control}
-              name='finishedDate'
-              render={({ field }) => (
-                <CustomTextField
-                  id='finishedDate'
-                  label='Data Final'
-                  type='date'
-                  inputLabelProps={false}
-                  helperText={errors?.finishedDate?.message}
-                  {...field}
-                />
-              )}
-            />
+            {renderController(control, 'fundraisingGoal', CustomTextField, errors?.fundraisingGoal?.message || '', {
+              label: 'Meta de arrecadação',
+              placeholder: 'Digite uma meta',
+              type: 'number',
+            })}
 
-            <Controller
-              control={control}
-              name='file'
-              render={({ field }) => (
-                <CustomTextField
-                  id='file'
-                  label='Imagem'
-                  type='file'
-                  helperText={errors?.file?.message}
-                  {...field}
-                />
-              )}
-            />
+            {renderController(control, 'startDate', CustomTextField, errors?.startDate?.message || '', {
+              label: 'Data Início',
+              type: 'date',
+              disabled: true,
+            })}
+
+            {renderController(control, 'finishedDate', CustomTextField, errors?.finishedDate?.message || '', {
+              label: 'Data Final',
+              type: 'date',
+            })}
+
+            {renderController(control, 'file', CustomTextField, errors?.file?.message || '', {
+              label: 'Imagem',
+              type: 'file',
+            })}
 
             <ButtonGroup>
-              <Button headlight label='Salvar' type='submit' />
-              <Button label='cancelar' headlight={false} onClick={handleBack} />
+              <Button headlight label="Salvar" type="submit" />
+              <Button label="Cancelar" headlight={false} onClick={handleBack} />
             </ButtonGroup>
           </Box>
         </form>

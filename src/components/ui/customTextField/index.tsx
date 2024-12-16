@@ -2,24 +2,24 @@ import React from 'react';
 import { FormLabel } from '../formLabel';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
 
-interface CustomTextFieldProps extends Omit<TextFieldProps, 'error'> {
+interface CustomTextFieldProps extends Omit<TextFieldProps, 'error' | 'helperText'> {
   id: string;
   label?: string;
   placeholder?: string;
   type: string;
   multiline?: boolean;
   fontSize?: string;
-  inputLabelProps?: boolean;
-  error?: boolean;
+  inputLabelProps?: { shrink?: boolean }; 
+  helperText?: string; 
 }
 
-const CustomTextField = React.forwardRef<HTMLInputElement, CustomTextFieldProps>(({
+const CustomTextField = React.memo(React.forwardRef<HTMLInputElement, CustomTextFieldProps>(({
   id,
   label,
   placeholder,
   type,
-  multiline,
-  fontSize,
+  multiline = false,
+  fontSize = '15px',
   inputLabelProps,
   helperText,
   ...rest
@@ -31,21 +31,21 @@ const CustomTextField = React.forwardRef<HTMLInputElement, CustomTextFieldProps>
       variant="outlined"
       size="small"
       type={type}
-      multiline={multiline || false}
+      multiline={multiline}
       placeholder={placeholder}
-      InputLabelProps={{ shrink: inputLabelProps }}
-      error={!!helperText}
+      InputLabelProps={{ shrink: inputLabelProps?.shrink }}
+      error={!!helperText} 
       helperText={helperText}
       inputRef={ref}
       {...rest}
       InputProps={{
         style: {
           borderRadius: '7px',
-          fontSize: fontSize || '15px',
+          fontSize,
         },
       }}
     />
   </>
-));
+)));
 
 export default CustomTextField;
