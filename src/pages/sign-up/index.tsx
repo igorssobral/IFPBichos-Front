@@ -12,6 +12,7 @@ import ButtonAppBar from "../../components/layout/appBar";
 import { useNavigate } from "react-router-dom";
 import { signup } from "../../services/auth";
 import { toast } from 'react-toastify';
+import { withMask } from 'use-mask-input';
 
 
 
@@ -31,7 +32,8 @@ const renderTextField = (
   placeholder: string,
   type: string,
   errors: any,
-  control: any
+  control: any,
+  mask?: string | string[] 
 ) => (
   <Controller
     control={control}
@@ -43,12 +45,12 @@ const renderTextField = (
         type={type}
         placeholder={placeholder}
         helperText={errors[name]?.message}
+        inputRef={mask ? withMask(mask) : undefined} 
         {...field}
       />
     )}
   />
 );
-
 const SignUpForm: React.FC<SignUpFormProps> = ({
   control,
   errors,
@@ -64,8 +66,8 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
       {!showAdditionalFields && (
         <>
           {renderTextField("name", "Digite seu nome", "nome", "text", errors, control)}
-          {renderTextField("CPF", "Digite seu CPF", "12345678910", "text", errors, control)}
-          {renderTextField("phoneNumber", "Digite seu telefone", "0000000000", "text", errors, control)}
+          {renderTextField("CPF", "Digite seu CPF", "000.000.000-00", "text", errors, control,"999.999.999-99")}
+          {renderTextField("phoneNumber", "Digite seu telefone", "(99) 99999-9999", "text", errors, control, "(99) 99999-9999")}
         </>
       )}
 

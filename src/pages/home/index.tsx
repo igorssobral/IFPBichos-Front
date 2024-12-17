@@ -201,7 +201,6 @@ export const Home = () => {
     <Container>
       <ButtonAppBar title='Campanhas' visible />
       <Grid style={filtersStyle} container spacing={2} sx={{ flexDirection: { xs: 'column-reverse', md: 'row' } }}>
-      {/* Botão para abrir filtros no mobile */}
       <Button
        label='Filtros'
         onClick={() => setFilterOpen(true)}
