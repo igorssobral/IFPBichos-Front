@@ -7,7 +7,7 @@ import MailIcon from '@mui/icons-material/Mail';
 import IconButton from '@mui/material/IconButton';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
-import { Button, Grid, Menu, MenuItem, Typography } from '@mui/material';
+import { Grid, Menu, MenuItem, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import {
   NotificationsActiveOutlined,
@@ -17,8 +17,8 @@ import { theme } from '../../themes/styles';
 
 interface CampaignNotificationDTO {
   id: string;
-  start: string; 
-  end: string; 
+  start: string;
+  end: string;
   title: string;
   description?: string | null;
 }
@@ -26,7 +26,9 @@ interface CampaignNotificationDTO {
 const NotificationBadge: React.FC = () => {
   // eslint-disable-next-line no-unused-vars
   const [_, setSocket] = useState<WebSocket | null>(null);
-  const [notifications, setNotifications] = useState<CampaignNotificationDTO[]>([]);
+  const [notifications, setNotifications] = useState<CampaignNotificationDTO[]>(
+    []
+  );
   const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
   const [snackbarMessage, setSnackbarMessage] = useState<string>('');
 
@@ -57,11 +59,12 @@ const NotificationBadge: React.FC = () => {
   };
 
   useEffect(() => {
-    const ws = new WebSocket(`wss://ifpbichos-back.onrender.com/ws/notifications`);
+    const ws = new WebSocket(
+      `wss://ifpbichos-back.onrender.com/ws/notifications`
+    );
     setSocket(ws);
 
-    ws.onopen = () => {
-    };
+    ws.onopen = () => {};
 
     ws.onmessage = (event) => {
       try {
@@ -69,15 +72,12 @@ const NotificationBadge: React.FC = () => {
         setNotifications((prevNotifications) => [...prevNotifications, data]);
         setSnackbarMessage(`Nova campanha criada: ${data.title}`);
         handleNotification(`Nova campanha criada: ${data.title}`);
-      } catch (e) {
-      }
+      } catch (e) {}
     };
 
-    ws.onerror = (_error) => {
-    };
+    ws.onerror = (_error) => {};
 
-    ws.onclose = () => {
-    };
+    ws.onclose = () => {};
 
     return () => {
       if (ws) {
@@ -88,19 +88,17 @@ const NotificationBadge: React.FC = () => {
 
   return (
     <div>
-      <Button
+      <IconButton
         id='basic-button'
         aria-controls={open ? 'basic-menu' : undefined}
         aria-haspopup='true'
         aria-expanded={open ? 'true' : undefined}
         onClick={handleClick}
       >
-        <IconButton>
-          <Badge badgeContent={notifications.length} color='warning'>
-            <MailIcon fontSize='medium' sx={{color: 'white'}} />
-          </Badge>
-        </IconButton>
-      </Button>
+        <Badge badgeContent={notifications.length} color='warning'>
+          <MailIcon fontSize='medium' sx={{ color: 'white' }} />
+        </Badge>
+      </IconButton>
 
       <Snackbar
         open={openSnackbar}
@@ -126,10 +124,20 @@ const NotificationBadge: React.FC = () => {
             <MenuItem
               key={notification.id}
               onClick={handleNavigate(notification.id)}
-              sx={{ borderRadius: 1 ,borderBottom: 1, borderColor: theme.colors.blackOpacity}}
+              sx={{
+                borderRadius: 1,
+                borderBottom: 1,
+                borderColor: theme.colors.blackOpacity,
+              }}
             >
-              <Grid display={'flex'} gap={1} justifyContent={'center'} padding={1}>
-                <NotificationsActiveOutlined /> Nova campanha: <Typography >{notification.title}</Typography>
+              <Grid
+                display={'flex'}
+                gap={1}
+                justifyContent={'center'}
+                padding={1}
+              >
+                <NotificationsActiveOutlined /> Nova campanha:{' '}
+                <Typography>{notification.title}</Typography>
               </Grid>
             </MenuItem>
           ))

@@ -6,8 +6,6 @@ import LinearProgress, {
   linearProgressClasses,
 } from '@mui/material/LinearProgress';
 
-import dog from '../../../assets/dog.jpg';
-import cat from '../../../assets/gato.jpg';
 import { CampaignRaw } from '../../../services/@types/campaign';
 import { Card } from '@mui/material';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
@@ -61,7 +59,7 @@ export const CardModal: React.FC<CardProps> = ({
 
   return (
     <Card
-    elevation={3}
+      elevation={3}
       sx={{
         width: '300px',
         height: '420px',
@@ -93,17 +91,7 @@ export const CardModal: React.FC<CardProps> = ({
       )}
 
       <Box className='image' onClick={handleViewCampaign}>
-        {campaign?.animal === 'GATO' ? (
-          <img
-            src={campaign.image || cat}
-            alt={campaign.title}
-          />
-        ) : (
-          <img
-            src={campaign.image || dog}
-            alt={campaign.title}
-          />
-        )}
+        <img src={campaign.image} alt={campaign.title} />
       </Box>
 
       <Box className='infor_content' display={'flex'} justifyContent={'center'}>
@@ -138,11 +126,7 @@ export const CardModal: React.FC<CardProps> = ({
               <Box>
                 <BorderLinearProgress
                   variant='determinate'
-                  value={
-                    campaign.collectionPercentage > 100
-                      ? 100
-                      : campaign.collectionPercentage
-                  }
+                  value={Math.min(campaign?.collectionPercentage || 0, 100)}
                 />
               </Box>
             </Grid>
@@ -154,11 +138,9 @@ export const CardModal: React.FC<CardProps> = ({
                 fontWeight={'bold'}
                 fontFamily={'Lato, sans-serif'}
               >
-                {`${
-                  campaign.collectionPercentage > 100
-                    ? 100
-                    : campaign.collectionPercentage
-                }%`}
+            {`${Math.min(campaign.collectionPercentage, 100)}%`}
+
+                
               </Typography>
             </Grid>
           </Grid>
@@ -172,10 +154,14 @@ export const CardModal: React.FC<CardProps> = ({
             Arrecadado R${campaign.balance.toFixed(2)}
           </Typography>
         </Box>
-          <Box width={"100%"} sx={{display: 'flex', justifyContent: 'center'}}>
-                    <Button headlight label='fazer doação' type='button' onClick={handleViewCampaign}/>
-
-          </Box>
+        <Box width={'100%'} sx={{ display: 'flex', justifyContent: 'center' }}>
+          <Button
+            headlight
+            label='fazer doação'
+            type='button'
+            onClick={handleViewCampaign}
+          />
+        </Box>
       </Box>
     </Card>
   );

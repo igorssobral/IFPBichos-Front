@@ -9,7 +9,7 @@ export const ContainerModal: React.FC<props> = ({ children }) => {
   return (
     <Box
     width={{lg:"500px",xs:"90%"}}
-    height={{lg:"70vh",xs:"60vh"}}
+    height={{lg:"55vh",xs:"75vh"}}
     display={"flex"}
     flexDirection={"column"}
     alignItems={"center"}

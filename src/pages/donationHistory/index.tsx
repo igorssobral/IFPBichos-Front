@@ -55,17 +55,23 @@ export const DonationHistory = () => {
   });
 
   useEffect(() => {
-    if (filteredDonationsHistory) {
-      const totalValue = filteredDonationsHistory?.reduce(
+    if (filteredDonationsHistory && Array.isArray(filteredDonationsHistory)) {
+      const totalValue = filteredDonationsHistory.reduce(
         (accumulator, donation) => {
-          return accumulator + donation.value;
+          if (
+            donation?.status === 'APPROVED' &&
+            typeof donation.value === 'number'
+          ) {
+            return accumulator + donation.value;
+          }
+          return accumulator;
         },
         0
       );
 
       setTotalDonationValue(totalValue);
     }
-  }, [month, year, donationHistory]);
+  }, [month, year, donationHistory, filteredDonationsHistory]);
 
   return (
     <Container
