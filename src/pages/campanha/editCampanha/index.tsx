@@ -212,7 +212,7 @@ export const EditCampanha = () => {
               <>
                 {' '}
                 <FormLabel label='Imagem' />
-                <img src={campaign.image} alt='' style={{ width: '300px',borderRadius:'10px'}} />
+                <img src={campaign.image} alt='' style={{ width: '350px',borderRadius:'10px'}} />
                 <Button
                   label='Alterar imagem'
                   onClick={() => setChangeImg(true)}
