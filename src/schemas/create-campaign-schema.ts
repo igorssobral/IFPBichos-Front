@@ -40,14 +40,15 @@ export const createCampaignSchema = z.object({
     .refine((data) => data > new Date(), {
       message: 'Data final precisa ser maior que a de inicio',
     }),
-
-  file: z
-    .string({ required_error: 'Selecione uma imagem!' })
-    .min(1, { message: 'O arquivo é obrigatório' })
-    .optional()
-    .refine((file) => file?.trim() !== '', {
-      message: 'O arquivo é obrigatório',
-    }),
+    file: z
+    .union([
+      z.string({required_error: 'Selecione uma imagem!',
+        invalid_type_error: ''}),
+      z
+        .instanceof(File)
+        .refine((file) => file.size > 0, { message: 'Selecione um arquivo válido!' }),
+    ])
+    
 });
 
 export type CreateCampaignSchema = {

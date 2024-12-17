@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 
 import { ApiCampaign } from '../../../services/data-base/CampaignService';
@@ -25,12 +25,16 @@ import {
 import { formatInputDate } from '../../../utils/format-date';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'react-toastify';
+import { CampaignRaw } from '../../../services/@types/campaign';
+import { FormLabel } from '../../../components/ui/formLabel';
 
 export const EditCampanha = () => {
-  const { getCampaignById, updateCampaign } = ApiCampaign();
+  const { getCampaignById, updateCampaign, uploadImage } = ApiCampaign();
   const navigate = useNavigate();
   const { id } = useParams();
-
+  const [file, setFile] = useState<File>();
+  const [campaign, setCampaign] = useState<CampaignRaw>();
+  const [changeImg, setChangeImg] = useState(false);
   const {
     handleSubmit,
     formState: { errors },
@@ -46,6 +50,7 @@ export const EditCampanha = () => {
         const data = await getCampaignById(id);
 
         if (data) {
+          setCampaign(data);
           setFormValues(data);
         }
       }
@@ -61,14 +66,21 @@ export const EditCampanha = () => {
     setValue('finishedDate', formatInputDate(data.end));
   };
 
-  const updateCurrencyCampaign = async (updatedCampaign: CreateCampaignSchema) => {
+  const updateCurrencyCampaign = async (
+    updatedCampaign: CreateCampaignSchema
+  ) => {
+    let imageUrl = '';
+    if (file) {
+
+      imageUrl = await uploadImage(file);
+    }
     try {
       await updateCampaign(`${id}`, {
         start: updatedCampaign.startDate,
         end: updatedCampaign.finishedDate,
         title: updatedCampaign.title,
         description: updatedCampaign.description,
-        image: updatedCampaign.file,
+        image: imageUrl || campaign?.image,
         collectionGoal: updatedCampaign.fundraisingGoal,
         animal: updatedCampaign.animal,
       });
@@ -88,15 +100,18 @@ export const EditCampanha = () => {
   };
 
   const renderController = (
-    name: keyof CreateCampaignSchema,
-    render: (field: any) => JSX.Element,
-    rules: any = {}
+    control: any,
+    name: string,
+    Component: React.ElementType,
+    helperText: string,
+    additionalProps: any = {}
   ) => (
     <Controller
       control={control}
       name={name}
-      rules={rules}
-      render={({ field }) => render(field)}
+      render={({ field }) => (
+        <Component {...field} helperText={helperText} {...additionalProps} />
+      )}
     />
   );
 
@@ -108,90 +123,122 @@ export const EditCampanha = () => {
         <Title label='Editar Campanha' />
         <form onSubmit={handleSubmit(onSubmit)}>
           <Box display={'flex'} flexDirection={'column'}>
-            {renderController('title', (field) => (
-              <CustomTextField
-                id='title'
-                label='Titulo'
-                placeholder='Digite o titulo'
-                type='text'
-                helperText={errors?.title?.message}
-                {...field}
-              />
-            ))}
+            {renderController(
+              control,
+              'title',
+              CustomTextField,
+              errors?.title?.message || '',
+              {
+                label: 'Título',
+                placeholder: 'Digite o título',
+                type: 'text',
+              }
+            )}
 
-            {renderController('description', (field) => (
-              <CustomTextField
-                id='description'
-                label='Descrição'
-                placeholder='Digite uma descrição'
-                multiline
-                type='text'
-                minRows={4}
-                maxRows={4}
-                helperText={errors?.description?.message}
-                {...field}
-              />
-            ))}
+            {renderController(
+              control,
+              'description',
+              CustomTextField,
+              errors?.description?.message || '',
+              {
+                label: 'Descrição',
+                placeholder: 'Digite uma descrição',
+                multiline: true,
+                minRows: 4,
+                maxRows: 4,
+              }
+            )}
 
-            {renderController('animal', (field) => (
+            <Controller
+              control={control}
+              name='animal'
+              render={({ field }) => (
+                <>
+                  <InputLabel sx={{ marginTop: '10px' }}>Animal</InputLabel>
+                  <Select
+                    value={field.value || 'Selecione'}
+                    placeholder='Selecione'
+                    onChange={field.onChange}
+                    error={!!errors.animal?.message}
+                    sx={{ marginBottom: '10px', borderRadius: 2 }}
+                  >
+                    <MenuItem value='Selecione'>Selecione</MenuItem>
+                    <MenuItem value='GATO'>Gato</MenuItem>
+                    <MenuItem value='CACHORRO'>Cachorro</MenuItem>
+                  </Select>
+                  <FormHelperText error>
+                    {errors.animal?.message}
+                  </FormHelperText>
+                </>
+              )}
+            />
+
+            {renderController(
+              control,
+              'fundraisingGoal',
+              CustomTextField,
+              errors?.fundraisingGoal?.message || '',
+              {
+                label: 'Meta de arrecadação',
+                placeholder: 'Digite uma meta',
+                type: 'number',
+              }
+            )}
+
+            {renderController(
+              control,
+              'startDate',
+              CustomTextField,
+              errors?.startDate?.message || '',
+              {
+                label: 'Data Início',
+                type: 'date',
+                disabled: true,
+              }
+            )}
+
+            {renderController(
+              control,
+              'finishedDate',
+              CustomTextField,
+              errors?.finishedDate?.message || '',
+              {
+                label: 'Data Final',
+                type: 'date',
+              }
+            )}
+
+            {campaign?.image && !changeImg ? (
               <>
-                <InputLabel sx={{ marginTop: '10px' }}>Animal</InputLabel>
-                <Select
-                  value={field.value || ''}
-                  onChange={field.onChange}
-                  error={!!errors.animal?.message}
-                  sx={{ marginBottom: '10px', borderRadius: 2 }}
-                >
-                  <MenuItem value={'Selecione'}>Selecione</MenuItem>
-                  <MenuItem value={'GATO'}>Gato</MenuItem>
-                  <MenuItem value={'CACHORRO'}>Cachorro</MenuItem>
-                </Select>
-                <FormHelperText error>{errors.animal?.message}</FormHelperText>
+                {' '}
+                <FormLabel label='Imagem' />
+                <img src={campaign.image} alt='' style={{ width: '300px',borderRadius:'10px'}} />
+                <Button
+                  label='Alterar imagem'
+                  onClick={() => setChangeImg(true)}
+                />
               </>
-            ))}
+            ) : (
+              <>
+                {renderController(
+                  control,
+                  'file',
+                  CustomTextField,
+                  errors?.file?.message || '',
 
-            {renderController('fundraisingGoal', (field) => (
-              <CustomTextField
-                id='fundraisingGoal'
-                label='Meta de arrecadação'
-                placeholder='Digite uma meta'
-                type='number'
-                helperText={errors?.fundraisingGoal?.message}
-                {...field}
-              />
-            ))}
-
-            {renderController('startDate', (field) => (
-              <CustomTextField
-                id='startDate'
-                label='Data Inicio'
-                type='date'
-                helperText={errors?.startDate?.message}
-                disabled={true}
-                {...field}
-              />
-            ))}
-
-            {renderController('finishedDate', (field) => (
-              <CustomTextField
-                id='finishedDate'
-                label='Data Final'
-                type='date'
-                helperText={errors?.finishedDate?.message}
-                {...field}
-              />
-            ))}
-
-            {renderController('file', (field) => (
-              <CustomTextField
-                id='file'
-                title='Imagem'
-                label=' '
-                type='file'
-                helperText={errors?.file?.message}
-                {...field}
-              />
-            ))}
+                  {
+                    label: 'Imagem',
+                    type: 'file',
+                    onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+                      const file = e.target.files ? e.target.files[0] : null;
+                      if (file) {
+                        setFile(file);
+                      }
+                    },
+                  }
+                )}
+              </>
+            )}
 
             <ButtonGroup>
               <Button headlight label='Salvar' type='submit' />

@@ -54,7 +54,7 @@ export const ApiCampaign = () => {
   const getAllCampaignsFinishedBalance = (): Promise<any> => {
     return new Promise((resolve, reject) => {
       axios
-        .get(`${URL}/campaign/finishedBalance`,config)
+        .get(`${URL}/campaign/finishedBalance`, config)
         .then((response: AxiosResponse<any>) => {
           resolve(response.data);
         })
@@ -131,6 +131,41 @@ export const ApiCampaign = () => {
     });
   };
 
+  async function uploadImage(file: File) {
+    if (!file) {
+      return;
+    }
+
+    const fileName = file.name;
+    if (!fileName) {
+      return;
+    }
+
+    const uploadPreset = import.meta.env.VITE_APP_UPLOAD_PRESET;
+    const cloudName = import.meta.env.VITE_APP_CLOUD_NAME;
+
+    if (!uploadPreset || !cloudName) {
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', uploadPreset);
+    formData.append('cloud_name', cloudName);
+
+    try {
+      const response = await axios.post(
+        `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+        formData
+      );
+
+      const imageUrl = response.data.secure_url;
+      return imageUrl;
+    } catch (error) {
+      return null;
+    }
+  }
+
   return {
     saveCampaign,
     updateCampaign,
@@ -141,5 +176,6 @@ export const ApiCampaign = () => {
     getCampaignById,
     getDonationHistory,
     getTotalBalance,
+    uploadImage,
   };
 };

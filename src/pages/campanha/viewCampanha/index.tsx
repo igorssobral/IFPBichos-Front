@@ -31,15 +31,13 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 import { Title } from '../../../components/ui/tittle';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import { formatValue } from '../../../utils/format-money';
-import dog from '../../../assets/dog.jpg';
-import cat from '../../../assets/gato.jpg';
 import CustomTextField from '../../../components/ui/customTextField';
 
 import { ApiPayment } from '../../../services/data-base/payment-service';
 import { ApiCampaign } from '../../../services/data-base/CampaignService';
 import { ResponsePayment } from '../../../services/@types/response-payment';
 import { BorderLinearProgress, style, styleButtonUi } from './style';
-import { Campaign } from '../../../services/@types/campaign';
+import { CampaignRaw } from '../../../services/@types/campaign';
 import { useAuth } from '../../../context/auth-context';
 import { theme } from '../../../themes/styles';
 import { ButtonGroup } from '../../../components/ui/button-group';
@@ -69,7 +67,7 @@ const ViewCampanha = () => {
 
   const { id } = useParams<{ id?: string }>();
   const { user } = useAuth();
-  const [campaign, setCampaign] = useState<Campaign | null>();
+  const [campaign, setCampaign] = useState<CampaignRaw>();
   const [sharedLink, setSharedLink] = useState<string>('');
   const [isCopy, setIsCopy] = useState(false);
   const [openModal, setOpenModal] = useState(false);
@@ -111,18 +109,13 @@ const ViewCampanha = () => {
   async function findCampaign() {
     if (id && !campaign) {
       await getCampaignById(id)
-        .then((data: Campaign) => {
+        .then((data: CampaignRaw) => {
+          console.log('🚀 ~ .then ~ data:', data);
+
           setCampaign({
-            id: data.id,
-            title: data.title,
-            description: data.description,
-            collectionGoal: data.collectionGoal,
-            collectionPercentage: data.collectionPercentage,
-            animal: data.animal,
-            balance: data.balance,
+            ...data,
             start: formatUTC(new Date(formatInputDate(data.start))),
             end: formatUTC(new Date(formatInputDate(data.end))),
-            image: data.image,
           });
         })
         .catch((_error) => {});
@@ -153,7 +146,9 @@ const ViewCampanha = () => {
     }
   }
 
-  const onSubmit: SubmitHandler<DonationSchema> = (data: { donation: number; }) => {
+  const onSubmit: SubmitHandler<DonationSchema> = (data: {
+    donation: number;
+  }) => {
     handleConfirmDonation(data);
   };
 
@@ -212,14 +207,11 @@ const ViewCampanha = () => {
         >
           <Box
             width={{ lg: '500px', xs: '380px' }}
+            maxHeight={{ lg: '400px', xs: '320px' }}
             borderRadius={'20px'}
             overflow={'hidden'}
           >
-            {campaign?.animal === 'GATO' ? (
-              <img src={cat} alt='' />
-            ) : (
-              <img src={dog} alt='' />
-            )}
+            <img src={campaign?.image} alt={campaign?.title} />
           </Box>
 
           <Box
@@ -239,21 +231,16 @@ const ViewCampanha = () => {
                   textAlign={'center'}
                 >
                   {campaign
-                    ? `${
-                        campaign.collectionPercentage > 100
-                          ? 100
-                          : campaign.collectionPercentage
-                      }%  /  ${formatValue(Number(campaign?.balance))}`
-                    : 0}
+                    ? `${Math.min(
+                        campaign.collectionPercentage,
+                        100
+                      )}% / ${formatValue(Number(campaign?.balance || 0))}`
+                    : '0'}
                 </Typography>
 
                 <BorderLinearProgress
                   variant='determinate'
-                  value={
-                    campaign && campaign?.collectionPercentage > 100
-                      ? 100
-                      : campaign?.collectionPercentage
-                  }
+                  value={Math.min(campaign?.collectionPercentage || 0, 100)}
                 />
               </Box>
 
@@ -276,18 +263,17 @@ const ViewCampanha = () => {
                   {formatValue(Number(campaign?.collectionGoal))}
                 </Typography>
               </Box>
-
               <Box>
                 <Typography
                   variant='h6'
-                  fontWeight={'300'}
-                  fontFamily={'Lato, sans-serif'}
-                  textAlign={'center'}
+                  fontWeight='300'
+                  fontFamily='Lato, sans-serif'
+                  textAlign='center'
                 >
                   TERMINA
-                  <Typography variant='h5' fontWeight={'bold'}>
-                    {campaign?.end}
-                  </Typography>
+                </Typography>
+                <Typography variant='h5' fontWeight='bold' textAlign='center'>
+                  {campaign?.end}
                 </Typography>
               </Box>
 
