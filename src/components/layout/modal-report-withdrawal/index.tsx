@@ -92,7 +92,7 @@ export const ReportWithdrawal = ({ isVisible, onClose, sync }: Props) => {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 400,
+    
     bgcolor: 'background.paper',
     border: '2px solid #000',
     boxShadow: 24,
@@ -102,7 +102,7 @@ export const ReportWithdrawal = ({ isVisible, onClose, sync }: Props) => {
   return (
     <Modal open={isVisible} onClose={onClose}>
       <form onSubmit={handleReportWithdrawalSubmit(onSubmitReportWithdrawal)}>
-        <Box sx={style} display={'flex'} flexDirection={'column'}>
+        <Box sx={style} width={{xs:350,md:400}} display={'flex'} flexDirection={'column'}>
           <DialogTitle
             id='responsive-dialog-title'
             textAlign={'center'}
@@ -118,7 +118,7 @@ export const ReportWithdrawal = ({ isVisible, onClose, sync }: Props) => {
               <>
                 <InputLabel sx={{ marginTop: '10px' }}>Campanha</InputLabel>
                 <Select
-                  style={{ width: '90%' }}
+                  style={{ width: '100%' }}
                   value={field.value || 0}
                   placeholder='Selecione'
                   onChange={(event) => {

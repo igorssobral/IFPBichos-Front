@@ -48,10 +48,10 @@ export const Menu = ({ open, setOpen }: props) => {
           variant='permanent'
           anchor='left'
           sx={{
-            width: 350,
+            width: { xs: 300, md: 350 },
             flexShrink: 0,
             '& .MuiDrawer-paper': {
-              width: 350,
+              width: { xs: 300, md: 350 },
             },
           }}
         >

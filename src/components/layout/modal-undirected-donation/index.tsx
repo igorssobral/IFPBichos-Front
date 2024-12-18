@@ -68,7 +68,7 @@ export default function ModalUndirectedDonation({ onClose, visible }: props) {
   return (
     <Modal open={visible} onClose={handleClose}>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Box width={{ lg: '30%' }} padding={{ lg: 6 }} sx={{ ...style }}>
+        <Box width={{xs:'90%', lg: '30%' }} padding={{ lg: 6 }} sx={{ ...style }}>
           <Stack direction='row' justifyContent='center' alignItems='center'>
             <Typography gutterBottom variant={'h5'} component='div'>
               Doação não direcionada

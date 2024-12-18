@@ -57,7 +57,7 @@ export const ManualDonationModal = ({ isVisible, onClose, sync }: Props) => {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 400,
+    width: 350,
     bgcolor: 'background.paper',
     border: '2px solid #000',
     boxShadow: 24,
@@ -67,7 +67,7 @@ export const ManualDonationModal = ({ isVisible, onClose, sync }: Props) => {
   return (
     <Modal open={isVisible} onClose={onClose}>
       <form onSubmit={handleManualDonationSubmit(onSubmitManualDonation)}>
-        <Box sx={style} display={'flex'} flexDirection={'column'}>
+        <Box  display={'flex'} flexDirection={'column'} sx={style}>
           {' '}
           <Typography textAlign={'center'} color={theme.colors.primary}>
             {'Informar Valor'}
