@@ -72,7 +72,93 @@ export const DonationHistory = () => {
       setTotalDonationValue(totalValue);
     }
   }, [month, year, donationHistory, filteredDonationsHistory]);
+ 
+  const DonationTable = ({ filteredDonationsHistory }) => {
+    return (
+      <TableContainer sx={{ maxHeight: 550, overflow: 'auto' }}>
+        <Table aria-label="doações" stickyHeader>
+          <TableHead>
+            <TableRow>
+              <TableCell align="center" sx={{ fontWeight: 'bold' }}>Campanha</TableCell>
+              <TableCell align="center" sx={{ fontWeight: 'bold' }}>Data</TableCell>
+              <TableCell align="center" sx={{ fontWeight: 'bold' }}>Valor</TableCell>
+              <TableCell align="center" sx={{ fontWeight: 'bold' }}>Status</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {filteredDonationsHistory?.length !== 0 ? (
+              filteredDonationsHistory.map((data) => (
+                <TableRow hover key={data.id}>
+                  <TableCell
+                    align="center"
+                    sx={{
+                      color: theme.colors.secondary,
+                      border: 1,
+                      whiteSpace: 'nowrap',
+                      overflow: 'clip',
+                      textOverflow: 'ellipsis',
+                      borderColor: theme.colors.blackOpacity,
+                      borderRadius: 2,
+                      padding: 0.5,
+                    }}
+                  >
+                    {data.titulo}
+                  </TableCell>
+                  <TableCell
+                    align="center"
+                    sx={{
+                      color: theme.colors.secondary,
+                      border: 1,
+                      borderColor: theme.colors.blackOpacity,
+                      borderRadius: 2,
+                      padding: 0.5,
+                    }}
+                  >
+                    {formatUTC(new Date(formatInputDate(data.date)))}
+                  </TableCell>
+                  <TableCell
+                    align="center"
+                    sx={{
+                      color: data.status === 'APPROVED' ? theme.colors.primary : 'red',
+                      border: 1,
+                      borderColor: theme.colors.blackOpacity,
+                      borderRadius: 2,
+                      fontWeight: 600,
+                      padding: 0.5,
+                    }}
+                  >
+                    {formatValue(data.value)}
+                  </TableCell>
+                  <TableCell
+                    align="center"
+                    sx={{
+                      color: data.status === 'APPROVED' ? theme.colors.primary : 'red',
+                      border: 1,
+                      borderColor: theme.colors.blackOpacity,
+                      borderRadius: 2,
+                      fontWeight: 600,
+                      padding: 0.5,
+                    }}
+                  >
+                    {data.status === 'APPROVED' ? 'APROVADO' : 'PENDENTE'}
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={4} align="center">
+                  <Typography>Nenhuma doação realizada nesse período</Typography>
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    );
+  };
+  
 
+  
   return (
     <Container
       maxWidth={'xl'}
@@ -81,7 +167,7 @@ export const DonationHistory = () => {
       <ButtonAppBar visible title='Histórico de Doações' />
 
       <Grid
-        mt={10}
+        mt={{xs:1,md:10}}
         width={{ xs: '98%', lg: '85%' }}
         display={'flex'}
         flexDirection={'column'}
@@ -91,19 +177,20 @@ export const DonationHistory = () => {
         <Grid
           width={{ xs: '98%', lg: '80%' }}
           display={'flex'}
-          alignItems={{ lg: 'center', xs: 'start' }}
+          alignItems={{ lg: 'center', xs: 'center' }}
           flexDirection={{ xs: 'column', md: 'row', lg: 'row' }}
           justifyContent={'space-evenly'}
           gap={1}
         >
           <Button label='voltar' onClick={() => navigate('/')} />
-          <Grid sx={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-            <Grid sx={{ display: 'flex', alignItems: 'center' }}>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <Grid sx={{ display: 'flex', alignItems: 'center', gap: 5 }} width={{xs:'100%'}}>
+            <Grid sx={{ display: 'flex', alignItems: 'center' }} width={{xs:'100%'}} >
+              <LocalizationProvider dateAdapter={AdapterDayjs} >
                 <DemoContainer components={['DatePicker', 'DatePicker']}>
-                  <Grid
+                  <Grid display={'flex'} gap={5}>
+                     <Grid
                     sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
-                    width={200}
+                    width={150}
                   >
                     <FormLabel>Mês</FormLabel>{' '}
                     <DatePicker
@@ -117,7 +204,7 @@ export const DonationHistory = () => {
 
                   <Grid
                     sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
-                    width={200}
+                    width={150}
                   >
                     <FormLabel>Ano</FormLabel>
                     <DatePicker
@@ -127,11 +214,13 @@ export const DonationHistory = () => {
                       onChange={(year) => setYear(year)}
                     />
                   </Grid>
+                  </Grid>
+                 
                 </DemoContainer>
               </LocalizationProvider>
             </Grid>
           </Grid>
-          <Grid display={'flex'} gap={1} alignItems={'center'}>
+          <Grid display={'flex'} gap={1} alignItems={'center'} mt={2}>
             <FormLabel>Total Doado:</FormLabel>
             <Typography
               paddingInline={2}

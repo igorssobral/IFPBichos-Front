@@ -30,6 +30,7 @@ import { ResponsePayment } from '../../services/@types/response-payment';
 import { ApiPayment } from '../../services/data-base/payment-service';
 import { toast } from 'react-toastify';
 import { Button } from '../../components/ui/button';
+import { theme } from '../../themes/styles';
 
 export const Home = () => {
   const { user } = useAuth();
@@ -200,25 +201,87 @@ export const Home = () => {
   return (
     <Container>
       <ButtonAppBar title='Campanhas' visible />
-      <Grid style={filtersStyle} container spacing={2} sx={{ flexDirection: { xs: 'column-reverse', md: 'row' } }}>
-      <Button
-       label='Filtros'
-        onClick={() => setFilterOpen(true)}
-        sx={{ display: { xs: 'block', md: 'none' } }} 
+      <Grid
+        style={filtersStyle}
+        container
+        spacing={2}
+        sx={{ flexDirection: { xs: 'column-reverse', md: 'row' } }}
       >
-        Filtros
-      </Button>
+        <Button
+          sx={{ display: { xs: 'block', md: 'none' },backgroundColor:theme.colors.secondary }}
+          label='Filtros'
+          onClick={() => setFilterOpen(true)}
+        />
 
-      <Drawer
-        anchor="bottom"
-        open={isFilterOpen}
-        onClose={() => setFilterOpen(false)}
-        
-      >
-        <Box p={2}>
-          <Grid display={'flex'} flexDirection={'column'} justifyContent={'center'} alignItems={'center'}>
-            <Grid item xs={6}>
-              <ListItem>
+        <Drawer
+          anchor='bottom'
+          open={isFilterOpen}
+          onClose={() => setFilterOpen(false)}
+        >
+          <Box p={2}>
+            <Grid
+              display={'flex'}
+              flexDirection={'column'}
+              justifyContent={'center'}
+              alignItems={'center'}
+            >
+              <Grid item xs={6}>
+                <ListItem>
+                  Filtros:
+                  <SelectSmall
+                    handleFilter={(value) => {
+                      setSelectedFilter(value);
+                      handleFilterByType(value);
+                      setIsChecked(false);
+                    }}
+                    selectedValue={selectedFilter}
+                  />
+                </ListItem>
+              </Grid>
+
+              <Grid item xs={7}>
+                <ListItem>
+                  <FormControlLabel
+                    value='end'
+                    control={
+                      <Radio
+                        checked={isChecked}
+                        color='success'
+                        onChange={handleChange}
+                      />
+                    }
+                    label='Próximo da meta'
+                  />
+                </ListItem>
+              </Grid>
+              <Grid item xs={12}>
+                <ListItem>
+                  <FormControlLabel
+                    value='start'
+                    control={<DeleteForeverIcon color='action' />}
+                    label='Limpar Filtros'
+                    onClick={resetFilters}
+                  />
+                </ListItem>
+              </Grid>
+            </Grid>
+          </Box>
+        </Drawer>
+
+        <Grid
+          flexDirection={{ xs: 'column', md: 'row', lg: 'row' }}
+          display={{ xs: 'none', md: 'flex' }}
+        >
+          <Grid
+            display={'flex'}
+            width={'100%'}
+            alignItems={{ lg: 'center', xs: 'center' }}
+            flexDirection={{ md: 'row', lg: 'row' }}
+            container
+            spacing={{ xs: 2, md: 3 }}
+          >
+            <Grid item xs={7} md={3}>
+              <ListItem sx={{ display: 'flex', justifyContent: 'center' }}>
                 Filtros:
                 <SelectSmall
                   handleFilter={(value) => {
@@ -230,95 +293,37 @@ export const Home = () => {
                 />
               </ListItem>
             </Grid>
-            
-            <Grid item xs={7}>
+            <Grid item xs={5} md={5}>
               <ListItem>
                 <FormControlLabel
-                  value="end"
+                  value='end'
                   control={
                     <Radio
                       checked={isChecked}
-                      color="success"
+                      color='success'
                       onChange={handleChange}
                     />
                   }
-                  label="Próximo da meta"
+                  label='Próximo da meta'
                 />
               </ListItem>
             </Grid>
-            <Grid item xs={12}>
+
+            <Grid item mx={{ xs: 'auto' }} md={4}>
               <ListItem>
                 <FormControlLabel
-                  value="start"
-                  control={<DeleteForeverIcon color="action" />}
-                  label="Limpar Filtros"
+                  value='start'
+                  control={<DeleteForeverIcon color='action' />}
+                  label='Limpar Filtros'
                   onClick={resetFilters}
                 />
               </ListItem>
             </Grid>
           </Grid>
-        </Box>
-      </Drawer>
-
-      <Grid
-        flexDirection={{ xs: 'column', md: 'row', lg: 'row' }}
-        display={{xs:'none', md:'flex'}}
-      >
-        <Grid
-          display={'flex'}
-          width={'100%'}
-          alignItems={{ lg: 'center', xs: 'center' }}
-          flexDirection={{  md: 'row', lg: 'row' }}
-          container
-          spacing={{xs: 2,md:3}}
-          
-        >
-          <Grid item xs={7} md={3}>
-            <ListItem sx={{display: 'flex', justifyContent: 'center'}}>
-              Filtros:
-              <SelectSmall
-                handleFilter={(value) => {
-                  setSelectedFilter(value);
-                  handleFilterByType(value);
-                  setIsChecked(false);
-                }}
-                selectedValue={selectedFilter}
-              />
-            </ListItem>
-          </Grid>
-          <Grid  item xs={5} md={5}>
-            <ListItem >
-              <FormControlLabel
-                value='end'
-                control={
-                  <Radio
-                    checked={isChecked}
-                    color='success'
-                    onChange={handleChange}
-                  />
-                }
-                label='Próximo da meta'
-              />
-            </ListItem>
-          </Grid>
-
-          <Grid item mx={{xs:'auto'}}  md={4}>
-            <ListItem>
-              <FormControlLabel
-                value='start'
-                control={<DeleteForeverIcon color='action' />}
-                label='Limpar Filtros'
-                onClick={resetFilters}
-              />
-            </ListItem>
-          </Grid>
         </Grid>
 
-        
-      </Grid>
-
-      <Grid width={{xs:'70%',md:'max-content'}} >
-          <ListItem >
+        <Grid width={{ xs: '70%', md: 'max-content' }}>
+          <ListItem>
             <CustomTextField
               label=''
               title=''
@@ -329,7 +334,6 @@ export const Home = () => {
               focused={false}
               fontSize='13px'
               fullWidth
-              
             />
             <SearchIcon
               fontSize='small'
@@ -338,7 +342,7 @@ export const Home = () => {
             />
           </ListItem>
         </Grid>
-    </Grid>
+      </Grid>
 
       <Container style={stylePagination}>
         <Pagination

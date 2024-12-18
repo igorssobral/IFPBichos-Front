@@ -67,8 +67,7 @@ const ResourcesApplication = () => {
 
       const combined = combineData(fetchedCampaigns, fetchedDonations);
       setCombinedData(combined);
-    } catch (error) {
-    }
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -227,233 +226,231 @@ const ResourcesApplication = () => {
         flexDirection='column'
         alignItems='center'
       >
-        <Grid
-          width={{ xs: '98%', lg: '80%' }}
-          display='flex'
-          alignItems='center'
-          justifyContent='space-evenly'
-          gap={1}
-        >
-          <Box sx={{ width: '100%', typography: 'body1' }}>
-            <TabContext value={value}>
-              <Box
+        <Box sx={{ typography: 'body1' }} width={{ xs: '100%', md: '80%' }}>
+          <TabContext value={value}>
+            <Box
+              display='flex'
+              flexDirection='column'
+              justifyContent='space-between'
+            >
+              <Grid
                 display='flex'
-                flexDirection='column'
-                justifyContent='space-between'
+                flexDirection={{ xs: 'column', md: 'row' }}
+                justifyContent={{ xs: 'center', md: 'space-between' }}
+                alignItems={{ xs: 'center' }}
+                gap={2}
               >
-                <Grid display='flex' justifyContent='space-between'>
-                  <TabList
-                    onChange={handleChange}
-                    TabIndicatorProps={{
-                      style: { backgroundColor: theme.colors.secondary },
-                    }}
-                  >
-                    <Tab label='Entrada' value='1' sx={tabStyles} />
-                    <Tab label='Saída' value='2' sx={tabStyles} />
-                  </TabList>
-                  <Grid sx={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <Grid
-                        sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
-                        width={200}
-                      >
-                        <FormLabel>Mês</FormLabel>
-                        <DatePicker
-                          value={value == '1' ? month : monthWithdrawal}
-                          openTo='month'
-                          views={['month']}
-                          onChange={(newMonth) =>
-                            value == '1'
-                              ? setMonth(newMonth)
-                              : setMonthWithdrawal(newMonth)
-                          }
-                        />
-                      </Grid>
-                    </LocalizationProvider>
-                  </Grid>
-                  <Grid display='flex' gap={1} alignItems='center'>
-                    <FormLabel>Saldo Avulso:</FormLabel>
-                    <Typography
-                      paddingInline={2}
-                      fontSize={17}
-                      sx={{ backgroundColor: 'white' }}
-                      border={1}
-                      borderColor={theme.colors.blackOpacity}
+                <TabList
+                  onChange={handleChange}
+                  TabIndicatorProps={{
+                    style: { backgroundColor: theme.colors.secondary },
+                  }}
+                >
+                  <Tab label='Entrada' value='1' sx={tabStyles} />
+                  <Tab label='Saída' value='2' sx={tabStyles} />
+                </TabList>
+                <Grid sx={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <Grid
+                      sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
+                      width={200}
                     >
-                      {formatValue(undirectedBalance)}
-                    </Typography>
-                  </Grid>
+                      <FormLabel>Mês</FormLabel>
+                      <DatePicker
+                        value={value == '1' ? month : monthWithdrawal}
+                        openTo='month'
+                        views={['month']}
+                        onChange={(newMonth) =>
+                          value == '1'
+                            ? setMonth(newMonth)
+                            : setMonthWithdrawal(newMonth)
+                        }
+                      />
+                    </Grid>
+                  </LocalizationProvider>
                 </Grid>
                 <Grid
                   display='flex'
-                  alignItems='center'
-                  flexDirection='row'
-                  marginTop={3}
-                  justifyContent='space-between'
+                  flexDirection={{ xs: 'column', md: 'row' }}
                   gap={1}
+                  alignItems='center'
                 >
-                  <Button label='voltar' onClick={() => navigate('/')} />
-                  <Grid display='flex' gap={1} alignItems='center'>
-                    <FormLabel>Saldo Campanhas:</FormLabel>
+                  <FormLabel>Saldo Avulso</FormLabel>
+                  <Typography
+                    paddingInline={2}
+                    fontSize={17}
+                    sx={{ backgroundColor: 'white' }}
+                    border={1}
+                    borderColor={theme.colors.blackOpacity}
+                  >
+                    {formatValue(undirectedBalance)}
+                  </Typography>
+                  <FormLabel>Saldo Campanhas</FormLabel>
+                  <Typography
+                    paddingInline={1}
+                    fontSize={17}
+                    sx={{ backgroundColor: 'white' }}
+                    border={1}
+                    borderColor={theme.colors.blackOpacity}
+                  >
+                    {formatValue(campaignsBalance || 0)}
+                  </Typography>
+                </Grid>
+              </Grid>
+              <Grid
+                display='flex'
+                alignItems='center'
+                justifyContent='space-between'
+                gap={1}
+              >
+                <Button label='voltar' onClick={() => navigate('/')} />
+
+                <Button
+                  label={
+                    value === '1' ? 'Doação em espécie' : 'Informar Retirada'
+                  }
+                  headlight={value === '1' ? true : false}
+                  onClick={
+                    value === '1'
+                      ? () => setOpen(true)
+                      : () => setOpenModalRetirada(true)
+                  }
+                />
+              </Grid>
+            </Box>
+            <TabPanel value='1' sx={{ paddingInline: 0 }}>
+              {renderTabPanelHeader([
+                'Ação',
+                'Motivação',
+                'Data',
+                'Valor Arrecadado',
+              ])}
+              <Box
+                height={{ md: '50vh', xl: '60vh' }}
+                sx={{ paddingInline: 0, overflowY: 'auto' }}
+              >
+                {filteredCombinedData?.map((entrada, index) => (
+                  <Grid
+                    key={index}
+                    display='flex'
+                    justifyContent='space-around'
+                    padding={2}
+                    bgcolor={theme.colors.white}
+                    borderRadius={5}
+                    marginY={2}
+                  >
                     <Typography
-                      paddingInline={1}
-                      fontSize={17}
-                      sx={{ backgroundColor: 'white' }}
-                      border={1}
-                      borderColor={theme.colors.blackOpacity}
+                      width={200}
+                      textAlign='center'
+                      maxHeight={65}
+                      whiteSpace={'nowrap'}
+                      overflow={'clip'}
+                      textOverflow={'ellipsis'}
                     >
-                      {formatValue(campaignsBalance || 0)}
+                      {entrada.title}
+                    </Typography>
+                    <Typography
+                      width={250}
+                      textAlign='start'
+                      maxHeight={65}
+                      whiteSpace={'nowrap'}
+                      overflow={'clip'}
+                      textOverflow={'ellipsis'}
+                    >
+                      {entrada.description}
+                    </Typography>
+                    <Typography width={70} textAlign='center'>
+                      {formatUTC(new Date(formatInputDate(entrada.date)))}
+                    </Typography>
+                    <Typography
+                      width={250}
+                      textAlign='center'
+                      color={
+                        (entrada?.balance ?? 0) >=
+                          (entrada?.collectionGoal ?? 0) ||
+                        entrada?.collectionGoal == undefined
+                          ? theme.colors.primary
+                          : 'orange'
+                      }
+                      onClick={() => {
+                        const canOpenModal =
+                          (entrada?.balance ?? 0) <
+                          (entrada?.collectionGoal ?? 0);
+                        if (canOpenModal) handleOpenModalResources(entrada);
+                      }}
+                      sx={{
+                        cursor:
+                          (entrada?.balance ?? 0) <
+                          (entrada?.collectionGoal ?? 0)
+                            ? 'pointer'
+                            : 'default',
+                      }}
+                    >
+                      {formatValue(entrada?.value)}
                     </Typography>
                   </Grid>
-                  <Button
-                    label={
-                      value === '1' ? 'Doação em espécie' : 'Informar Retirada'
-                    }
-                    headlight={value === '1' ? true : false}
-                    onClick={
-                      value === '1'
-                        ? () => setOpen(true)
-                        : () => setOpenModalRetirada(true)
-                    }
-                  />
-                </Grid>
+                ))}
               </Box>
-              <TabPanel value='1' sx={{ paddingInline: 0 }}>
-                {renderTabPanelHeader([
-                  'Ação',
-                  'Motivação',
-                  'Data',
-                  'Valor Arrecadado',
-                ])}
-                <Box
-                  height={{ md: '50vh', xl: '60vh' }}
-                  sx={{ paddingInline: 0, overflowY: 'auto' }}
-                >
-                  {filteredCombinedData?.map((entrada, index) => (
-                    <Grid
-                      key={index}
-                      display='flex'
-                      justifyContent='space-around'
-                      padding={2}
-                      bgcolor={theme.colors.white}
-                      borderRadius={5}
-                      marginY={2}
+            </TabPanel>
+            <TabPanel value='2' sx={{ paddingInline: 0 }}>
+              {renderTabPanelHeader([
+                'Campanha',
+                'Ação',
+                'Data',
+                'Valor Retirado',
+              ])}
+              <Box
+                height={{ md: '50vh', xl: '60vh' }}
+                sx={{ paddingInline: 0, overflowY: 'auto' }}
+              >
+                {filteredWithdrawal?.map((saida, index) => (
+                  <Grid
+                    key={index}
+                    display='flex'
+                    justifyContent='space-around'
+                    padding={2}
+                    bgcolor={theme.colors.white}
+                    borderRadius={5}
+                    marginY={2}
+                  >
+                    <Typography
+                      width={200}
+                      textAlign='center'
+                      maxHeight={65}
+                      whiteSpace={'nowrap'}
+                      overflow={'clip'}
+                      textOverflow={'ellipsis'}
                     >
-                      <Typography
-                        width={200}
-                        textAlign='center'
-                        maxHeight={65}
-                        whiteSpace={'nowrap'}
-                        overflow={'clip'}
-                        textOverflow={'ellipsis'}
-                      >
-                        {entrada.title}
-                      </Typography>
-                      <Typography
-                        width={250}
-                        textAlign='start'
-                        maxHeight={65}
-                        whiteSpace={'nowrap'}
-                        overflow={'clip'}
-                        textOverflow={'ellipsis'}
-                      >
-                        {entrada.description}
-                      </Typography>
-                      <Typography width={70} textAlign='center'>
-                        {formatUTC(new Date(formatInputDate(entrada.date)))}
-                      </Typography>
-                      <Typography
-                        width={250}
-                        textAlign='center'
-                        color={
-                          (entrada?.balance ?? 0) >=
-                            (entrada?.collectionGoal ?? 0) ||
-                          entrada?.collectionGoal == undefined
-                            ? theme.colors.primary
-                            : 'orange'
-                        }
-                        onClick={() => {
-                          if (
-                            (entrada?.balance ?? 0) <
-                            (entrada?.collectionGoal ?? 0)
-                          )
-                            handleOpenModalResources(entrada);
-                            handleOpenModalResources(entrada);
-                        }}
-                        style={{
-                          cursor:
-                            (entrada?.balance ?? 0) <
-                            (entrada?.collectionGoal ?? 0)
-                              ? 'pointer'
-                              : 'default',
-                        }}
-                      >
-                        {formatValue(entrada?.value)}
-                      </Typography>
-                    </Grid>
-                  ))}
-                </Box>
-              </TabPanel>
-              <TabPanel value='2' sx={{ paddingInline: 0 }}>
-                {renderTabPanelHeader([
-                  'Campanha',
-                  'Ação',
-                  'Data',
-                  'Valor Retirado',
-                ])}
-                <Box
-                  height={{ md: '50vh', xl: '60vh' }}
-                  sx={{ paddingInline: 0, overflowY: 'auto' }}
-                >
-                  {filteredWithdrawal?.map((saida, index) => (
-                    <Grid
-                      key={index}
-                      display='flex'
-                      justifyContent='space-around'
-                      padding={2}
-                      bgcolor={theme.colors.white}
-                      borderRadius={5}
-                      marginY={2}
+                      {saida.action}
+                    </Typography>
+                    <Typography
+                      width={200}
+                      textAlign='center'
+                      maxHeight={65}
+                      whiteSpace={'nowrap'}
+                      overflow={'clip'}
+                      textOverflow={'ellipsis'}
                     >
-                      <Typography
-                        width={200}
-                        textAlign='center'
-                        maxHeight={65}
-                        whiteSpace={'nowrap'}
-                        overflow={'clip'}
-                        textOverflow={'ellipsis'}
-                      >
-                        {saida.action}
-                      </Typography>
-                      <Typography
-                        width={200}
-                        textAlign='center'
-                        maxHeight={65}
-                        whiteSpace={'nowrap'}
-                        overflow={'clip'}
-                        textOverflow={'ellipsis'}
-                      >
-                        {saida.justification}
-                      </Typography>
-                      <Typography width={200} textAlign='center'>
-                        {formatUTC(
-                          new Date(formatInputDate(saida.completionDate))
-                        )}
-                      </Typography>
-                      <Typography
-                        width={150}
-                        textAlign='center'
-                        color={theme.colors.redPrimary}
-                      >
-                        {formatValue(saida.cost)}
-                      </Typography>
-                    </Grid>
-                  ))}
-                </Box>
-              </TabPanel>
-            </TabContext>
-          </Box>
-        </Grid>
+                      {saida.justification}
+                    </Typography>
+                    <Typography width={200} textAlign='center'>
+                      {formatUTC(
+                        new Date(formatInputDate(saida.completionDate))
+                      )}
+                    </Typography>
+                    <Typography
+                      width={150}
+                      textAlign='center'
+                      color={theme.colors.redPrimary}
+                    >
+                      {formatValue(saida.cost)}
+                    </Typography>
+                  </Grid>
+                ))}
+              </Box>
+            </TabPanel>
+          </TabContext>
+        </Box>
       </Grid>
 
       {open && (
