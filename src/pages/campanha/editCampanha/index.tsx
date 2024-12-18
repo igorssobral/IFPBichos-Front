@@ -244,7 +244,6 @@ export const EditCampanha = () => {
               <Button headlight label='Salvar' type='submit' />
               <Button
                 label='cancelar'
-                width=''
                 headlight={false}
                 onClick={handleBack}
               />

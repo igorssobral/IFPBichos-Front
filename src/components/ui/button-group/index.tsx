@@ -1,6 +1,5 @@
 import React from 'react';
 import './styles.css';
-import { ButtonGroup as ButtonGroups } from '@mui/material';
 
 type props = {
   children: React.ReactNode;
@@ -8,10 +7,10 @@ type props = {
 
 export const ButtonGroup = ({ children }: props) => {
   return (
-    <ButtonGroups
+    <div
       className='button-content'
     >
       {children}
-    </ButtonGroups>
+    </div>
   );
 };

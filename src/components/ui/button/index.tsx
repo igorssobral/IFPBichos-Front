@@ -9,7 +9,7 @@ type Props = {
   disabled?: boolean;
   onClick?: () => void;
   type?: 'button' | 'submit';
-} & React.ComponentProps<typeof ButtonComponent>; 
+} & React.ComponentProps<typeof ButtonComponent>;
 
 export const Button = ({
   width,
@@ -18,27 +18,38 @@ export const Button = ({
   disabled,
   onClick,
   type,
-  ...rest 
+  ...rest
 }: Props) => {
   return (
     <ButtonComponent
-      style={{
+      sx={{
         width: `${width}`,
         height: '40px',
-        borderRadius: 6,
-        backgroundColor: `${headlight ? theme.colors.primary : theme.colors.secondary}`,
+        borderRadius: 2,
+        backgroundColor: `${
+          headlight ? theme.colors.primary : theme.colors.secondary
+        }`,
         marginTop: '20px',
         paddingTop: '10px',
         fontSize: '15px',
         fontWeight: 'bolder',
         boxShadow: 'none',
-        
+        border: headlight
+          ? `1px solid ${theme.colors.primary}`
+          : `1px solid ${theme.colors.secondary}`,
+        transition: 'all 0.3s ease-in-out',
+        '&:hover': {
+          backgroundColor: headlight ? theme.colors.white : theme.colors.white,
+          color: headlight ? theme.colors.primary : theme.colors.secondary,
+
+          boxShadow: 'none',
+        },
       }}
       type={type}
-      variant="contained"
+      variant='contained'
       onClick={onClick}
       disabled={disabled}
-      {...rest} 
+      {...rest}
     >
       {label}
     </ButtonComponent>
