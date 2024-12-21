@@ -110,7 +110,6 @@ const ViewCampanha = () => {
     if (id && !campaign) {
       await getCampaignById(id)
         .then((data: CampaignRaw) => {
-          console.log('🚀 ~ .then ~ data:', data);
 
           setCampaign({
             ...data,
