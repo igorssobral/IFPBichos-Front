@@ -7,6 +7,7 @@ import {
   setLocalStorage,
 } from '../utils/local-storage';
 import { decodeJwt } from '../utils/decode-jwt';
+import { isValidToken } from '../services/auth';
 
 interface AuthContextType {
   user: UserLogged | null;
@@ -40,7 +41,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     const authUser = isAuthenticated();
-    setUser(authUser);
+  
+    if (!authUser) {
+      logout(); 
+      return;
+    }
+  
+    const verifyTokenIsValid = async () => {
+      try {
+        const tokenValid = await isValidToken(); 
+  
+        if (!tokenValid) {
+          logout(); 
+        } else {
+          setUser(authUser); 
+        }
+      } catch (error) {
+       
+        logout(); 
+      }
+    };
+  
+    verifyTokenIsValid();
   }, []);
 
   return (
