@@ -38,6 +38,7 @@ export const Home = () => {
   const { getAllCampaigns, deleteCampaign } = ApiCampaign();
   const { updatePayment } = ApiPayment();
   const [campaigns, setCampaigns] = useState<CampaignRaw[]>([]);
+  console.log('🚀 ~ Home ~ campaigns:', campaigns.length);
   const [campaignsCopy, setCampaignsCopy] = useState<CampaignRaw[]>();
   const [isFilterOpen, setFilterOpen] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
@@ -208,7 +209,10 @@ export const Home = () => {
         sx={{ flexDirection: { xs: 'column-reverse', md: 'row' } }}
       >
         <Button
-          sx={{ display: { xs: 'block', md: 'none' },backgroundColor:theme.colors.secondary }}
+          sx={{
+            display: { xs: 'block', md: 'none' },
+            backgroundColor: theme.colors.secondary,
+          }}
           label='Filtros'
           onClick={() => setFilterOpen(true)}
         />
@@ -344,17 +348,19 @@ export const Home = () => {
         </Grid>
       </Grid>
 
-      <Container style={stylePagination}>
-        <Pagination
-          count={totalPages}
-          variant='outlined'
-          style={{ color: 'red' }}
-          size='medium'
-          shape='rounded'
-          page={page}
-          onChange={handleChangePage}
-        />
-      </Container>
+      <Grid style={stylePagination}>
+        {campaigns.length > 12 ? (
+          <Pagination
+            count={totalPages}
+            variant='outlined'
+            style={{ color: 'red' }}
+            size='medium'
+            shape='rounded'
+            page={page}
+            onChange={handleChangePage}
+          />
+        ) : null}
+      </Grid>
 
       <Container
         style={{
@@ -404,14 +410,16 @@ export const Home = () => {
 
       {filteredCampaigns?.length !== 0 && (
         <Container style={stylePagination}>
-          <Pagination
-            count={totalPages}
-            variant='outlined'
-            size='medium'
-            shape='rounded'
-            page={page}
-            onChange={handleChangePage}
-          />
+          {campaigns.length > 12 ? (
+            <Pagination
+              count={totalPages}
+              variant='outlined'
+              size='medium'
+              shape='rounded'
+              page={page}
+              onChange={handleChangePage}
+            />
+          ) : null}
         </Container>
       )}
     </Container>
