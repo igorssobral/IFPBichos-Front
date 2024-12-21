@@ -78,7 +78,6 @@ export const ResourcesRealocation = ({
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 350,
     bgcolor: 'background.paper',
     border: '2px solid #000',
     boxShadow: 24,
@@ -89,7 +88,7 @@ export const ResourcesRealocation = ({
   return (
     <Modal open={isVisible} onClose={handleClose}>
       <form onSubmit={handleSubmit(onSubmitReportWithdrawal)}>
-        <Box sx={style} display={'flex'} flexDirection={'column'}>
+        <Box width={{xs:'90%', lg: '30%' }}  sx={{ ...style }}  display={'flex'} flexDirection={'column'}>
           <DialogTitle
             id='responsive-dialog-title'
             textAlign={'center'}
