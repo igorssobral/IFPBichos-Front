@@ -180,19 +180,20 @@ const ResourcesApplication = () => {
   const renderTabPanelHeader = (headers: string[]) => (
     <Grid
       display='flex'
-      justifyContent='space-around'
+      justifyContent='space-between'
       bgcolor={theme.colors.primary}
       padding={2}
-      borderRadius={4}
+      paddingX={{ x: 0, md: 5 }}
+      borderRadius={2}
       mt={2}
     >
       {headers.map((header, index) => (
         <Typography
           key={index}
-          width={250}
+          width={{ xs: 'max-content', md: 250 }}
           textAlign='center'
           color='white'
-          fontSize={20}
+          fontSize={{ xs: 14, md: 20 }}
         >
           {header}
         </Typography>
@@ -220,7 +221,6 @@ const ResourcesApplication = () => {
     >
       <ButtonAppBar visible title='Gerenciar Recursos' />
       <Grid
-        mt={2}
         width={{ xs: '98%', lg: '85%' }}
         display='flex'
         flexDirection='column'
@@ -318,13 +318,11 @@ const ResourcesApplication = () => {
                 />
               </Grid>
             </Box>
-            <TabPanel value='1' sx={{ paddingInline: 0 }}>
-              {renderTabPanelHeader([
-                'Ação',
-                'Motivação',
-                'Data',
-                'Valor Arrecadado',
-              ])}
+            <TabPanel
+              value='1'
+              sx={{ paddingInline: 0, display: { xs: 'block' } }}
+            >
+              {renderTabPanelHeader(['Ação', 'Data', 'Valor Arrecadado'])}
               <Box
                 height={{ md: '50vh', xl: '60vh' }}
                 sx={{ paddingInline: 0, overflowY: 'auto' }}
@@ -333,23 +331,25 @@ const ResourcesApplication = () => {
                   <Grid
                     key={index}
                     display='flex'
-                    justifyContent='space-around'
+                    justifyContent='space-between'
                     padding={2}
+                    paddingX={{ xs: 2, md: 10 }}
                     bgcolor={theme.colors.white}
                     borderRadius={5}
                     marginY={2}
+                    textAlign={{ xs: 'start', md: 'center' }}
                   >
                     <Typography
-                      width={200}
-                      textAlign='center'
+                      width={{ xs: 100, md: 200 }}
                       maxHeight={65}
                       whiteSpace={'nowrap'}
                       overflow={'clip'}
                       textOverflow={'ellipsis'}
+                      fontSize={{ xs: 14, md: 20 }}
                     >
                       {entrada.title}
                     </Typography>
-                    <Typography
+                    {/* <Typography
                       width={250}
                       textAlign='start'
                       maxHeight={65}
@@ -358,13 +358,17 @@ const ResourcesApplication = () => {
                       textOverflow={'ellipsis'}
                     >
                       {entrada.description}
-                    </Typography>
-                    <Typography width={70} textAlign='center'>
+                    </Typography> */}
+                    <Typography
+                      fontSize={{ xs: 14, md: 20 }}
+                      minWidth={90}
+                      width={{ xs: 100, md: 200 }}
+                    >
                       {formatUTC(new Date(formatInputDate(entrada.date)))}
                     </Typography>
                     <Typography
-                      width={250}
-                      textAlign='center'
+                      fontSize={{ xs: 14, md: 20 }}
+                      width={{ xs: 100, md: 200 }}
                       color={
                         (entrada?.balance ?? 0) >=
                           (entrada?.collectionGoal ?? 0) ||
@@ -393,12 +397,7 @@ const ResourcesApplication = () => {
               </Box>
             </TabPanel>
             <TabPanel value='2' sx={{ paddingInline: 0 }}>
-              {renderTabPanelHeader([
-                'Campanha',
-                'Ação',
-                'Data',
-                'Valor Retirado',
-              ])}
+              {renderTabPanelHeader(['Campanha', 'Data', 'Valor Retirado'])}
               <Box
                 height={{ md: '50vh', xl: '60vh' }}
                 sx={{ paddingInline: 0, overflowY: 'auto' }}
@@ -409,12 +408,15 @@ const ResourcesApplication = () => {
                     display='flex'
                     justifyContent='space-around'
                     padding={2}
+                    paddingX={{ xs: 2, md: 10 }}
                     bgcolor={theme.colors.white}
                     borderRadius={5}
                     marginY={2}
+                    textAlign={{ xs: 'start', md: 'center' }}
                   >
                     <Typography
-                      width={200}
+                      fontSize={{ xs: 14, md: 20 }}
+                      width={{ xs: 100, md: 200 }}
                       textAlign='center'
                       maxHeight={65}
                       whiteSpace={'nowrap'}
@@ -423,23 +425,29 @@ const ResourcesApplication = () => {
                     >
                       {saida.action}
                     </Typography>
-                    <Typography
-                      width={200}
+                    {/* <Typography
+                      width={{ xs: 100, md: 200 }}
                       textAlign='center'
                       maxHeight={65}
                       whiteSpace={'nowrap'}
                       overflow={'clip'}
                       textOverflow={'ellipsis'}
+                      fontSize={{ xs: 14, md: 20 }}
                     >
                       {saida.justification}
-                    </Typography>
-                    <Typography width={200} textAlign='center'>
+                    </Typography> */}
+                    <Typography
+                      fontSize={{ xs: 14, md: 20 }}
+                      minWidth={90}
+                      width={{ xs: 100, md: 200 }}
+                    >
                       {formatUTC(
                         new Date(formatInputDate(saida.completionDate))
                       )}
                     </Typography>
                     <Typography
-                      width={150}
+                      fontSize={{ xs: 14, md: 20 }}
+                      width={{ xs: 100, md: 200 }}
                       textAlign='center'
                       color={theme.colors.redPrimary}
                     >
