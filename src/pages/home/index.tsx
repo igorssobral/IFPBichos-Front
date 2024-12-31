@@ -38,7 +38,6 @@ export const Home = () => {
   const { getAllCampaigns, deleteCampaign } = ApiCampaign();
   const { updatePayment } = ApiPayment();
   const [campaigns, setCampaigns] = useState<CampaignRaw[]>([]);
-  console.log('🚀 ~ Home ~ campaigns:', campaigns.length);
   const [campaignsCopy, setCampaignsCopy] = useState<CampaignRaw[]>();
   const [isFilterOpen, setFilterOpen] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
